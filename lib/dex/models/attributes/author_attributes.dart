@@ -18,9 +18,16 @@ class AuthorAttributes {
   String? naver;
   String? website;
 
+  String createdAt;
+  String updatedAt;
+  int version;
+
   AuthorAttributes({
     required this.name,
     required this.imageUrl,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.version,
     this.biography,
     this.twitter,
     this.pixiv,
@@ -41,9 +48,12 @@ class AuthorAttributes {
       AuthorAttributes(
         name: json['name'] as String,
         imageUrl: json['imageUrl'] as String,
+        createdAt: json['createdAt'] as String,
+        updatedAt: json['updatedAt'] as String,
+        version: json['version'] as int,
         biography: json['biography'] == null
             ? null
-            : json['biography'] == '[]'
+            : json['biography'] is Iterable
                 ? null
                 : LocalizedString.fromJson(
                     json['biography'] as Map<String, dynamic>),
@@ -62,22 +72,35 @@ class AuthorAttributes {
         website: json['website'] as String?,
       );
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'imageUrl': imageUrl,
-        'biography': biography,
-        'twitter': twitter,
-        'pixiv': pixiv,
-        'melonBook': melonBook,
-        'fanBox': fanBox,
-        'booth': booth,
-        'nicoVideo': nicoVideo,
-        'skeb': skeb,
-        'fantia': fantia,
-        'tumber': tumber,
-        'youtube': youtube,
-        'weibo': weibo,
-        'naver': naver,
-        'website': website,
-      };
+  Map<String, dynamic> toJson() {
+    final val = <String, dynamic>{};
+
+    void writeNotNull(String key, dynamic value) {
+      if (value != null) {
+        val[key] = value;
+      }
+    }
+
+    val['name'] = name;
+    val['imageUrl'] = imageUrl;
+    val['createdAt'] = createdAt;
+    val['updatedAt'] = updatedAt;
+    val['version'] = version;
+    writeNotNull('name', name);
+    writeNotNull('biography', biography);
+    writeNotNull('twitter', twitter);
+    writeNotNull('pixiv', pixiv);
+    writeNotNull('melonBook', melonBook);
+    writeNotNull('fanBox', fanBox);
+    writeNotNull('booth', booth);
+    writeNotNull('nicoVideo', nicoVideo);
+    writeNotNull('skeb', skeb);
+    writeNotNull('fantia', fantia);
+    writeNotNull('tumber', tumber);
+    writeNotNull('youtube', youtube);
+    writeNotNull('weibo', weibo);
+    writeNotNull('naver', naver);
+    writeNotNull('website', website);
+    return val;
+  }
 }

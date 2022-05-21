@@ -29,3 +29,17 @@ class Relationship {
         'attributes': attributes,
       };
 }
+
+extension RelationshipsExtensions on List<Relationship> {
+
+  /// 返回一个 EntityType 为输入值的 Relationship
+  Relationship firstType(EntityType type) {
+    return firstWhere((relationship) => relationship.type == type);
+  }
+
+  /// 返回一个 EntityType 为输入值的 Relationship（未找到时返回 null）
+  Relationship? firstTypeOrDefault(EntityType type) {
+    return firstWhere((relationship) => relationship.type == type,
+        orElse: null);
+  }
+}

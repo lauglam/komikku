@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:komikku/dex/dex_settings.dart';
 import 'package:komikku/utils/exception.dart';
-import 'package:komikku/utils/settings.dart';
+import 'package:komikku/utils/app_settings.dart';
 import 'package:komikku/utils/storage.dart';
 
 class HttpUtil {
@@ -14,8 +15,8 @@ class HttpUtil {
   HttpUtil._internal() {
     BaseOptions options = BaseOptions(
       baseUrl: serverUrl,
-      connectTimeout: 10000,
-      receiveTimeout: 5000,
+      connectTimeout: 20000,
+      receiveTimeout: 20000,
       headers: {},
       contentType: 'application/json; charset=utf-8',
       responseType: ResponseType.json,
