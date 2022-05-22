@@ -1,3 +1,4 @@
+import 'package:komikku/dex/apis/api_helper.dart';
 import 'package:komikku/dex/models/manga_list.dart';
 
 import '../../utils/http.dart';
@@ -7,17 +8,11 @@ class MangaApi {
     Map<String, dynamic>? queryParameters,
     String? order,
   }) async {
-    var uri = Uri(
+    var response = await HttpUtil().get(buildUri(
       path: '/manga',
       queryParameters: queryParameters,
-    );
-
-    var path = uri.toString();
-    if (order != null) {
-      path = queryParameters == null ? '$path?$order' : '$path&$order';
-    }
-
-    var response = await HttpUtil().get(path);
+      order: order,
+    ));
     return MangaListResponse.fromJson(response);
   }
 }

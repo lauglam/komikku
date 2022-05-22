@@ -17,8 +17,9 @@ class _LatestUpdateState extends State<LatestUpdate> {
   final _streamController = StreamController<List<MangaDto>>();
   final _scrollController = ScrollController();
   final _cacheMangaList = <MangaDto>[];
-  int chapterLimit = 20;
+  int chapterLimit = 40;
   int chapterOffset = 0;
+  int mangaLimit = 20;
 
   @override
   void initState() {
@@ -43,10 +44,29 @@ class _LatestUpdateState extends State<LatestUpdate> {
     _streamController.close();
   }
 
-  sinkStream() async {
-    _cacheMangaList.addAll(await _getMangaList());
+  sinkStream({bool refresh = false}) async {
+    if (refresh) {
+      _cacheMangaList.clear();
+      chapterOffset = 0;
+    }
+
+    var distinctMangaList = <MangaDto>[];
+
+    /// 获取足够的并且不重复的Manga
+    while (distinctMangaList.length < mangaLimit) {
+      var list = await _getMangaList();
+
+      /// 添加_cacheMangaList没有并且distinctMangaList也没有的
+      distinctMangaList.addAll(list.where((m) =>
+          !_cacheMangaList.map((e) => e.id).contains(m.id) &&
+          !distinctMangaList.map((e) => e.id).contains(m.id)));
+
+      /// 设置Chapter查询偏移
+      chapterOffset += chapterLimit;
+    }
+
+    _cacheMangaList.addAll(distinctMangaList);
     _streamController.sink.add(_cacheMangaList);
-    chapterOffset += chapterLimit;
   }
 
   @override
@@ -62,9 +82,8 @@ class _LatestUpdateState extends State<LatestUpdate> {
           return const Center(child: CircularProgressIndicator());
         } else {
           return RefreshIndicator(
-            onRefresh: () {
-              sinkStream();
-              return Future.value();
+            onRefresh: () async {
+              await sinkStream(refresh: true);
             },
             child: GridView.builder(
               padding: const EdgeInsets.all(8),
@@ -92,7 +111,7 @@ class _LatestUpdateState extends State<LatestUpdate> {
 
   /// 获取漫画列表
   Future<List<MangaDto>> _getMangaList() async {
-    var distinctChapters = <Chapter>[];
+    // var distinctChapters = <Chapter>[];
 
     var chapterListResponse = await ChapterApi.getChapterListAsync(
       queryParameters: ChapterListQuery(
@@ -114,16 +133,15 @@ class _LatestUpdateState extends State<LatestUpdate> {
     var mangaIds = chapterListResponse.data
         .map((chapter) => chapter.relationships.firstType(EntityType.manga).id)
         .toSet();
-    for (var id in mangaIds) {
-      distinctChapters.add(chapterListResponse.data.firstWhere(
-          (item) => item.relationships.firstType(EntityType.manga).id == id));
-    }
+    // for (var id in mangaIds) {
+    //   distinctChapters.add(chapterListResponse.data.firstWhere(
+    //       (item) => item.relationships.firstType(EntityType.manga).id == id));
+    // }
 
     var mangaListResponse = await MangaApi.getMangaListAsync(
       queryParameters: MangaListQuery(
-        // ids: mangaIds.toList(),
-        limit: 20,
-        offset: chapterOffset,
+        ids: mangaIds.toList(),
+        limit: mangaIds.length,
         includes: ['cover_art', 'author'],
         contentRating: [
           ContentRating.safe,

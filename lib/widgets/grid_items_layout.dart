@@ -19,7 +19,7 @@ class GridItemsLayout extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       clipBehavior: Clip.antiAlias,
       child: CachedNetworkImage(
-        imageUrl: dto.assetUrl,
+        imageUrl: dto.imageUrl,
         fit: BoxFit.cover,
         // placeholder: (context, url) => Image.asset('assets/images/image-default.png'),
         errorWidget: (context, url, error) =>

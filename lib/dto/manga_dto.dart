@@ -7,12 +7,14 @@ import 'package:komikku/dex/retrieving.dart';
 
 /// 漫画
 class MangaDto {
-  final String assetUrl;
+  final String id;
+  final String imageUrl;
   final String title;
   final String subtitle;
 
   MangaDto({
-    required this.assetUrl,
+    required this.id,
+    required this.imageUrl,
     required this.title,
     required this.subtitle,
   });
@@ -23,9 +25,10 @@ class MangaDto {
         source.relationships.firstType(EntityType.coverArt).attributes);
 
     return MangaDto(
+      id: source.id,
       title: source.attributes.title.value(),
       subtitle: '[${statusEnumChineseMap[source.attributes.status]}]',
-      assetUrl: Retrieving.getCoverArtOn256(source.id, coverAttribute.fileName),
+      imageUrl: Retrieving.getCoverArtOn256(source.id, coverAttribute.fileName),
     );
   }
 }

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/query/content_rating.dart';
-import 'package:komikku/dex/models/query/extensions.dart';
+import 'package:komikku/dex/models/query/date_helper.dart';
 import 'package:komikku/dex/models/query/order_mode.dart';
 import 'package:komikku/dex/models/query/publication_demographic.dart';
 import 'package:komikku/dex/models/query/tags_mode.dart';
@@ -104,10 +104,10 @@ class MangaListQuery {
             .toList(),
         createdAtSince: json['createdAtSince'] == null
             ? null
-            : (json['createdAtSince'] as String).parse(),
+            : parseDate(json['createdAtSince'] as String),
         updatedAtSince: json['updatedAtSince'] == null
             ? null
-            : (json['updatedAtSince'] as String).parse(),
+            : parseDate(json['updatedAtSince'] as String),
         includes: (json['includes[]'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList(),
@@ -146,8 +146,8 @@ class MangaListQuery {
             .toList());
     writeNotNull('contentRating[]',
         contentRating?.map((e) => contentRatingEnumMap[e]).toList());
-    writeNotNull('createdAtSince', createdAtSince?.format());
-    writeNotNull('updatedAtSince', updatedAtSince?.format());
+    writeNotNull('createdAtSince', formatDate(createdAtSince));
+    writeNotNull('updatedAtSince', formatDate(updatedAtSince));
     writeNotNull('includes[]', includes);
     writeNotNull('limit', limit?.toString());
     writeNotNull('offset', offset?.toString());

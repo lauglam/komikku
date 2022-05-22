@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:komikku/routes.dart';
 import 'package:komikku/views/latest_update.dart';
 import 'package:komikku/views/me.dart';
 import 'package:komikku/views/subscribes.dart';
@@ -14,10 +15,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Komikku',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      routes: staticRoutes,
       home: const Shell(),
     );
   }
@@ -66,7 +68,7 @@ class _ShellState extends State<Shell> {
           ),
         ],
         currentIndex: currentIndex,
-        type: BottomNavigationBarType.shifting,
+        type: BottomNavigationBarType.fixed,
         onTap: (index) {
           if (index != currentIndex) setState(() => currentIndex = index);
         },

@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/query/content_rating.dart';
 import 'package:komikku/dex/models/query/order_mode.dart';
-import 'package:komikku/dex/models/query/extensions.dart';
+import 'package:komikku/dex/models/query/date_helper.dart';
 
 /// ChapterList Query
 class ChapterListQuery {
@@ -61,13 +61,13 @@ class ChapterListQuery {
             .toList(),
         createdAtSince: json['createdAtSince'] == null
             ? null
-            : (json['createdAtSince'] as String).parse(),
+            : parseDate(json['createdAtSince'] as String),
         updatedAtSince: json['updatedAtSince'] == null
             ? null
-            : (json['updatedAtSince'] as String).parse(),
+            : parseDate(json['updatedAtSince'] as String),
         publishAtSince: json['publishAtSince'] == null
             ? null
-            : (json['publishAtSince'] as String).parse(),
+            : parseDate(json['publishAtSince'] as String),
         translatedLanguage: (json['translatedLanguage[]'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList(),
@@ -116,9 +116,9 @@ class ChapterListQuery {
     writeNotNull('limit', limit?.toString());
     writeNotNull('offset', offset?.toString());
     writeNotNull('includes[]', includes);
-    writeNotNull('createdAtSince', createdAtSince?.format());
-    writeNotNull('updatedAtSince', updatedAtSince?.format());
-    writeNotNull('publishAtSince', publishAtSince?.format());
+    writeNotNull('createdAtSince', formatDate(createdAtSince));
+    writeNotNull('updatedAtSince', formatDate(updatedAtSince));
+    writeNotNull('publishAtSince', formatDate(publishAtSince));
     writeNotNull('translatedLanguage[]', translatedLanguage);
     writeNotNull('originalLanguage[]', originalLanguage);
     writeNotNull('excludedOriginalLanguage[]', excludedOriginalLanguage);
