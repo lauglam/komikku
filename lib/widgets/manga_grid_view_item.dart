@@ -3,8 +3,8 @@ import 'package:komikku/dto/manga_dto.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// 子项布局
-class GridItemLayout extends StatelessWidget {
-  const GridItemLayout({
+class MangaGridViewItem extends StatelessWidget {
+  const MangaGridViewItem({
     Key? key,
     required this.dto,
     required this.titleStyle,
@@ -23,14 +23,14 @@ class GridItemLayout extends StatelessWidget {
         fit: BoxFit.cover,
         // placeholder: (context, url) => Image.asset('assets/images/image-default.png'),
         errorWidget: (context, url, error) => Image.asset('assets/images/image-failed.png'),
-        progressIndicatorBuilder: (context, url, progress) => Center(
-          child: Transform.scale(
-            scale: 0.7,
-            child: CircularProgressIndicator(
-              value: progress.progress,
-            ),
-          ),
-        ),
+        // progressIndicatorBuilder: (context, url, progress) => Center(
+        //   child: Transform.scale(
+        //     scale: 0.7,
+        //     child: CircularProgressIndicator(
+        //       value: progress.progress,
+        //     ),
+        //   ),
+        // ),
       ),
     );
 

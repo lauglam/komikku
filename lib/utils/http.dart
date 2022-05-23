@@ -1,7 +1,5 @@
 import 'package:dio/dio.dart';
-
 import 'package:komikku/dex/dex_settings.dart';
-import 'package:komikku/utils/exception.dart';
 import 'package:komikku/utils/app_settings.dart';
 import 'package:komikku/utils/storage.dart';
 
@@ -252,4 +250,18 @@ class HttpUtil {
         }
     }
   }
+}
+
+/// Http异常
+class HttpException implements Exception {
+  int code;
+  String message;
+
+  HttpException({
+    required this.code,
+    required this.message,
+  });
+
+  @override
+  String toString() => 'Exception: code $code, $message';
 }

@@ -17,6 +17,7 @@ class _ReadingState extends State<Reading> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      extendBodyBehindAppBar: true,
       body: FutureBuilder<List<String>>(
         future: _getChapterPages(),
         builder: (context, snapshot) {

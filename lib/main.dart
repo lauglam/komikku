@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:komikku/routes.dart';
+import 'package:komikku/views/login.dart';
 import 'package:komikku/views/shell.dart';
 
 void main() {
@@ -15,9 +15,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Komikku',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.orange,
       ),
-      routes: staticRoutes,
+      routes: {'/login': (context) => const Login()},
       home: const Shell(),
     );
   }

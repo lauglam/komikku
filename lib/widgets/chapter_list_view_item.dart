@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:komikku/dto/chapter_dto.dart';
-import 'package:komikku/utils/date_format.dart';
+import 'package:komikku/utils/helper.dart';
 
-class LinearItemLayout extends StatelessWidget {
-  const LinearItemLayout({Key? key, required this.dto, required this.imageUrl}) : super(key: key);
+class ChapterListViewItem extends StatelessWidget {
+  const ChapterListViewItem({Key? key, required this.dto, required this.imageUrl}) : super(key: key);
   final ChapterDto dto;
   final String imageUrl;
 
@@ -35,7 +35,7 @@ class LinearItemLayout extends StatelessWidget {
             Text(dto.uploader),
           ],
         ),
-        trailing: const Icon(Icons.arrow_forward),
+        trailing: const Icon(Icons.arrow_forward_rounded),
       ),
     );
   }

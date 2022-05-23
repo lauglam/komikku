@@ -5,7 +5,7 @@ import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/views/details.dart';
-import 'package:komikku/widgets/grid_item_layout.dart';
+import 'package:komikku/widgets/manga_grid_view_item.dart';
 
 class LatestUpdate extends StatefulWidget {
   const LatestUpdate({Key? key}) : super(key: key);
@@ -105,13 +105,13 @@ class _LatestUpdateState extends State<LatestUpdate> {
                     if (index < snapshot.data!.length) {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) {
-                          return Details(dto: snapshot.data![index]);
-                        }),
+                        MaterialPageRoute(
+                          builder: (context) => Details(dto: snapshot.data![index]),
+                        ),
                       );
                     }
                   },
-                  child: GridItemLayout(
+                  child: MangaGridViewItem(
                     dto: snapshot.data![index],
                     titleStyle: TitleStyle.footer,
                   ),

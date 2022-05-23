@@ -6,7 +6,7 @@ import 'package:komikku/dex/models/query/manga_feed_query.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/views/reading.dart';
-import 'package:komikku/widgets/linear_item_layout.dart';
+import 'package:komikku/widgets/chapter_list_view_item.dart';
 import 'package:komikku/widgets/tags_wrap.dart';
 import 'package:grouped_list/grouped_list.dart';
 
@@ -30,7 +30,7 @@ class _DetailsState extends State<Details> {
           builder: (context) {
             return IconButton(
               icon: const Icon(
-                Icons.arrow_back_ios,
+                Icons.arrow_back_ios_rounded,
                 color: Colors.white,
               ),
               onPressed: () => Navigator.pop(context),
@@ -113,11 +113,9 @@ class _DetailsState extends State<Details> {
                       return InkWell(
                         onTap: () => Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) {
-                            return Reading(id: element.id);
-                          }),
+                          MaterialPageRoute(builder: (context) => Reading(id: element.id)),
                         ),
-                        child: LinearItemLayout(
+                        child: ChapterListViewItem(
                           dto: element,
                           imageUrl: widget.dto.imageUrl256,
                         ),
