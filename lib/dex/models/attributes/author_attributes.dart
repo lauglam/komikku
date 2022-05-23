@@ -2,7 +2,7 @@ import 'package:komikku/dex/models/localized_string.dart';
 
 class AuthorAttributes {
   String name;
-  String imageUrl;
+  String? imageUrl;
   LocalizedString? biography;
   String? twitter;
   String? pixiv;
@@ -24,10 +24,10 @@ class AuthorAttributes {
 
   AuthorAttributes({
     required this.name,
-    required this.imageUrl,
     required this.createdAt,
     required this.updatedAt,
     required this.version,
+    this.imageUrl,
     this.biography,
     this.twitter,
     this.pixiv,
@@ -44,10 +44,9 @@ class AuthorAttributes {
     this.website,
   });
 
-  factory AuthorAttributes.fromJson(Map<String, dynamic> json) =>
-      AuthorAttributes(
+  factory AuthorAttributes.fromJson(Map<String, dynamic> json) => AuthorAttributes(
         name: json['name'] as String,
-        imageUrl: json['imageUrl'] as String,
+        imageUrl: json['imageUrl'] as String?,
         createdAt: json['createdAt'] as String,
         updatedAt: json['updatedAt'] as String,
         version: json['version'] as int,
@@ -55,8 +54,7 @@ class AuthorAttributes {
             ? null
             : json['biography'] is Iterable
                 ? null
-                : LocalizedString.fromJson(
-                    json['biography'] as Map<String, dynamic>),
+                : LocalizedString.fromJson(json['biography'] as Map<String, dynamic>),
         twitter: json['twitter'] as String?,
         pixiv: json['pixiv'] as String?,
         melonBook: json['melonBook'] as String?,
@@ -82,11 +80,10 @@ class AuthorAttributes {
     }
 
     val['name'] = name;
-    val['imageUrl'] = imageUrl;
     val['createdAt'] = createdAt;
     val['updatedAt'] = updatedAt;
     val['version'] = version;
-    writeNotNull('name', name);
+    writeNotNull('imageUrl', imageUrl);
     writeNotNull('biography', biography);
     writeNotNull('twitter', twitter);
     writeNotNull('pixiv', pixiv);

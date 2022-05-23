@@ -28,8 +28,7 @@ class ChapterAttributes {
     this.externalUrl,
   });
 
-  factory ChapterAttributes.fromJson(Map<String, dynamic> json) =>
-      ChapterAttributes(
+  factory ChapterAttributes.fromJson(Map<String, dynamic> json) => ChapterAttributes(
         publishAt: json['publishAt'] as String,
         readableAt: json['readableAt'] as String,
         translatedLanguage: json['translatedLanguage'] as String,

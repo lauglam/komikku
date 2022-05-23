@@ -5,30 +5,49 @@ import 'package:komikku/dex/models/manga.dart';
 import 'package:komikku/dex/models/relationship.dart';
 import 'package:komikku/dex/retrieving.dart';
 
+import '../dex/models/attributes/author_attributes.dart';
+
 /// 漫画
 class MangaDto {
   final String id;
-  final String imageUrl;
   final String title;
-  final String subtitle;
+  final String status;
+  final String author;
+  final List<String> tags;
+  final String imageUrl256;
+  final String imageUrl512;
+  final String imageUrlOriginal;
+  final String? description;
 
   MangaDto({
     required this.id,
-    required this.imageUrl,
     required this.title,
-    required this.subtitle,
+    required this.status,
+    required this.author,
+    required this.tags,
+    required this.imageUrl256,
+    required this.imageUrl512,
+    required this.imageUrlOriginal,
+    this.description,
   });
 
   factory MangaDto.fromSource(Manga source) {
-    /// NOTE: 必须含有 CoverAttributes
-    var coverAttribute = CoverAttributes.fromJson(
-        source.relationships.firstType(EntityType.coverArt).attributes);
+    /// NOTE: 必须含有 CoverAttributes AuthorAttributes
+    var coverAttributes =
+        CoverAttributes.fromJson(source.relationships.firstType(EntityType.coverArt).attributes);
+    var authorAttributes =
+        AuthorAttributes.fromJson(source.relationships.firstType(EntityType.author).attributes);
 
     return MangaDto(
       id: source.id,
       title: source.attributes.title.value(),
-      subtitle: '[${statusEnumChineseMap[source.attributes.status]}]',
-      imageUrl: Retrieving.getCoverArtOn256(source.id, coverAttribute.fileName),
+      status: statusEnumChineseMap[source.attributes.status]!,
+      author: authorAttributes.name,
+      tags: source.attributes.tags.map((e) => e.attributes.name.value()).toList(),
+      imageUrl256: Retrieving.getCoverArtOn256(source.id, coverAttributes.fileName),
+      imageUrl512: Retrieving.getCoverArtOn512(source.id, coverAttributes.fileName),
+      imageUrlOriginal: Retrieving.getCoverArtOnOriginal(source.id, coverAttributes.fileName),
+      description: source.attributes.description?.value(),
     );
   }
 }

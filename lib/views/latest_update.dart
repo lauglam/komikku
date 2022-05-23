@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/manga_dto.dart';
-import 'package:komikku/widgets/grid_items_layout.dart';
+import 'package:komikku/views/details.dart';
+import 'package:komikku/widgets/grid_item_layout.dart';
 
 class LatestUpdate extends StatefulWidget {
   const LatestUpdate({Key? key}) : super(key: key);
@@ -19,7 +20,9 @@ class _LatestUpdateState extends State<LatestUpdate> {
   final _cacheMangaList = <MangaDto>[];
   int chapterLimit = 40;
   int chapterOffset = 0;
-  int mangaLimit = 20;
+
+  /// 不小于20
+  int mangaGreaterOrEqual = 20;
 
   @override
   void initState() {
@@ -53,7 +56,7 @@ class _LatestUpdateState extends State<LatestUpdate> {
     var distinctMangaList = <MangaDto>[];
 
     /// 获取足够的并且不重复的Manga
-    while (distinctMangaList.length < mangaLimit) {
+    while (distinctMangaList.length < mangaGreaterOrEqual) {
       var list = await _getMangaList();
 
       /// 添加_cacheMangaList没有并且distinctMangaList也没有的
@@ -93,13 +96,25 @@ class _LatestUpdateState extends State<LatestUpdate> {
                 crossAxisSpacing: 8,
                 childAspectRatio: 0.75,
               ),
-              shrinkWrap: true,
               controller: _scrollController,
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
-                return GridItemsLayout(
-                  dto: snapshot.data![index],
-                  titleStyle: TitleStyle.footer,
+                return InkWell(
+                  onTap: () {
+                    /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
+                    if (index < snapshot.data!.length) {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) {
+                          return Details(dto: snapshot.data![index]);
+                        }),
+                      );
+                    }
+                  },
+                  child: GridItemLayout(
+                    dto: snapshot.data![index],
+                    titleStyle: TitleStyle.footer,
+                  ),
                 );
               },
             ),
@@ -114,10 +129,11 @@ class _LatestUpdateState extends State<LatestUpdate> {
     // var distinctChapters = <Chapter>[];
 
     var chapterListResponse = await ChapterApi.getChapterListAsync(
-      queryParameters: ChapterListQuery(
+      query: ChapterListQuery(
         limit: chapterLimit,
         offset: chapterOffset,
-        includes: ['manga', 'scanlation_group'],
+        // includes: ['manga', 'scanlation_group'],
+        includes: ['manga'],
         translatedLanguage: ['zh', 'zh-hk'],
         contentRating: [
           ContentRating.safe,
@@ -125,7 +141,7 @@ class _LatestUpdateState extends State<LatestUpdate> {
           ContentRating.erotica,
           ContentRating.pornographic
         ],
-      ).toJson(),
+      ),
       order: ChapterListOrder(readableAt: OrderMode.desc).build(),
     );
 
@@ -139,7 +155,7 @@ class _LatestUpdateState extends State<LatestUpdate> {
     // }
 
     var mangaListResponse = await MangaApi.getMangaListAsync(
-      queryParameters: MangaListQuery(
+      query: MangaListQuery(
         ids: mangaIds.toList(),
         limit: mangaIds.length,
         includes: ['cover_art', 'author'],
@@ -149,7 +165,7 @@ class _LatestUpdateState extends State<LatestUpdate> {
           ContentRating.erotica,
           ContentRating.pornographic
         ],
-      ).toJson(),
+      ),
     );
     return mangaListResponse.data.map((e) => MangaDto.fromSource(e)).toList();
   }

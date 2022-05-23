@@ -59,58 +59,37 @@ class MangaListQuery {
   });
 
   factory MangaListQuery.fromJson(Map<String, dynamic> json) => MangaListQuery(
-        ids:
-            (json['ids[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
+        ids: (json['ids[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
         title: json['title'] as String?,
         group: json['group'] as String?,
         hasAvailableChapters: json['hasAvailableChapters'] as bool?,
-        authors: (json['authors[]'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList(),
-        artists: (json['artists[]'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList(),
+        authors: (json['authors[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
+        artists: (json['artists[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
         year: json['year'] as int?,
-        includedTags: (json['includedTags[]'] as List<dynamic>?)
+        includedTags: (json['includedTags[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
+        includedTagsMode: $enumDecodeNullable(tagsModeEnumMap, json['includedTagsMode']),
+        excludedTags: (json['excludedTags[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
+        excludedTagsMode: $enumDecodeNullable(tagsModeEnumMap, json['excludedTagsMode']),
+        status: (json['status[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
+        originalLanguage:
+            (json['originalLanguage[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
+        excludedOriginalLanguage: (json['excludedOriginalLanguage[]'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList(),
-        includedTagsMode:
-            $enumDecodeNullable(tagsModeEnumMap, json['includedTagsMode']),
-        excludedTags: (json['excludedTags[]'] as List<dynamic>?)
+        availableTranslatedLanguage: (json['availableTranslatedLanguage[]'] as List<dynamic>?)
             ?.map((e) => e as String)
             .toList(),
-        excludedTagsMode:
-            $enumDecodeNullable(tagsModeEnumMap, json['excludedTagsMode']),
-        status: (json['status[]'] as List<dynamic>?)
-            ?.map((e) => e as String)
+        publicationDemographic: (json['publicationDemographic[]'] as List<dynamic>?)
+            ?.map((e) => $enumDecode(publicationDemographicEnumMap, e))
             .toList(),
-        originalLanguage: (json['originalLanguage[]'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList(),
-        excludedOriginalLanguage:
-            (json['excludedOriginalLanguage[]'] as List<dynamic>?)
-                ?.map((e) => e as String)
-                .toList(),
-        availableTranslatedLanguage:
-            (json['availableTranslatedLanguage[]'] as List<dynamic>?)
-                ?.map((e) => e as String)
-                .toList(),
-        publicationDemographic:
-            (json['publicationDemographic[]'] as List<dynamic>?)
-                ?.map((e) => $enumDecode(publicationDemographicEnumMap, e))
-                .toList(),
         contentRating: (json['contentRating[]'] as List<dynamic>?)
             ?.map((e) => $enumDecode(contentRatingEnumMap, e))
             .toList(),
-        createdAtSince: json['createdAtSince'] == null
-            ? null
-            : parseDate(json['createdAtSince'] as String),
-        updatedAtSince: json['updatedAtSince'] == null
-            ? null
-            : parseDate(json['updatedAtSince'] as String),
-        includes: (json['includes[]'] as List<dynamic>?)
-            ?.map((e) => e as String)
-            .toList(),
+        createdAtSince:
+            json['createdAtSince'] == null ? null : parseDate(json['createdAtSince'] as String),
+        updatedAtSince:
+            json['updatedAtSince'] == null ? null : parseDate(json['updatedAtSince'] as String),
+        includes: (json['includes[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
         limit: json['limit'] as int?,
         offset: json['offset'] as int?,
       );
@@ -139,13 +118,9 @@ class MangaListQuery {
     writeNotNull('originalLanguage[]', originalLanguage);
     writeNotNull('excludedOriginalLanguage[]', excludedOriginalLanguage);
     writeNotNull('availableTranslatedLanguage[]', availableTranslatedLanguage);
-    writeNotNull(
-        'publicationDemographic[]',
-        publicationDemographic
-            ?.map((e) => publicationDemographicEnumMap[e])
-            .toList());
-    writeNotNull('contentRating[]',
-        contentRating?.map((e) => contentRatingEnumMap[e]).toList());
+    writeNotNull('publicationDemographic[]',
+        publicationDemographic?.map((e) => publicationDemographicEnumMap[e]).toList());
+    writeNotNull('contentRating[]', contentRating?.map((e) => contentRatingEnumMap[e]).toList());
     writeNotNull('createdAtSince', formatDate(createdAtSince));
     writeNotNull('updatedAtSince', formatDate(updatedAtSince));
     writeNotNull('includes[]', includes);
@@ -190,8 +165,7 @@ class MangaListOrder {
       query += '&order[updatedAt]=${orderModeEnumMap[updatedAt]}';
     }
     if (latestUploadedChapter != null) {
-      query +=
-          '&order[latestUploadedChapter]=${orderModeEnumMap[latestUploadedChapter]}';
+      query += '&order[latestUploadedChapter]=${orderModeEnumMap[latestUploadedChapter]}';
     }
     if (followedCount != null) {
       query += '&order[followedCount]=${orderModeEnumMap[followedCount]}';

@@ -10,8 +10,10 @@ class Me extends StatefulWidget {
 class _MeState extends State<Me> {
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('我的'),
+    return Column(
+      children: [
+        Card(clipBehavior: Clip.antiAlias,)
+      ],
     );
   }
 }

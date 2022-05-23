@@ -3,15 +3,15 @@ import 'package:komikku/dto/manga_dto.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// 子项布局
-class GridItemsLayout extends StatelessWidget {
-  final MangaDto dto;
-  final TitleStyle titleStyle;
-
-  const GridItemsLayout({
+class GridItemLayout extends StatelessWidget {
+  const GridItemLayout({
     Key? key,
     required this.dto,
     required this.titleStyle,
   }) : super(key: key);
+
+  final MangaDto dto;
+  final TitleStyle titleStyle;
 
   @override
   Widget build(BuildContext context) {
@@ -19,11 +19,10 @@ class GridItemsLayout extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       clipBehavior: Clip.antiAlias,
       child: CachedNetworkImage(
-        imageUrl: dto.imageUrl,
+        imageUrl: dto.imageUrl256,
         fit: BoxFit.cover,
         // placeholder: (context, url) => Image.asset('assets/images/image-default.png'),
-        errorWidget: (context, url, error) =>
-            Image.asset('assets/images/image-failed.png'),
+        errorWidget: (context, url, error) => Image.asset('assets/images/image-failed.png'),
         progressIndicatorBuilder: (context, url, progress) => Center(
           child: Transform.scale(
             scale: 0.7,
@@ -48,7 +47,7 @@ class GridItemsLayout extends StatelessWidget {
             clipBehavior: Clip.antiAlias,
             child: GridTileBar(
               title: _TitleText(text: dto.title),
-              subtitle: _TitleText(text: dto.subtitle),
+              subtitle: _TitleText(text: dto.status),
               backgroundColor: Colors.black45,
             ),
           ),
@@ -59,12 +58,11 @@ class GridItemsLayout extends StatelessWidget {
           footer: Material(
             color: Colors.transparent,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
-            ),
+                borderRadius: BorderRadius.vertical(top: Radius.circular(4))),
             clipBehavior: Clip.antiAlias,
             child: GridTileBar(
               title: _TitleText(text: dto.title),
-              subtitle: _TitleText(text: dto.subtitle),
+              subtitle: _TitleText(text: '[${dto.status}]'),
               backgroundColor: Colors.black45,
             ),
           ),

@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+
 import 'package:komikku/dex/dex_settings.dart';
 import 'package:komikku/utils/exception.dart';
 import 'package:komikku/utils/app_settings.dart';
@@ -11,12 +12,14 @@ class HttpUtil {
 
   Dio? dio;
   CancelToken? cancelToken = CancelToken();
+  static const _retries = 3;
 
   HttpUtil._internal() {
     BaseOptions options = BaseOptions(
       baseUrl: serverUrl,
       connectTimeout: 20000,
       receiveTimeout: 20000,
+      sendTimeout: 20000,
       headers: {},
       contentType: 'application/json; charset=utf-8',
       responseType: ResponseType.json,
@@ -37,8 +40,39 @@ class HttpUtil {
       return handler.next(response); // continue
       // 如果你想终止请求并触发一个错误,你可以 reject 一个`DioError`对象,如`handler.reject(error)`，
       // 这样请求将被中止并触发异常，上层catchError会被调用。
-    }, onError: (DioError e, handler) {
+    }, onError: (DioError e, handler) async {
       // Do something with response error
+      var retryCount = 0;
+      if (e.type == DioErrorType.other && retryCount < _retries) {
+        retryCount++;
+        var response = await dio?.request(
+          e.requestOptions.path,
+          data: e.requestOptions.data,
+          queryParameters: e.requestOptions.queryParameters,
+          cancelToken: e.requestOptions.cancelToken,
+          onSendProgress: e.requestOptions.onReceiveProgress,
+          onReceiveProgress: e.requestOptions.onReceiveProgress,
+          options: Options(
+            method: e.requestOptions.method,
+            sendTimeout: e.requestOptions.sendTimeout,
+            receiveTimeout: e.requestOptions.receiveTimeout,
+            extra: e.requestOptions.extra,
+            headers: e.requestOptions.headers,
+            responseType: e.requestOptions.responseType,
+            contentType: e.requestOptions.contentType,
+            validateStatus: e.requestOptions.validateStatus,
+            receiveDataWhenStatusError: e.requestOptions.receiveDataWhenStatusError,
+            followRedirects: e.requestOptions.followRedirects,
+            maxRedirects: e.requestOptions.maxRedirects,
+            requestEncoder: e.requestOptions.requestEncoder,
+            responseDecoder: e.requestOptions.responseDecoder,
+            listFormat: e.requestOptions.listFormat,
+          ),
+        );
+        if (response != null) {
+          return handler.resolve(response);
+        }
+      }
       return handler.next(e); //continue
       // 如果你想完成请求并返回一些自定义数据，可以resolve 一个`Response`,如`handler.resolve(response)`。
       // 这样请求将会被终止，上层then会被调用，then中返回的数据将是你的自定义response.
@@ -68,14 +102,11 @@ class HttpUtil {
   }
 
   /// restful get 操作
-  Future get(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future get(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? getLocalOptions();
       var response = await dio?.get(path,
-          queryParameters: params,
-          options: tokenOptions,
-          cancelToken: cancelToken);
+          queryParameters: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -83,12 +114,11 @@ class HttpUtil {
   }
 
   /// restful post 操作
-  Future post(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future post(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? getLocalOptions();
-      var response = await dio?.post(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
+      var response =
+          await dio?.post(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -96,12 +126,11 @@ class HttpUtil {
   }
 
   /// restful put 操作
-  Future put(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future put(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? getLocalOptions();
-      var response = await dio?.put(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
+      var response =
+          await dio?.put(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -109,12 +138,11 @@ class HttpUtil {
   }
 
   /// restful patch 操作
-  Future patch(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future patch(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? getLocalOptions();
-      var response = await dio?.patch(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
+      var response =
+          await dio?.patch(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -122,12 +150,11 @@ class HttpUtil {
   }
 
   /// restful delete 操作
-  Future delete(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future delete(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? getLocalOptions();
-      var response = await dio?.delete(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
+      var response =
+          await dio?.delete(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -135,14 +162,11 @@ class HttpUtil {
   }
 
   /// restful post form 表单提交操作
-  Future postForm(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future postForm(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? getLocalOptions();
       var response = await dio?.post(path,
-          data: FormData.fromMap(params),
-          options: tokenOptions,
-          cancelToken: cancelToken);
+          data: FormData.fromMap(params), options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -215,8 +239,7 @@ class HttpUtil {
               default:
                 {
                   return HttpException(
-                      code: errCode,
-                      message: error.response?.statusMessage ?? '未知错误');
+                      code: errCode, message: error.response?.statusMessage ?? '未知错误');
                 }
             }
           } on Exception catch (_) {
