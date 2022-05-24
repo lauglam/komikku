@@ -3,6 +3,7 @@ import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/models/login.dart' as auth;
 import 'package:komikku/utils/authentication.dart';
 import 'package:komikku/utils/event_bus.dart';
+import 'package:komikku/utils/toast.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -140,6 +141,9 @@ class _LoginState extends State<Login> {
 
       // 登录成功，退出本页面
       if (!mounted) return;
+      Toast.toast(context, '登录成功');
+
+      // 回退
       Navigator.of(context).pop();
     } catch (e) {
       _showDialog('账号或密码有误');
