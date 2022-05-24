@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/models/login.dart' as auth;
 import 'package:komikku/utils/authentication.dart';
+import 'package:komikku/utils/event_bus.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -49,7 +50,7 @@ class _LoginState extends State<Login> {
             Form(
               key: _formKey,
               child: Container(
-                padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 25),
+                padding: const EdgeInsets.symmetric(horizontal: 25),
                 child: Card(
                   child: Column(
                     children: [
@@ -133,6 +134,9 @@ class _LoginState extends State<Login> {
       var response = await AuthApi.loginAsync(auth.Login(email: _email!, password: _password!));
       await setRefresh(response.token.refresh);
       await setSession(response.token.session);
+
+      // 发送事件
+      bus.emit('login');
 
       // 登录成功，退出本页面
       if (!mounted) return;

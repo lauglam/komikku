@@ -3,7 +3,7 @@ import 'package:komikku/dex/models/enum/result.dart';
 import 'enum/response_type.dart';
 
 /// 页响应
-class PageResponse<T> extends SuccessResponse<T> {
+class PageResponse<T> extends OkResponse<T> {
   int limit;
   int offset;
   int total;
@@ -18,11 +18,11 @@ class PageResponse<T> extends SuccessResponse<T> {
 }
 
 /// 成功响应
-class SuccessResponse<T> {
+class OkResponse<T> {
   ResponseType response;
   T data;
 
-  SuccessResponse({
+  OkResponse({
     required this.response,
     required this.data,
   });

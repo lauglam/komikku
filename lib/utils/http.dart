@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:komikku/dex/apis/auth_api.dart';
-import 'package:komikku/dex/dex_settings.dart';
+import 'package:komikku/dex/settings.dart';
 import 'package:komikku/dex/models/refresh_token.dart';
 import 'package:komikku/utils/authentication.dart';
 

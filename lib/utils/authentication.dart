@@ -12,15 +12,36 @@ Future<bool> get isLogin async {
   return await session != null || await refresh != null;
 }
 
-/// 设置刷新令牌
-Future<void> setRefresh(String token) async {
-  var file = await _localFile;
-  var jsonString = jsonEncode(Refresh(
-    token: token,
-    expire: DateTime.now().add(_refreshExpire),
-  ));
+/// 获取会话令牌
+Future<String?> get session async {
+  final prefs = await SharedPreferences.getInstance();
+  final list = prefs.getStringList('session');
+  if (list == null) return null;
 
-  file.writeAsString(jsonString);
+  if (DateTime.now().isAfter(DateTime.parse(list[0]))) {
+    await prefs.remove('session');
+    return null;
+  }
+
+  return list[1];
+}
+
+/// 获取刷新令牌
+Future<String?> get refresh async {
+  var file = await _localFile;
+  // 不存在时返回 null
+  if (!await file.exists()) return null;
+
+  var jsonString = await file.readAsString();
+  if (jsonString.isEmpty) return null;
+
+  var refreshMap = jsonDecode(jsonString);
+  // 过期返回null
+  if (DateTime.now().isAfter(DateTime.parse(refreshMap['expire']))) {
+    return null;
+  }
+
+  return refreshMap['token'];
 }
 
 /// 设置会话令牌
@@ -34,33 +55,27 @@ Future<bool> setSession(String token) async {
   return result;
 }
 
-/// 获取刷新令牌
-Future<String?> get refresh async {
+/// 设置刷新令牌
+Future<void> setRefresh(String token) async {
   var file = await _localFile;
-  var jsonString = await file.readAsString();
-  if (jsonString.isEmpty) return null;
+  var jsonString = jsonEncode(Refresh(
+    token: token,
+    expire: DateTime.now().add(_refreshExpire),
+  ));
 
-  var refreshMap = jsonDecode(jsonString);
-  // 过期返回null
-  if (DateTime.now().isAfter(DateTime.parse(refreshMap['expire']))) {
-    return null;
-  }
-
-  return refreshMap['token'];
+  file.writeAsString(jsonString);
 }
 
-/// 获取会话令牌
-Future<String?> get session async {
+/// 移除会话令牌
+Future<void> removeSession() async {
   final prefs = await SharedPreferences.getInstance();
-  final list = prefs.getStringList('session');
-  if (list == null) return null;
+  await prefs.remove('session');
+}
 
-  if (DateTime.now().isAfter(DateTime.parse(list[0]))) {
-    await prefs.remove('session');
-    return null;
-  }
-
-  return list[1];
+/// 移除会话令牌
+Future<void> removeRefresh() async {
+  var file = await _localFile;
+  if (await file.exists()) file.delete();
 }
 
 /// 本地文件

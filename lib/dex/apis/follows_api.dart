@@ -1,4 +1,4 @@
-import 'package:komikku/dex/apis/api_helper.dart';
+import 'package:komikku/dex/util.dart';
 import 'package:komikku/dex/models/manga_list.dart';
 import 'package:komikku/dex/models/query/usual_query.dart';
 import 'package:komikku/utils/http.dart';

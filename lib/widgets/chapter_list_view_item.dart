@@ -3,7 +3,8 @@ import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/utils/helper.dart';
 
 class ChapterListViewItem extends StatelessWidget {
-  const ChapterListViewItem({Key? key, required this.dto, required this.imageUrl}) : super(key: key);
+  const ChapterListViewItem({Key? key, required this.dto, required this.imageUrl})
+      : super(key: key);
   final ChapterDto dto;
   final String imageUrl;
 
@@ -20,7 +21,7 @@ class ChapterListViewItem extends StatelessWidget {
     return Card(
       elevation: 0.5,
       clipBehavior: Clip.antiAlias,
-      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 6),
+      margin: const EdgeInsets.symmetric(vertical: 6),
       child: ListTile(
         title: Text(
           title,

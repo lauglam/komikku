@@ -5,6 +5,7 @@ import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dex/models/query/usual_query.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/utils/authentication.dart';
+import 'package:komikku/utils/event_bus.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/manga_grid_view_item.dart';
@@ -23,6 +24,15 @@ class _SubscribesState extends State<Subscribes> {
   final _cacheMangaList = <MangaDto>[];
   int mangaLimit = 40;
   int mangaOffset = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // 订阅事件
+    bus.on('login', (arg) => setState(() {}));
+    bus.on('logout', (arg) => setState(() {}));
+  }
 
   @override
   void dispose() {

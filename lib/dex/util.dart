@@ -1,3 +1,4 @@
+/// 建造请求Uri
 String buildUri({
   required String path,
   Map<String, dynamic>? queryParameters,

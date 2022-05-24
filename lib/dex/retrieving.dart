@@ -1,4 +1,4 @@
-import 'package:komikku/dex/dex_settings.dart';
+import 'package:komikku/dex/settings.dart';
 
 class Retrieving {
   /// 获取封面艺术原图

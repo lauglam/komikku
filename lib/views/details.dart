@@ -60,7 +60,7 @@ class _DetailsState extends State<Details> {
               imageUrl: widget.dto.imageUrlOriginal,
               fit: BoxFit.fitWidth,
               width: double.infinity,
-              height: 200,
+              height: 220,
               errorWidget: (context, url, progress) =>
                   Image.asset('assets/images/image-failed.png'),
             ),
