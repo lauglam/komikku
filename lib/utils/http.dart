@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart';
+import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/dex_settings.dart';
+import 'package:komikku/dex/models/refresh_token.dart';
 import 'package:komikku/utils/authentication.dart';
 
 class HttpUtil {
@@ -89,8 +91,18 @@ class HttpUtil {
   /// 读取本地配置
   Future<Options> getLocalOptions() async {
     Options options = Options();
-    String? token = await session;
-    if (token != null) {
+
+    // 查看是否登录
+    if (await isLogin) {
+      var token = await session;
+
+      // session 为空的情况，请求刷新session
+      if (token == null) {
+        var response = await AuthApi.refreshAsync(RefreshToken(token: (await refresh)!));
+        token = response.token.session;
+        await setSession(token);
+      }
+
       options = Options(headers: {
         'Authorization': 'Bearer $token',
       });

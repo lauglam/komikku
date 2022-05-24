@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/query/content_rating.dart';
-import 'package:komikku/dex/models/query/order_mode.dart';
-import 'package:komikku/dex/models/query/date_helper.dart';
+import 'package:komikku/dex/models/enum/content_rating.dart';
+import 'package:komikku/dex/models/enum/order_mode.dart';
+import 'package:komikku/dex/models/util.dart';
 
 /// ChapterList Query
 class ChapterListQuery {

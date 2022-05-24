@@ -6,6 +6,7 @@ import 'package:komikku/dex/models/query/manga_feed_query.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/views/reading.dart';
+import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/chapter_list_view_item.dart';
 import 'package:komikku/widgets/tags_wrap.dart';
 import 'package:grouped_list/grouped_list.dart';
@@ -88,14 +89,9 @@ class _DetailsState extends State<Details> {
             FutureBuilder<List<ChapterDto>>(
               future: _getMangaFeed(),
               builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.none) {
-                  return const Center(child: Text('无数据'));
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('出现错误${snapshot.error}'));
-                } else if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else {
-                  return GroupedListView<ChapterDto, String>(
+                return BuilderChecker(
+                  snapshot: snapshot,
+                  widget: () => GroupedListView<ChapterDto, String>(
                     padding: const EdgeInsets.all(15),
                     shrinkWrap: true,
                     elements: snapshot.data!,
@@ -122,8 +118,8 @@ class _DetailsState extends State<Details> {
                       );
                     },
                     order: GroupedListOrder.DESC,
-                  );
-                }
+                  ),
+                );
               },
             ),
           ],

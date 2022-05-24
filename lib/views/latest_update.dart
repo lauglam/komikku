@@ -5,6 +5,7 @@ import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/views/details.dart';
+import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/manga_grid_view_item.dart';
 
 class LatestUpdate extends StatefulWidget {
@@ -29,14 +30,11 @@ class _LatestUpdateState extends State<LatestUpdate> {
     super.initState();
     sinkStream();
 
+    /// 监听滚动控制器
     _scrollController.addListener(() {
-      if (_scrollController.position.atEdge) {
-        if (_scrollController.position.pixels == 0) {
-          // on top
-        } else {
-          // on bottom
-          sinkStream();
-        }
+      if (_scrollController.position.atEdge && _scrollController.position.pixels != 0) {
+        // On bottom
+        sinkStream();
       }
     });
   }
@@ -45,8 +43,10 @@ class _LatestUpdateState extends State<LatestUpdate> {
   void dispose() {
     super.dispose();
     _streamController.close();
+    _scrollController.dispose();
   }
 
+  /// 推入流中
   sinkStream({bool refresh = false}) async {
     if (refresh) {
       _cacheMangaList.clear();
@@ -77,14 +77,9 @@ class _LatestUpdateState extends State<LatestUpdate> {
     return StreamBuilder<List<MangaDto>>(
       stream: _streamController.stream,
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.none) {
-          return const Center(child: Text('无数据'));
-        } else if (snapshot.hasError) {
-          return Center(child: Text('出现错误${snapshot.error}'));
-        } else if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return RefreshIndicator(
+        return BuilderChecker(
+          snapshot: snapshot,
+          widget: () => RefreshIndicator(
             onRefresh: () async {
               await sinkStream(refresh: true);
             },
@@ -118,8 +113,8 @@ class _LatestUpdateState extends State<LatestUpdate> {
                 );
               },
             ),
-          );
-        }
+          ),
+        );
       },
     );
   }

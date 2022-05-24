@@ -2,8 +2,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/enum/state.dart';
 import 'package:komikku/dex/models/enum/status.dart';
 import 'package:komikku/dex/models/localized_string.dart';
-import 'package:komikku/dex/models/query/content_rating.dart';
-import 'package:komikku/dex/models/query/publication_demographic.dart';
+import 'package:komikku/dex/models/enum/content_rating.dart';
+import 'package:komikku/dex/models/enum/publication_demographic.dart';
 import 'package:komikku/dex/models/tag.dart';
 
 class MangaAttributes {

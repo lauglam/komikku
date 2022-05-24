@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis/at_home_api.dart';
 import 'package:komikku/dex/retrieving.dart';
+import 'package:komikku/widgets/builder_checker.dart';
 
 class Reading extends StatefulWidget {
   const Reading({Key? key, required this.id}) : super(key: key);
@@ -21,14 +22,9 @@ class _ReadingState extends State<Reading> {
       body: FutureBuilder<List<String>>(
         future: _getChapterPages(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.none) {
-            return const Center(child: Text('无数据'));
-          } else if (snapshot.hasError) {
-            return Center(child: Text('出现错误${snapshot.error}'));
-          } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          } else {
-            return ListView.builder(
+          return BuilderChecker(
+            snapshot: snapshot,
+            widget: () => ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 return CachedNetworkImage(
@@ -50,8 +46,8 @@ class _ReadingState extends State<Reading> {
                       Image.asset('assets/images/image-failed.png'),
                 );
               },
-            );
-          }
+            ),
+          );
         },
       ),
     );
