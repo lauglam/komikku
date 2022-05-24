@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:komikku/dex/apis/auth_api.dart';
+import 'package:komikku/dex/models/login.dart' as auth;
+import 'package:komikku/utils/authentication.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -115,7 +118,7 @@ class _LoginState extends State<Login> {
   }
 
   /// 登录
-  _login() {
+  _login() async {
     _formKey.currentState?.save();
     if (_email?.isEmpty ?? true) {
       _showDialog('账号不能为空');
@@ -123,6 +126,19 @@ class _LoginState extends State<Login> {
     }
     if (_password?.isEmpty ?? true) {
       _showDialog('密码不能为空');
+      return;
+    }
+
+    try {
+      var response = await AuthApi.loginAsync(auth.Login(email: _email!, password: _password!));
+      await setRefresh(response.token.refresh);
+      await setSession(response.token.session);
+
+      // 登录成功，退出本页面
+      if (!mounted) return;
+      Navigator.of(context).pop();
+    } catch (e) {
+      _showDialog('账号或密码有误');
       return;
     }
   }

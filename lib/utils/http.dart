@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:komikku/dex/dex_settings.dart';
-import 'package:komikku/utils/app_settings.dart';
-import 'package:komikku/utils/storage.dart';
+import 'package:komikku/utils/authentication.dart';
 
 class HttpUtil {
   static final HttpUtil _instance = HttpUtil._internal();
@@ -88,9 +87,9 @@ class HttpUtil {
   }
 
   /// 读取本地配置
-  Options getLocalOptions() {
+  Future<Options> getLocalOptions() async {
     Options options = Options();
-    String? token = LocalStorage().get(storageSessionTokenKey);
+    String? token = await session;
     if (token != null) {
       options = Options(headers: {
         'Authorization': 'Bearer $token',
@@ -102,7 +101,7 @@ class HttpUtil {
   /// restful get 操作
   Future get(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
+      var tokenOptions = options ?? await getLocalOptions();
       var response = await dio?.get(path,
           queryParameters: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
@@ -114,7 +113,7 @@ class HttpUtil {
   /// restful post 操作
   Future post(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
+      var tokenOptions = options ?? await getLocalOptions();
       var response =
           await dio?.post(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
@@ -126,7 +125,7 @@ class HttpUtil {
   /// restful put 操作
   Future put(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
+      var tokenOptions = options ?? await getLocalOptions();
       var response =
           await dio?.put(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
@@ -138,7 +137,7 @@ class HttpUtil {
   /// restful patch 操作
   Future patch(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
+      var tokenOptions = options ?? await getLocalOptions();
       var response =
           await dio?.patch(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
@@ -150,7 +149,7 @@ class HttpUtil {
   /// restful delete 操作
   Future delete(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
+      var tokenOptions = options ?? await getLocalOptions();
       var response =
           await dio?.delete(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
@@ -162,7 +161,7 @@ class HttpUtil {
   /// restful post form 表单提交操作
   Future postForm(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
-      var tokenOptions = options ?? getLocalOptions();
+      var tokenOptions = options ?? await getLocalOptions();
       var response = await dio?.post(path,
           data: FormData.fromMap(params), options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
