@@ -38,6 +38,7 @@ dependencies:
   collection: ^1.16.0
   grouped_list: ^5.0.1
   path_provider: ^2.0.10
+  bot_toast: ^4.0.2
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

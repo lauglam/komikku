@@ -1,124 +1,169 @@
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 
-class Toast {
-  static OverlayEntry? _overlayEntry;
-  static bool _showing = false;
-  static DateTime? _startedTime;
-  static String? _message;
-  static int? _showTime;
-  static Color? _backgroundColor;
-  static Color? _textColor;
-  static double? _textSize;
-  static ToastPosition? _position;
-  static double? _horizontal;
-  static double? _vertical;
+CancelFunc showText({
+  required String text,
+  WrapAnimation? wrapAnimation,
+  WrapAnimation? wrapToastAnimation,
+  Color backgroundColor = Colors.transparent,
+  Color contentColor = Colors.black45,
+  BorderRadiusGeometry borderRadius = const BorderRadius.all(Radius.circular(4)),
+  TextStyle textStyle = const TextStyle(fontSize: 14, color: Colors.white),
+  AlignmentGeometry? align = const Alignment(0, 0.8),
+  EdgeInsetsGeometry contentPadding = const EdgeInsets.symmetric(vertical: 7, horizontal: 14),
+  Duration? duration = const Duration(seconds: 2),
+  Duration? animationDuration,
+  Duration? animationReverseDuration,
+  BackButtonBehavior? backButtonBehavior,
+  VoidCallback? onClose,
+  bool enableKeyboardSafeArea = true,
+  bool clickClose = false,
+  bool crossPage = true,
+  bool onlyOne = true,
+}) {
+  return BotToast.showText(
+    text: text,
+    wrapAnimation: wrapAnimation,
+    wrapToastAnimation: wrapToastAnimation,
+    backgroundColor: backgroundColor,
+    contentColor: contentColor,
+    borderRadius: borderRadius,
+    textStyle: textStyle,
+    align: align,
+    contentPadding: contentPadding,
+    duration: duration,
+    animationDuration: animationDuration,
+    animationReverseDuration: animationReverseDuration,
+    backButtonBehavior: backButtonBehavior,
+    onClose: onClose,
+    enableKeyboardSafeArea: enableKeyboardSafeArea,
+    clickClose: clickClose,
+    crossPage: crossPage,
+    onlyOne: onlyOne,
+  );
+}
 
-  static void toast(
-    BuildContext context,
-    String message, {
-    int showTime = 2000,
-    Color backgroundColor = Colors.black45,
-    Color textColor = Colors.white,
-    double textSize = 14,
-    ToastPosition position = ToastPosition.bottom,
-    double horizontal = 20,
-    double vertical = 10,
-  }) async {
-    _message = message;
-    _startedTime = DateTime.now();
-    _showTime = showTime;
-    _backgroundColor = backgroundColor;
-    _textColor = textColor;
-    _textSize = textSize;
-    _position = position;
-    _horizontal = horizontal;
-    _vertical = vertical;
-
-    // 获取OverlayState
-    var overlayState = Overlay.of(context);
-
-    _showing = true;
-    _overlayEntry ??= OverlayEntry(
-      builder: (context) => Positioned(
-        top: _calPosition(context),
-        child: Container(
-          alignment: Alignment.center,
-          width: MediaQuery.of(context).size.width,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: AnimatedOpacity(
-              opacity: _showing ? 1 : 0,
-              duration:
-                  _showing ? const Duration(milliseconds: 100) : const Duration(milliseconds: 400),
-              child: Center(
-                child: Card(
-                  color: _backgroundColor,
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: _horizontal!,
-                      vertical: _vertical!,
-                    ),
-                    child: Text(
-                      _message!,
-                      style: TextStyle(
-                        fontSize: _textSize,
-                        color: _textColor,
-                      ),
-                    ),
+void showAlertDialog({
+  required String title,
+  String confirmText = '确认',
+  String cancelText = '取消',
+  Color confirmTextColor = Colors.orange,
+  Color cancelTextColor = Colors.black45,
+  VoidCallback? onConfirm,
+  VoidCallback? onCancel,
+  VoidCallback? backgroundReturn,
+  BackButtonBehavior backButtonBehavior = BackButtonBehavior.close,
+}) {
+  BotToast.showAnimationWidget(
+      clickClose: false,
+      allowClick: false,
+      onlyOne: true,
+      crossPage: true,
+      backButtonBehavior: backButtonBehavior,
+      wrapToastAnimation: (controller, cancel, child) => Stack(
+            children: <Widget>[
+              GestureDetector(
+                onTap: () {
+                  cancel();
+                  backgroundReturn?.call();
+                },
+                //The DecoratedBox here is very important,he will fill the entire parent component
+                child: AnimatedBuilder(
+                  builder: (_, child) => Opacity(
+                    opacity: controller.value,
+                    child: child,
+                  ),
+                  animation: controller,
+                  child: const DecoratedBox(
+                    decoration: BoxDecoration(color: Colors.black26),
+                    child: SizedBox.expand(),
                   ),
                 ),
               ),
-            ),
+              _CustomOffsetAnimation(
+                controller: controller,
+                child: child,
+              )
+            ],
           ),
-        ),
-      ),
-    );
-
-    assert(overlayState != null);
-    overlayState?.insert(_overlayEntry!);
-
-    // 重新绘制UI
-    _overlayEntry!.markNeedsBuild();
-
-    // 等待
-    await Future.delayed(Duration(milliseconds: _showTime!));
-
-    // 2秒后，是否应该消失
-    if (DateTime.now().difference(_startedTime!).inMilliseconds > _showTime!) {
-      _showing = false;
-      _overlayEntry!.markNeedsBuild();
-      await Future.delayed(const Duration(milliseconds: 400));
-      _overlayEntry!.remove();
-      _overlayEntry = null;
-    }
-  }
-
-  /// toast位置
-  static _calPosition(context) {
-    double val;
-    switch (_position!) {
-      case ToastPosition.top:
-        val = MediaQuery.of(context).size.height * 1 / 4;
-        break;
-      case ToastPosition.center:
-        val = MediaQuery.of(context).size.height * 2 / 5;
-        break;
-      case ToastPosition.bottom:
-        val = MediaQuery.of(context).size.height * 3 / 4;
-        break;
-    }
-    return val;
-  }
+      toastBuilder: (cancelFunc) => AlertDialog(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+            title: Text(title),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  cancelFunc();
+                  onCancel?.call();
+                },
+                child: Text(
+                  cancelText,
+                  style: TextStyle(color: cancelTextColor),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  cancelFunc();
+                  onConfirm?.call();
+                },
+                child: Text(
+                  confirmText,
+                  style: TextStyle(color: confirmTextColor),
+                ),
+              ),
+            ],
+          ),
+      animationDuration: const Duration(milliseconds: 300));
 }
 
-/// 位置
-enum ToastPosition {
-  /// 上方
-  top,
+class _CustomOffsetAnimation extends StatefulWidget {
+  const _CustomOffsetAnimation({
+    Key? key,
+    required this.controller,
+    required this.child,
+  }) : super(key: key);
 
-  /// 中间
-  center,
+  final AnimationController controller;
+  final Widget child;
 
-  /// 底部
-  bottom,
+  @override
+  State<_CustomOffsetAnimation> createState() => _CustomOffsetAnimationState();
+}
+
+class _CustomOffsetAnimationState extends State<_CustomOffsetAnimation> {
+  Tween<Offset>? tweenOffset;
+  Tween<double>? tweenScale;
+
+  Animation<double>? animation;
+
+  @override
+  void initState() {
+    tweenOffset = Tween<Offset>(
+      begin: const Offset(0.0, 0.8),
+      end: Offset.zero,
+    );
+    tweenScale = Tween<double>(begin: 0.3, end: 1.0);
+    animation = CurvedAnimation(parent: widget.controller, curve: Curves.decelerate);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: widget.controller,
+      builder: (context, child) {
+        return FractionalTranslation(
+            translation: tweenOffset!.evaluate(animation!),
+            child: ClipRect(
+              child: Transform.scale(
+                scale: tweenScale!.evaluate(animation!),
+                child: Opacity(
+                  opacity: animation!.value,
+                  child: child,
+                ),
+              ),
+            ));
+      },
+      child: widget.child,
+    );
+  }
 }

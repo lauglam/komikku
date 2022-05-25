@@ -30,8 +30,9 @@ class _SubscribesState extends State<Subscribes> {
     super.initState();
 
     // 订阅事件
-    bus.on('login', (arg) => setState(() => clean()));
-    bus.on('logout', (arg) => setState(() => clean()));
+    bus.on('login', (arg) => setState(() => _clear()));
+    bus.on('logout', (arg) => setState(() => _clear()));
+    bus.on('refresh_subscribes', (arg) => setState(() => _clear()));
   }
 
   @override
@@ -42,8 +43,8 @@ class _SubscribesState extends State<Subscribes> {
   }
 
   /// 推入流中
-  Future<void> sink({bool refresh = false}) async {
-    if (refresh) clean();
+  Future<void> _addMangaListToSink({bool refresh = false}) async {
+    if (refresh) _clear();
 
     _cacheMangaList.addAll(await _getUserFollowedMangaList());
     _streamController.sink.add(_cacheMangaList);
@@ -56,12 +57,12 @@ class _SubscribesState extends State<Subscribes> {
   void listener() {
     if (_scrollController.position.atEdge && _scrollController.position.pixels != 0) {
       // on bottom
-      sink();
+      _addMangaListToSink();
     }
   }
 
   /// 清理(登录、登出、刷新时使用)
-  void clean() {
+  void _clear() {
     _cacheMangaList.clear();
     mangaOffset = 0;
   }
@@ -74,14 +75,11 @@ class _SubscribesState extends State<Subscribes> {
         return BuilderChecker(
           snapshot: snapshot,
           widget: () {
-            if (!snapshot.data!) {
-              // 未登录
-              return const Center(child: Text('请先登录'));
-            }
+            // 未登录
+            if (!snapshot.data!) return const Center(child: Text('请先登录'));
 
             // 加载数据
-            sink();
-
+            _addMangaListToSink();
             // 监听滚动控制器
             _scrollController.removeListener(listener);
             _scrollController.addListener(listener);
@@ -93,9 +91,11 @@ class _SubscribesState extends State<Subscribes> {
                   snapshot: snapshot,
                   widget: () => RefreshIndicator(
                     onRefresh: () async {
-                      await sink(refresh: true);
+                      await _addMangaListToSink(refresh: true);
                     },
                     child: GridView.builder(
+                      // 永远滚动，即使在不满屏幕的情况下
+                      physics: const AlwaysScrollableScrollPhysics(),
                       padding: const EdgeInsets.all(8),
                       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 3,

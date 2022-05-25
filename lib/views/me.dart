@@ -16,6 +16,8 @@ class Me extends StatefulWidget {
 }
 
 class _MeState extends State<Me> {
+  final _loginFlag = ValueNotifier<bool>(false);
+
   @override
   initState() {
     super.initState();
@@ -40,6 +42,7 @@ class _MeState extends State<Me> {
             FutureBuilder<String?>(
               future: _getUserDetails(),
               builder: (context, snapshot) {
+                _loginFlag.value = snapshot.data != null;
                 return BuilderChecker(
                   snapshot: snapshot,
                   widget: () {
@@ -64,31 +67,48 @@ class _MeState extends State<Me> {
                                     ),
                                     minimumSize: MaterialStateProperty.all(const Size(200, 35)),
                                   ),
-                                  child: Text(
-                                    snapshot.data == null ? '登录' : '退出登录',
-                                    style: const TextStyle(fontSize: 15),
+                                  child: ValueListenableBuilder(
+                                    valueListenable: _loginFlag,
+                                    builder: (context, value, child) {
+                                      return Text(
+                                        _loginFlag.value ? '退出登录' : '登录',
+                                        style: const TextStyle(fontSize: 15),
+                                      );
+                                    },
                                   ),
                                   onPressed: () {
                                     // 未登录
-                                    if (snapshot.data == null) {
+                                    if (!_loginFlag.value) {
                                       Navigator.pushNamed(context, '/login');
                                       return;
                                     }
-                                    _logout();
+
+                                    showAlertDialog(
+                                        title: '是否退出登录',
+                                        onConfirm: () {
+                                          _logout();
+                                          _loginFlag.value = !_loginFlag.value;
+                                        });
                                   },
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.arrow_forward_ios_rounded),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    // TODO: 去往个人资料
+                                    showText(text: '功能暂未上线，敬请期待');
+                                  },
                                 ),
                               ],
                             ),
                             // Username
                             Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10),
-                              child: Text(
-                                snapshot.data == null ? '未登录' : snapshot.data!,
-                                style: const TextStyle(fontSize: 16),
+                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                              child: ValueListenableBuilder(
+                                valueListenable: _loginFlag,
+                                builder: (context, value, child) => Text(
+                                  _loginFlag.value ? snapshot.data! : '未登录',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
                               ),
                             ),
                           ],
@@ -122,9 +142,6 @@ class _MeState extends State<Me> {
     await AuthApi.logoutAsync();
     // 发出事件
     bus.emit('logout');
-    setState(() {});
-
-    if (!mounted) return;
-    Toast.toast(context, '已退出登录');
+    showText(text: '已退出登录');
   }
 }

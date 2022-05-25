@@ -1,3 +1,4 @@
+import 'package:komikku/dex/models/response.dart';
 import 'package:komikku/dex/util.dart';
 import 'package:komikku/dex/models/manga_list.dart';
 import 'package:komikku/dex/models/query/usual_query.dart';
@@ -14,8 +15,8 @@ class FollowsApi {
   }
 
   /// 检测用户是否订阅某本漫画
-  static Future<MangaListResponse> checkUserFollowsMangaAsync(String id) async {
+  static Future<Response> checkUserFollowsMangaAsync(String id) async {
     var response = await HttpUtil().get('/user/follows/manga/$id');
-    return MangaListResponse.fromJson(response);
+    return Response.fromJson(response);
   }
 }

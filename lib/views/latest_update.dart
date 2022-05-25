@@ -84,6 +84,8 @@ class _LatestUpdateState extends State<LatestUpdate> {
               await sinkStream(refresh: true);
             },
             child: GridView.builder(
+              // 永远滚动，即使在不满屏幕的情况下
+              physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.all(8),
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,

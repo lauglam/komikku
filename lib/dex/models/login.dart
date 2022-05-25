@@ -14,6 +14,7 @@ class LoginResponse extends Response {
         result: $enumDecode(resultEnumMap, json['result']),
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'token': token.toJson(),
         'result': resultEnumMap[result],

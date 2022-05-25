@@ -28,9 +28,9 @@ class _ReadingState extends State<Reading> {
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 return CachedNetworkImage(
-                  fadeOutDuration: const Duration(milliseconds: 0),
                   imageUrl: snapshot.data![index],
                   fit: BoxFit.fitWidth,
+                  fadeOutDuration: const Duration(milliseconds: 1),
                   progressIndicatorBuilder: (context, url, progress) {
                     return SizedBox(
                       height: MediaQuery.of(context).size.height * 0.5,

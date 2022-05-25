@@ -1,3 +1,4 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/enum/result.dart';
 
 import 'enum/response_type.dart';
@@ -35,4 +36,12 @@ class Response {
   Response({
     required this.result,
   });
+
+  factory Response.fromJson(Map<String, dynamic> json) => Response(
+        result: $enumDecode(resultEnumMap, json['result']),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'result': resultEnumMap[result],
+      };
 }

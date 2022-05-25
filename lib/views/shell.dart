@@ -58,7 +58,7 @@ class _ShellState extends State<Shell> {
       onWillPop: () async {
         if (lastPop == null || DateTime.now().difference(lastPop!) > const Duration(seconds: 2)) {
           lastPop = DateTime.now();
-          Toast.toast(context, '再按一次退出');
+          showText(text: '再按一次退出');
           return false;
         }
         return true;

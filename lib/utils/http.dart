@@ -223,7 +223,7 @@ class HttpUtil {
                 }
               case 404:
                 {
-                  return HttpException(code: errCode, message: '无法连接服务器');
+                  return HttpException(code: errCode, message: '无法找到数据');
                 }
               case 405:
                 {

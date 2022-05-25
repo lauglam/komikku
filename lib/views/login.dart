@@ -4,6 +4,7 @@ import 'package:komikku/dex/models/login.dart' as auth;
 import 'package:komikku/utils/authentication.dart';
 import 'package:komikku/utils/event_bus.dart';
 import 'package:komikku/utils/toast.dart';
+import 'package:komikku/widgets/delay_pop.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -14,106 +15,114 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
+
+  // 是否正在执行关键任务
+  bool _isBusy = false;
   String? _email;
   String? _password;
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: Builder(
-          builder: (context) {
-            return IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios_rounded,
-                color: Colors.black45,
-              ),
-              onPressed: () => Navigator.pop(context),
-            );
-          },
+    return DelayPop(
+      flag: _isBusy,
+      duration: const Duration(seconds: 1),
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Builder(
+            builder: (context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Colors.black45,
+                ),
+                onPressed: () => Navigator.pop(context),
+              );
+            },
+          ),
         ),
-      ),
 
-      /// 必须使用SingleChildScrollView包裹，防止键盘显示时底部"Bottom Overflowed"
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            /// Header image
-            Container(
-              padding: const EdgeInsets.only(top: 30),
-              height: 220,
-              child: Image.asset('assets/images/login-cartoon.png'),
-            ),
+        /// 必须使用SingleChildScrollView包裹，防止键盘显示时底部"Bottom Overflowed"
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              /// Header image
+              Container(
+                padding: const EdgeInsets.only(top: 30),
+                height: 220,
+                child: Image.asset('assets/images/login-cartoon.png'),
+              ),
 
-            /// Input form
-            Form(
-              key: _formKey,
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Card(
-                  child: Column(
-                    children: [
-                      /// Email
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
-                        child: TextFormField(
-                          maxLines: 1,
-                          keyboardType: TextInputType.emailAddress,
-                          autofocus: false,
-                          style: const TextStyle(fontSize: 15),
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '请输入账号',
-                            icon: Icon(
-                              Icons.email,
-                              color: Colors.grey,
+              /// Input form
+              Form(
+                key: _formKey,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25),
+                  child: Card(
+                    child: Column(
+                      children: [
+                        /// Email
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
+                          child: TextFormField(
+                            maxLines: 1,
+                            keyboardType: TextInputType.emailAddress,
+                            autofocus: false,
+                            style: const TextStyle(fontSize: 15),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: '请输入账号',
+                              icon: Icon(
+                                Icons.email,
+                                color: Colors.grey,
+                              ),
                             ),
+                            onSaved: (value) => _email = value?.trim(),
                           ),
-                          onSaved: (value) => _email = value?.trim(),
                         ),
-                      ),
-                      Divider(height: 0.5, indent: 16, color: Colors.grey[300]),
+                        Divider(height: 0.5, indent: 16, color: Colors.grey[300]),
 
-                      /// Password
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
-                        child: TextFormField(
-                          maxLines: 1,
-                          obscureText: true,
-                          autofocus: false,
-                          style: const TextStyle(fontSize: 15),
-                          decoration: const InputDecoration(
-                            border: InputBorder.none,
-                            hintText: '请输入密码',
-                            icon: Icon(Icons.lock, color: Colors.grey),
+                        /// Password
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
+                          child: TextFormField(
+                            maxLines: 1,
+                            obscureText: true,
+                            autofocus: false,
+                            style: const TextStyle(fontSize: 15),
+                            decoration: const InputDecoration(
+                              border: InputBorder.none,
+                              hintText: '请输入密码',
+                              icon: Icon(Icons.lock, color: Colors.grey),
+                            ),
+                            onSaved: (value) => _password = value?.trim(),
                           ),
-                          onSaved: (value) => _password = value?.trim(),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
-            ),
 
-            /// Login button
-            Container(
-              padding: const EdgeInsets.fromLTRB(35, 30, 35, 0),
-              child: OutlinedButton(
-                style: ButtonStyle(
-                  shape: MaterialStateProperty.all(
-                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              /// Login button
+              Padding(
+                padding: const EdgeInsets.fromLTRB(35, 30, 35, 0),
+                child: OutlinedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(
+                      RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    ),
+                    side:
+                        MaterialStateProperty.all(const BorderSide(color: Colors.orange, width: 1)),
+                    minimumSize: MaterialStateProperty.all(const Size(300, 35)),
                   ),
-                  side: MaterialStateProperty.all(const BorderSide(color: Colors.orange, width: 1)),
-                  minimumSize: MaterialStateProperty.all(const Size(300, 35)),
+                  onPressed: () => _login(),
+                  child: const Text('登录', style: TextStyle(color: Colors.orange)),
                 ),
-                onPressed: () => _login(),
-                child: const Text('登录', style: TextStyle(color: Colors.orange)),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -132,6 +141,7 @@ class _LoginState extends State<Login> {
     }
 
     try {
+      _isBusy = true;
       var response = await AuthApi.loginAsync(auth.Login(email: _email!, password: _password!));
       await setRefresh(response.token.refresh);
       await setSession(response.token.session);
@@ -140,14 +150,15 @@ class _LoginState extends State<Login> {
       bus.emit('login');
 
       // 登录成功，退出本页面
-      if (!mounted) return;
-      Toast.toast(context, '登录成功');
+      showText(text: '登录成功');
 
       // 回退
-      Navigator.of(context).pop();
+      if (mounted) Navigator.of(context).pop();
     } catch (e) {
-      _showDialog('账号或密码有误');
+      showText(text: '账号或密码有误');
       return;
+    } finally {
+      _isBusy = false;
     }
   }
 
