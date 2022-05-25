@@ -30,8 +30,8 @@ class _SubscribesState extends State<Subscribes> {
     super.initState();
 
     // 订阅事件
-    bus.on('login', (arg) => setState(() {}));
-    bus.on('logout', (arg) => setState(() {}));
+    bus.on('login', (arg) => setState(() => clean()));
+    bus.on('logout', (arg) => setState(() => clean()));
   }
 
   @override
@@ -42,11 +42,8 @@ class _SubscribesState extends State<Subscribes> {
   }
 
   /// 推入流中
-  sinkStream({bool refresh = false}) async {
-    if (refresh) {
-      _cacheMangaList.clear();
-      mangaOffset = 0;
-    }
+  Future<void> sink({bool refresh = false}) async {
+    if (refresh) clean();
 
     _cacheMangaList.addAll(await _getUserFollowedMangaList());
     _streamController.sink.add(_cacheMangaList);
@@ -59,8 +56,14 @@ class _SubscribesState extends State<Subscribes> {
   void listener() {
     if (_scrollController.position.atEdge && _scrollController.position.pixels != 0) {
       // on bottom
-      sinkStream();
+      sink();
     }
+  }
+
+  /// 清理(登录、登出、刷新时使用)
+  void clean() {
+    _cacheMangaList.clear();
+    mangaOffset = 0;
   }
 
   @override
@@ -77,7 +80,7 @@ class _SubscribesState extends State<Subscribes> {
             }
 
             // 加载数据
-            sinkStream();
+            sink();
 
             // 监听滚动控制器
             _scrollController.removeListener(listener);
@@ -90,7 +93,7 @@ class _SubscribesState extends State<Subscribes> {
                   snapshot: snapshot,
                   widget: () => RefreshIndicator(
                     onRefresh: () async {
-                      await sinkStream(refresh: true);
+                      await sink(refresh: true);
                     },
                     child: GridView.builder(
                       padding: const EdgeInsets.all(8),

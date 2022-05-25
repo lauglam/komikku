@@ -5,6 +5,7 @@ import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/apis/user_api.dart';
 import 'package:komikku/utils/authentication.dart';
 import 'package:komikku/utils/event_bus.dart';
+import 'package:komikku/utils/toast.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 
 class Me extends StatefulWidget {
@@ -54,7 +55,7 @@ class _MeState extends State<Me> {
                               children: [
                                 const CircleAvatar(
                                   radius: 40,
-                                  backgroundImage: ExactAssetImage('assets/images/avatar-4.png'),
+                                  backgroundImage: ExactAssetImage('assets/images/icon.png'),
                                 ),
                                 OutlinedButton(
                                   style: ButtonStyle(
@@ -121,7 +122,9 @@ class _MeState extends State<Me> {
     await AuthApi.logoutAsync();
     // 发出事件
     bus.emit('logout');
-
     setState(() {});
+
+    if (!mounted) return;
+    Toast.toast(context, '已退出登录');
   }
 }
