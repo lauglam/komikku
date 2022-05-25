@@ -55,7 +55,7 @@ class _MeState extends State<Me> {
                               children: [
                                 const CircleAvatar(
                                   radius: 40,
-                                  backgroundImage: ExactAssetImage('assets/images/icon.png'),
+                                  backgroundImage: ExactAssetImage('assets/images/avatar-4.png'),
                                 ),
                                 OutlinedButton(
                                   style: ButtonStyle(
