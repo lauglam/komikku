@@ -150,7 +150,7 @@ class MangaListOrder {
     this.relevance,
   });
 
-  String build(bool onlyOrder) {
+  String build() {
     var query = '';
     if (title != null) {
       query += '&order[title]=${orderModeEnumMap[title]}';
@@ -173,6 +173,7 @@ class MangaListOrder {
     if (relevance != null) {
       query += '&order[relevance]=${orderModeEnumMap[relevance]}';
     }
-    return onlyOrder ? '?${query.substring(1)}' : query;
+
+    return query.substring(1);
   }
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:komikku/dto/chapter_dto.dart';
-import 'package:komikku/utils/helper.dart';
+import 'package:komikku/utils/timeago.dart';
 
 class ChapterListViewItem extends StatelessWidget {
   const ChapterListViewItem({Key? key, required this.dto, required this.imageUrl})
@@ -31,7 +31,7 @@ class ChapterListViewItem extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: Text(RelativeDateFormat.format(dto.publishAt)),
+              child: Text(timeAgo(dto.publishAt)),
             ),
             Text(dto.uploader),
           ],

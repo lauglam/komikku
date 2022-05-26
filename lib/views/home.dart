@@ -29,13 +29,13 @@ class _LatestUpdateState extends State<LatestUpdate> {
   @override
   void initState() {
     super.initState();
-    sinkStream();
+    _addMangaListToSink();
 
     /// 监听滚动控制器
     _scrollController.addListener(() {
       if (_scrollController.position.atEdge && _scrollController.position.pixels != 0) {
         // On bottom
-        sinkStream();
+        _addMangaListToSink();
       }
     });
   }
@@ -48,7 +48,7 @@ class _LatestUpdateState extends State<LatestUpdate> {
   }
 
   /// 推入流中
-  sinkStream({bool refresh = false}) async {
+  Future<void> _addMangaListToSink({bool refresh = false}) async {
     if (refresh) {
       _cacheMangaList.clear();
       chapterOffset = 0;
@@ -91,9 +91,9 @@ class _LatestUpdateState extends State<LatestUpdate> {
         builder: (context, snapshot) {
           return BuilderChecker(
             snapshot: snapshot,
-            widget: () => RefreshIndicator(
+            child: () => RefreshIndicator(
               onRefresh: () async {
-                await sinkStream(refresh: true);
+                await _addMangaListToSink(refresh: true);
               },
               child: GridView.builder(
                 // 永远滚动，即使在不满屏幕的情况下
@@ -152,7 +152,7 @@ class _LatestUpdateState extends State<LatestUpdate> {
           ContentRating.pornographic
         ],
       ),
-      order: ChapterListOrder(readableAt: OrderMode.desc).build(),
+      order: ChapterListOrder(readableAt: OrderMode.desc),
     );
 
     /// NOTE: 必须含有 MangaAttributes

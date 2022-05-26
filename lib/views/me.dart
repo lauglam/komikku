@@ -45,7 +45,7 @@ class _MeState extends State<Me> {
                 _loginFlag.value = snapshot.data != null;
                 return BuilderChecker(
                   snapshot: snapshot,
-                  widget: () {
+                  child: () {
                     return Card(
                       clipBehavior: Clip.antiAlias,
                       child: Padding(

@@ -75,7 +75,7 @@ class _DetailsState extends State<Details> {
               return BuilderChecker(
                 snapshot: snapshot,
                 indicator: false,
-                widget: () {
+                child: () {
                   _followIconFlag.value = snapshot.data!;
                   return ValueListenableBuilder(
                     valueListenable: _followIconFlag,
@@ -167,7 +167,7 @@ class _DetailsState extends State<Details> {
                 builder: (context, snapshot) {
                   return BuilderChecker(
                     snapshot: snapshot,
-                    widget: () => GroupedListView<ChapterDto, String>(
+                    child: () => GroupedListView<ChapterDto, String>(
                       padding: const EdgeInsets.all(15),
                       shrinkWrap: true,
                       elements: snapshot.data!,
@@ -224,7 +224,7 @@ class _DetailsState extends State<Details> {
           readableAt: OrderMode.asc,
           volume: OrderMode.desc,
           chapter: OrderMode.desc,
-        ).build());
+        ));
 
     return chapterListResponse.data.map((e) => ChapterDto.fromSource(e)).toList();
   }

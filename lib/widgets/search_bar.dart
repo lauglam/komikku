@@ -1,10 +1,17 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:komikku/utils/icons.dart';
 
 /// 搜索框
 class SearchAppBar extends StatelessWidget {
-  const SearchAppBar({Key? key, required this.hintText}) : super(key: key);
+  const SearchAppBar({
+    Key? key,
+    required this.hintText,
+    required this.onSubmitted,
+  }) : super(key: key);
+
   final String hintText;
+  final AsyncValueSetter<String> onSubmitted;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +37,7 @@ class SearchAppBar extends StatelessWidget {
           hintText: hintText,
           hintStyle: const TextStyle(color: Colors.white, fontSize: 15, height: 1.12),
         ),
+        onSubmitted: (value) => onSubmitted(value),
       ),
     );
   }

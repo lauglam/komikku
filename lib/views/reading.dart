@@ -24,7 +24,7 @@ class _ReadingState extends State<Reading> {
         builder: (context, snapshot) {
           return BuilderChecker(
             snapshot: snapshot,
-            widget: () => ListView.builder(
+            child: () => ListView.builder(
               itemCount: snapshot.data!.length,
               itemBuilder: (context, index) {
                 return CachedNetworkImage(

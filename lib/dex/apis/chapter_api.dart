@@ -6,12 +6,12 @@ import 'package:komikku/utils/http.dart';
 class ChapterApi {
   static Future<ChapterListResponse> getChapterListAsync({
     ChapterListQuery? query,
-    String? order,
+    ChapterListOrder? order,
   }) async {
     var response = await HttpUtil().get(buildUri(
       path: '/chapter',
       queryParameters: query?.toJson(),
-      order: order,
+      order: order?.build(),
     ));
     return ChapterListResponse.fromJson(response);
   }

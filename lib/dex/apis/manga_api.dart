@@ -1,3 +1,4 @@
+import 'package:komikku/dex/models/query/chapter_list_query.dart';
 import 'package:komikku/dex/models/response.dart';
 import 'package:komikku/dex/util.dart';
 import 'package:komikku/dex/models/chapter_list.dart';
@@ -10,12 +11,12 @@ class MangaApi {
   /// Get 漫画列表
   static Future<MangaListResponse> getMangaListAsync({
     MangaListQuery? query,
-    String? order,
+    MangaListOrder? order,
   }) async {
     var response = await HttpUtil().get(buildUri(
       path: '/manga',
       queryParameters: query?.toJson(),
-      order: order,
+      order: order?.build(),
     ));
     return MangaListResponse.fromJson(response);
   }
@@ -24,12 +25,12 @@ class MangaApi {
   static Future<ChapterListResponse> getMangaFeedAsync(
     String id, {
     MangaFeedQuery? query,
-    String? order,
+    ChapterListOrder? order,
   }) async {
     var response = await HttpUtil().get(buildUri(
       path: '/manga/$id/feed',
       queryParameters: query?.toJson(),
-      order: order,
+      order: order?.build(),
     ));
     return ChapterListResponse.fromJson(response);
   }
