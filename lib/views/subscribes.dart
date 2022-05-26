@@ -69,69 +69,71 @@ class _SubscribesState extends State<Subscribes> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: isLogin,
-      builder: (context, snapshot) {
-        return BuilderChecker(
-          snapshot: snapshot,
-          widget: () {
-            // 未登录
-            if (!snapshot.data!) return const Center(child: Text('请先登录'));
+    return SafeArea(
+      child: FutureBuilder<bool>(
+        future: isLogin,
+        builder: (context, snapshot) {
+          return BuilderChecker(
+            snapshot: snapshot,
+            widget: () {
+              // 未登录
+              if (!snapshot.data!) return const Center(child: Text('请先登录'));
 
-            // 加载数据
-            _addMangaListToSink();
-            // 监听滚动控制器
-            _scrollController.removeListener(listener);
-            _scrollController.addListener(listener);
+              // 加载数据
+              _addMangaListToSink();
+              // 监听滚动控制器
+              _scrollController.removeListener(listener);
+              _scrollController.addListener(listener);
 
-            return StreamBuilder<List<MangaDto>>(
-              stream: _streamController.stream,
-              builder: (context, snapshot) {
-                return BuilderChecker(
-                  snapshot: snapshot,
-                  widget: () => RefreshIndicator(
-                    onRefresh: () async {
-                      await _addMangaListToSink(refresh: true);
-                    },
-                    child: GridView.builder(
-                      // 永远滚动，即使在不满屏幕的情况下
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: const EdgeInsets.all(8),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 8,
-                        crossAxisSpacing: 8,
-                        childAspectRatio: 0.75,
-                      ),
-                      controller: _scrollController,
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () {
-                            /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
-                            if (index < snapshot.data!.length) {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Details(dto: snapshot.data![index]),
-                                ),
-                              );
-                            }
-                          },
-                          child: MangaGridViewItem(
-                            dto: snapshot.data![index],
-                            titleStyle: TitleStyle.footer,
-                          ),
-                        );
+              return StreamBuilder<List<MangaDto>>(
+                stream: _streamController.stream,
+                builder: (context, snapshot) {
+                  return BuilderChecker(
+                    snapshot: snapshot,
+                    widget: () => RefreshIndicator(
+                      onRefresh: () async {
+                        await _addMangaListToSink(refresh: true);
                       },
+                      child: GridView.builder(
+                        // 永远滚动，即使在不满屏幕的情况下
+                        physics: const AlwaysScrollableScrollPhysics(),
+                        padding: const EdgeInsets.all(8),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          mainAxisSpacing: 8,
+                          crossAxisSpacing: 8,
+                          childAspectRatio: 0.75,
+                        ),
+                        controller: _scrollController,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
+                              if (index < snapshot.data!.length) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Details(dto: snapshot.data![index]),
+                                  ),
+                                );
+                              }
+                            },
+                            child: MangaGridViewItem(
+                              dto: snapshot.data![index],
+                              titleStyle: TitleStyle.footer,
+                            ),
+                          );
+                        },
+                      ),
                     ),
-                  ),
-                );
-              },
-            );
-          },
-        );
-      },
+                  );
+                },
+              );
+            },
+          );
+        },
+      ),
     );
   }
 
