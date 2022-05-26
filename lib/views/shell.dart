@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/toast.dart';
-import 'package:komikku/views/latest_update.dart';
+import 'package:komikku/views/home.dart';
 import 'package:komikku/views/me.dart';
 import 'package:komikku/views/signup.dart';
 import 'package:komikku/views/subscribes.dart';
