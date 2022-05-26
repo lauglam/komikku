@@ -7,6 +7,7 @@ import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/manga_grid_view_item.dart';
+import 'package:komikku/widgets/search_bar.dart';
 
 class LatestUpdate extends StatefulWidget {
   const LatestUpdate({Key? key}) : super(key: key);
@@ -74,50 +75,62 @@ class _LatestUpdateState extends State<LatestUpdate> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder<List<MangaDto>>(
-      stream: _streamController.stream,
-      builder: (context, snapshot) {
-        return BuilderChecker(
-          snapshot: snapshot,
-          widget: () => RefreshIndicator(
-            onRefresh: () async {
-              await sinkStream(refresh: true);
-            },
-            child: GridView.builder(
-              // 永远滚动，即使在不满屏幕的情况下
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(8),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                childAspectRatio: 0.75,
-              ),
-              controller: _scrollController,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
-                    if (index < snapshot.data!.length) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Details(dto: snapshot.data![index]),
-                        ),
-                      );
-                    }
-                  },
-                  child: MangaGridViewItem(
-                    dto: snapshot.data![index],
-                    titleStyle: TitleStyle.footer,
-                  ),
-                );
+    return Scaffold(
+      appBar: AppBar(
+        titleSpacing: 0,
+        toolbarHeight: 50,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: SearchAppBarButton(
+          hintText: '搜索',
+          onTap: () => Navigator.pushNamed(context, '/search'),
+        ),
+      ),
+      body: StreamBuilder<List<MangaDto>>(
+        stream: _streamController.stream,
+        builder: (context, snapshot) {
+          return BuilderChecker(
+            snapshot: snapshot,
+            widget: () => RefreshIndicator(
+              onRefresh: () async {
+                await sinkStream(refresh: true);
               },
+              child: GridView.builder(
+                // 永远滚动，即使在不满屏幕的情况下
+                physics: const AlwaysScrollableScrollPhysics(),
+                padding: const EdgeInsets.all(8),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisSpacing: 8,
+                  crossAxisSpacing: 8,
+                  childAspectRatio: 0.75,
+                ),
+                controller: _scrollController,
+                itemCount: snapshot.data!.length,
+                itemBuilder: (context, index) {
+                  return InkWell(
+                    onTap: () {
+                      /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
+                      if (index < snapshot.data!.length) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Details(dto: snapshot.data![index]),
+                          ),
+                        );
+                      }
+                    },
+                    child: MangaGridViewItem(
+                      dto: snapshot.data![index],
+                      titleStyle: TitleStyle.footer,
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        );
-      },
+          );
+        },
+      ),
     );
   }
 
