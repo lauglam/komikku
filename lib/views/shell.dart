@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/toast.dart';
 import 'package:komikku/views/latest_update.dart';
 import 'package:komikku/views/me.dart';
@@ -28,28 +29,15 @@ class _ShellState extends State<Shell> {
           children: _pages,
         ),
         bottomNavigationBar: BottomNavigationBar(
+          iconSize: 20,
+          selectedFontSize: 12,
+          selectedIconTheme: IconThemeData(
+            color: Theme.of(context).primaryColor,
+          ),
           items: const [
-            BottomNavigationBarItem(
-              label: '最新更新',
-              icon: Icon(
-                Icons.home_rounded,
-                color: Colors.green,
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: '订阅',
-              icon: Icon(
-                Icons.favorite,
-                color: Colors.pink,
-              ),
-            ),
-            BottomNavigationBarItem(
-              label: '我的',
-              icon: Icon(
-                Icons.person_pin,
-                color: Colors.blue,
-              ),
-            ),
+            BottomNavigationBarItem(label: '首页', icon: Icon(TaoIcons.home)),
+            BottomNavigationBarItem(label: '订阅', icon: Icon(TaoIcons.heart)),
+            BottomNavigationBarItem(label: '我的', icon: Icon(TaoIcons.me)),
           ],
           currentIndex: _currentIndex,
           type: BottomNavigationBarType.fixed,
