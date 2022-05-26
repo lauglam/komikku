@@ -79,7 +79,7 @@ class _MeState extends State<Me> {
                                   onPressed: () {
                                     // 未登录
                                     if (!_loginFlag.value) {
-                                      Navigator.pushNamed(context, '/login');
+                                      Navigator.pushNamed(context, '/login-signup');
                                       return;
                                     }
 

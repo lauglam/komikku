@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:komikku/utils/toast.dart';
 import 'package:komikku/views/latest_update.dart';
 import 'package:komikku/views/me.dart';
+import 'package:komikku/views/signup.dart';
 import 'package:komikku/views/subscribes.dart';
+import 'package:komikku/views/login.dart';
 
+/// 主界面Shell
 class Shell extends StatefulWidget {
   const Shell({Key? key}) : super(key: key);
 
@@ -63,6 +66,43 @@ class _ShellState extends State<Shell> {
         }
         return true;
       },
+    );
+  }
+}
+
+/// 登录-注册的Shell
+class TabShell extends StatefulWidget {
+  const TabShell({Key? key}) : super(key: key);
+
+  @override
+  State<TabShell> createState() => _TabShellState();
+}
+
+class _TabShellState extends State<TabShell> {
+  final _pages = [const Login(), const Signup()];
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTabController(
+      length: _pages.length,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          leading: Builder(
+            builder: (context) {
+              return IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios_rounded,
+                  color: Colors.black45,
+                ),
+                onPressed: () => Navigator.pop(context),
+              );
+            },
+          ),
+        ),
+        body: TabBarView(children: _pages),
+      ),
     );
   }
 }

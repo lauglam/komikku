@@ -1,6 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:komikku/views/login.dart';
+import 'package:komikku/views/activate_account.dart';
 import 'package:komikku/views/shell.dart';
 
 void main() {
@@ -20,7 +20,10 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.orange,
       ),
-      routes: {'/login': (context) => const Login()},
+      routes: {
+        '/login-signup': (context) => const TabShell(),
+        '/activate-account': (context) => const ActivateAccount(),
+      },
       home: const Shell(),
     );
   }
