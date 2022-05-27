@@ -1,9 +1,11 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/models/login.dart' as auth;
 import 'package:komikku/utils/authentication.dart';
 import 'package:komikku/utils/event_bus.dart';
 import 'package:komikku/utils/toast.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
   const Login({Key? key}) : super(key: key);
@@ -13,6 +15,8 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  final TapGestureRecognizer _tapGestureRecognizer = TapGestureRecognizer();
+  Future<void>? _launched;
   final _formKey = GlobalKey<FormState>();
   String? _emailOrUsername;
   String? _password;
@@ -25,7 +29,7 @@ class _LoginState extends State<Login> {
           children: [
             /// Header image
             Container(
-              padding: const EdgeInsets.only(top: 30),
+              margin: const EdgeInsets.only(top: 80),
               height: 220,
               child: Image.asset('assets/images/login-cartoon.png'),
             ),
@@ -100,12 +104,41 @@ class _LoginState extends State<Login> {
             /// Signup Arrow
             Padding(
               padding: const EdgeInsets.only(top: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  Text('向右滑动前往注册', style: TextStyle(color: Colors.black45)),
-                  Icon(Icons.arrow_forward_ios_rounded, size: 16, color: Colors.black45),
+              child: Column(
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        const TextSpan(
+                          text: '本应用不提供注册服务，请',
+                          style: TextStyle(color: Colors.black45),
+                        ),
+                        TextSpan(
+                          text: '点击',
+                          style: const TextStyle(
+                            color: Colors.purple,
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: _tapGestureRecognizer
+                            ..onTap = () => setState(() => _launched = _launchInBrowser(Uri(
+                                scheme: 'https', host: 'mangadex.org', path: 'account/signup'))),
+                        ),
+                        const TextSpan(
+                          text: '前往官网',
+                          style: TextStyle(color: Colors.black45),
+                        ),
+                      ],
+                    ),
+                  ),
+                  FutureBuilder<void>(
+                    future: _launched,
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        showText(text: '错误: ${snapshot.error}');
+                      }
+                      return const Text('');
+                    },
+                  ),
                 ],
               ),
             ),
@@ -113,6 +146,16 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  /// 跳转浏览器
+  Future<void> _launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
   }
 
   /// 登录
