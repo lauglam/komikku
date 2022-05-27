@@ -19,96 +19,98 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          /// Header image
-          Container(
-            padding: const EdgeInsets.only(top: 30),
-            height: 220,
-            child: Image.asset('assets/images/login-cartoon.png'),
-          ),
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            /// Header image
+            Container(
+              padding: const EdgeInsets.only(top: 30),
+              height: 220,
+              child: Image.asset('assets/images/login-cartoon.png'),
+            ),
 
-          /// Input form
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 25),
-              child: Card(
-                child: Column(
-                  children: [
-                    /// Email
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
-                      child: TextFormField(
-                        maxLines: 1,
-                        keyboardType: TextInputType.emailAddress,
-                        autofocus: false,
-                        style: const TextStyle(fontSize: 15),
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '请输入账号',
-                          icon: Icon(
-                            Icons.email,
-                            color: Colors.grey,
+            /// Input form
+            Form(
+              key: _formKey,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Card(
+                  child: Column(
+                    children: [
+                      /// Email
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 10, 0, 0),
+                        child: TextFormField(
+                          maxLines: 1,
+                          keyboardType: TextInputType.emailAddress,
+                          autofocus: false,
+                          style: const TextStyle(fontSize: 15),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '请输入账号',
+                            icon: Icon(
+                              Icons.email,
+                              color: Colors.grey,
+                            ),
                           ),
+                          onSaved: (value) => _emailOrUsername = value?.trim(),
                         ),
-                        onSaved: (value) => _emailOrUsername = value?.trim(),
                       ),
-                    ),
-                    Divider(height: 0.5, indent: 16, color: Colors.grey[300]),
+                      Divider(height: 0.5, indent: 16, color: Colors.grey[300]),
 
-                    /// Password
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
-                      child: TextFormField(
-                        maxLines: 1,
-                        obscureText: true,
-                        autofocus: false,
-                        style: const TextStyle(fontSize: 15),
-                        decoration: const InputDecoration(
-                          border: InputBorder.none,
-                          hintText: '请输入密码',
-                          icon: Icon(Icons.lock, color: Colors.grey),
+                      /// Password
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 10, 0, 10),
+                        child: TextFormField(
+                          maxLines: 1,
+                          obscureText: true,
+                          autofocus: false,
+                          style: const TextStyle(fontSize: 15),
+                          decoration: const InputDecoration(
+                            border: InputBorder.none,
+                            hintText: '请输入密码',
+                            icon: Icon(Icons.lock, color: Colors.grey),
+                          ),
+                          onSaved: (value) => _password = value?.trim(),
                         ),
-                        onSaved: (value) => _password = value?.trim(),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
 
-          /// Login button
-          Padding(
-            padding: const EdgeInsets.fromLTRB(35, 30, 35, 0),
-            child: OutlinedButton(
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all(
-                  RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            /// Login button
+            Padding(
+              padding: const EdgeInsets.fromLTRB(35, 30, 35, 0),
+              child: OutlinedButton(
+                style: ButtonStyle(
+                  shape: MaterialStateProperty.all(
+                    RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  ),
+                  side: MaterialStateProperty.all(const BorderSide(color: Colors.orange, width: 1)),
+                  minimumSize: MaterialStateProperty.all(const Size(300, 35)),
                 ),
-                side: MaterialStateProperty.all(const BorderSide(color: Colors.orange, width: 1)),
-                minimumSize: MaterialStateProperty.all(const Size(300, 35)),
+                onPressed: () => _login(),
+                child: const Text('登录', style: TextStyle(color: Colors.orange)),
               ),
-              onPressed: () => _login(),
-              child: const Text('登录', style: TextStyle(color: Colors.orange)),
             ),
-          ),
 
-          /// Signup Arrow
-          Padding(
-            padding: const EdgeInsets.only(top: 40),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
-                Text('向右滑动前往注册', style: TextStyle(color: Colors.black45)),
-                Icon(Icons.arrow_forward_ios_rounded, size: 16, color: Colors.black45),
-              ],
+            /// Signup Arrow
+            Padding(
+              padding: const EdgeInsets.only(top: 40),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: const [
+                  Text('向右滑动前往注册', style: TextStyle(color: Colors.black45)),
+                  Icon(Icons.arrow_forward_ios_rounded, size: 16, color: Colors.black45),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

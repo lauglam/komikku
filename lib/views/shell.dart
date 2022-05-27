@@ -59,6 +59,7 @@ class _ShellState extends State<Shell> {
 }
 
 /// 登录-注册的Shell
+@Deprecated('官方不允许App进行注册，注册需要移步官网')
 class TabShell extends StatefulWidget {
   const TabShell({Key? key}) : super(key: key);
 
@@ -66,6 +67,7 @@ class TabShell extends StatefulWidget {
   State<TabShell> createState() => _TabShellState();
 }
 
+@Deprecated('官方不允许App进行注册，注册需要移步官网')
 class _TabShellState extends State<TabShell> {
   final _pages = [const Login(), const Signup()];
 

@@ -1,6 +1,6 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:komikku/views/activate_account.dart';
+import 'package:komikku/views/login.dart';
 import 'package:komikku/views/search.dart';
 import 'package:komikku/views/shell.dart';
 
@@ -23,8 +23,7 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         '/search': (context) => const Search(),
-        '/login-signup': (context) => const TabShell(),
-        '/activate-account': (context) => const ActivateAccount(),
+        '/login': (context) => const Login(),
       },
       home: const Shell(),
     );

@@ -58,7 +58,7 @@ class _MeState extends State<Me> {
                               children: [
                                 const CircleAvatar(
                                   radius: 40,
-                                  backgroundImage: ExactAssetImage('assets/images/avatar-4.png'),
+                                  backgroundImage: ExactAssetImage('assets/images/avatar.png'),
                                 ),
                                 OutlinedButton(
                                   style: ButtonStyle(
@@ -79,7 +79,7 @@ class _MeState extends State<Me> {
                                   onPressed: () {
                                     // 未登录
                                     if (!_loginFlag.value) {
-                                      Navigator.pushNamed(context, '/login-signup');
+                                      Navigator.pushNamed(context, '/login');
                                       return;
                                     }
 

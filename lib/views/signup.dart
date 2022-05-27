@@ -3,6 +3,7 @@ import 'package:komikku/dex/apis/account_api.dart';
 import 'package:komikku/dex/models/account.dart';
 import 'package:komikku/utils/toast.dart';
 
+@Deprecated('官方不允许App进行注册，注册需要移步官网')
 class Signup extends StatefulWidget {
   const Signup({Key? key}) : super(key: key);
 
@@ -10,6 +11,7 @@ class Signup extends StatefulWidget {
   State<Signup> createState() => _SignupState();
 }
 
+@Deprecated('官方不允许App进行注册，注册需要移步官网')
 class _SignupState extends State<Signup> {
   final _formKey = GlobalKey<FormState>();
   String? _username;

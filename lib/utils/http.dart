@@ -229,6 +229,14 @@ class HttpUtil {
                 {
                   return HttpException(code: errCode, message: '请求方法被禁止');
                 }
+              case 409:
+                {
+                  return HttpException(code: errCode, message: '请求次数过多');
+                }
+              case 412:
+                {
+                  return HttpException(code: errCode, message: '需要验证码');
+                }
               case 500:
                 {
                   return HttpException(code: errCode, message: '服务器内部错误');
