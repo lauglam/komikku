@@ -13,7 +13,6 @@ import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/chapter_list_view_item.dart';
 import 'package:komikku/widgets/delay_pop.dart';
 import 'package:komikku/widgets/tags_wrap.dart';
-import 'package:grouped_list/grouped_list.dart';
 import 'package:komikku/utils/toast.dart';
 
 class Details extends StatefulWidget {
@@ -167,33 +166,26 @@ class _DetailsState extends State<Details> {
                 builder: (context, snapshot) {
                   return BuilderChecker(
                     snapshot: snapshot,
-                    child: () => GroupedListView<ChapterDto, String>(
+                    child: () => ListView.builder(
                       padding: const EdgeInsets.all(15),
+                      itemCount: snapshot.data!.length,
+                      // 必须设置shrinkWrap & physics
                       shrinkWrap: true,
-                      elements: snapshot.data!,
                       physics: const NeverScrollableScrollPhysics(),
-                      groupBy: (element) => '${element.volume ?? '未成'} 卷',
-                      groupSeparatorBuilder: (groupByValue) => Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: Text(
-                          groupByValue,
-                          textAlign: TextAlign.start,
-                          style: const TextStyle(fontSize: 16, color: Colors.black26),
-                        ),
-                      ),
-                      itemBuilder: (context, element) {
+                      itemBuilder: (context, index) {
                         return InkWell(
                           onTap: () => Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => Reading(id: element.id)),
+                            MaterialPageRoute(
+                              builder: (context) => Reading(id: snapshot.data![index].id),
+                            ),
                           ),
                           child: ChapterListViewItem(
-                            dto: element,
+                            dto: snapshot.data![index],
                             imageUrl: widget.dto.imageUrl256,
                           ),
                         );
                       },
-                      order: GroupedListOrder.DESC,
                     ),
                   );
                 },
@@ -221,9 +213,9 @@ class _DetailsState extends State<Details> {
           ],
         ),
         order: MangaFeedOrder(
-          readableAt: OrderMode.asc,
           volume: OrderMode.desc,
           chapter: OrderMode.desc,
+          readableAt: OrderMode.desc,
         ));
 
     return chapterListResponse.data.map((e) => ChapterDto.fromSource(e)).toList();
