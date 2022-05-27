@@ -30,15 +30,25 @@ dependencies:
   flutter:
     sdk: flutter
 
+  # 网络请求
   dio: ^4.0.6
+  # 简单的Key-Value缓存
   shared_preferences: ^2.0.15
-  json_annotation: ^4.5.0
-  intl: ^0.17.0
-  cached_network_image: ^3.2.1
-  collection: ^1.16.0
-  grouped_list: ^5.0.1
+  # 文件持久化
   path_provider: ^2.0.10
+  # 配合build_runner、json_serializable一起使用，本身也提供帮助类
+  json_annotation: ^4.5.0
+  # 主要用于时间格式化，后续考虑移除
+  intl: ^0.17.0
+  # 网络图片加载
+  cached_network_image: ^3.2.1
+  # 集合处理
+  collection: ^1.16.0
+  # 带有分组功能的ListView
+  grouped_list: ^5.0.1
+  # 消息框、提示框和自定义加载等
   bot_toast: ^4.0.2
+  # 格式化时间（如：1天前）
   timeago: ^3.2.2
 
   # The following adds the Cupertino Icons font to your application.
@@ -49,9 +59,13 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
+  # 生成类中fromJson和toJson方法
   build_runner: ^2.1.11
   json_serializable: ^6.2.0
+  # 应用图标
   icons_launcher: ^1.1.8
+  # 应用屏幕启动时的闪屏
+  flutter_native_splash: ^2.2.1
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
@@ -60,13 +74,6 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^2.0.0
 
-flutter_icons:
-  image_path_android: "assets/icons/launcher_icon.png"
-  image_path_ios: "assets/icons/launcher_icon.png"
-  adaptive_icon_background: "assets/icons/ic_launcher_background.png"
-  adaptive_icon_foreground: "assets/icons/ic_launcher_foreground.png"
-  android: true
-  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

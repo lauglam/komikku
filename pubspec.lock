@@ -258,6 +258,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.0.1"
+  flutter_native_splash:
+    dependency: "direct dev"
+    description:
+      name: flutter_native_splash
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.2.1"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -366,6 +373,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "6.2.0"
+  lint:
+    dependency: transitive
+    description:
+      name: lint
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "1.8.2"
   lints:
     dependency: transitive
     description:
