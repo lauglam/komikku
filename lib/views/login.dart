@@ -14,7 +14,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
-  String? _email;
+  String? _emailOrUsername;
   String? _password;
 
   @override
@@ -53,7 +53,7 @@ class _LoginState extends State<Login> {
                             color: Colors.grey,
                           ),
                         ),
-                        onSaved: (value) => _email = value?.trim(),
+                        onSaved: (value) => _emailOrUsername = value?.trim(),
                       ),
                     ),
                     Divider(height: 0.5, indent: 16, color: Colors.grey[300]),
@@ -119,7 +119,11 @@ class _LoginState extends State<Login> {
     if (!_validate()) return;
 
     try {
-      var response = await AuthApi.loginAsync(auth.Login(email: _email!, password: _password!));
+      var login = _emailOrUsername!.contains('@')
+          ? auth.Login(email: _emailOrUsername!, password: _password!)
+          : auth.Login(username: _emailOrUsername!, password: _password!);
+
+      var response = await AuthApi.loginAsync(login);
       await setRefresh(response.token.refresh);
       await setSession(response.token.session);
 
@@ -139,7 +143,7 @@ class _LoginState extends State<Login> {
 
   /// 验证
   bool _validate() {
-    if (_email?.isEmpty ?? true) {
+    if (_emailOrUsername?.isEmpty ?? true) {
       showText(text: '账号不能为空');
       return false;
     }

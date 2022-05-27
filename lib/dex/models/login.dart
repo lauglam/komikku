@@ -24,18 +24,18 @@ class LoginResponse extends Response {
 /// 登录请求
 class Login {
   String? username;
-  String email;
+  String? email;
   String password;
 
   Login({
-    required this.email,
-    required this.password,
     this.username,
+    this.email,
+    required this.password,
   });
 
   factory Login.fromJson(Map<String, dynamic> json) => Login(
         username: json['username'] as String?,
-        email: json['email'] as String,
+        email: json['email'] as String?,
         password: json['password'] as String,
       );
 
@@ -48,8 +48,8 @@ class Login {
       }
     }
 
-    val['email'] = email;
     val['password'] = password;
+    writeNotNull('email', email);
     writeNotNull('username', username);
     return val;
   }
