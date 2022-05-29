@@ -11,7 +11,7 @@ class MangaListViewItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 120,
-      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -20,7 +20,7 @@ class MangaListViewItem extends StatelessWidget {
             borderRadius: BorderRadius.circular(4),
             child: CachedNetworkImage(
               imageUrl: dto.imageUrl256,
-              fit: BoxFit.fitWidth,
+              fit: BoxFit.fill,
               width: 70,
               errorWidget: (context, url, progress) =>
                   Image.asset('assets/images/image-failed.png'),

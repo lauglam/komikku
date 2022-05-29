@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:komikku/utils/icons.dart';
 
 typedef BooleanCallback = bool Function(String);
 typedef ValueChanged = void Function(bool, String);
@@ -21,6 +22,45 @@ class ChipWarp extends StatelessWidget {
       );
       children.add(child);
     }
+
+    return Wrap(spacing: 6, runSpacing: -10, children: children);
+  }
+}
+
+/// 可以删除的Chip
+class CanDeleteChipWarp extends StatefulWidget {
+  const CanDeleteChipWarp({
+    Key? key,
+    required this.values,
+    required this.onDeleted,
+  }) : super(key: key);
+
+  final List<String> values;
+  final ValueSetter<String> onDeleted;
+
+  @override
+  State<CanDeleteChipWarp> createState() => _CanDeleteChipWarpState();
+}
+
+class _CanDeleteChipWarpState extends State<CanDeleteChipWarp> {
+  @override
+  Widget build(BuildContext context) {
+    var children = List.generate(
+      widget.values.length,
+      (index) => Chip(
+        padding: const EdgeInsets.all(0),
+        labelPadding: const EdgeInsets.fromLTRB(8, -2, 8, -2),
+        visualDensity: VisualDensity.compact,
+        label: Text(widget.values[index], style: const TextStyle(fontSize: 10)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+        deleteIcon: Transform.scale(
+          scale: 0.7,
+          child: const Icon(TaoIcons.trash),
+        ),
+        deleteIconColor: Colors.red,
+        onDeleted: () => setState(() => widget.onDeleted.call(widget.values[index])),
+      ),
+    );
 
     return Wrap(spacing: 6, runSpacing: -10, children: children);
   }

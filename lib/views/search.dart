@@ -10,6 +10,7 @@ import 'package:komikku/utils/toast.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/advanced%20_search.dart';
 import 'package:komikku/widgets/builder_checker.dart';
+import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/widgets/manga_list_view_item.dart';
 import 'package:komikku/widgets/search_bar.dart';
 
@@ -98,8 +99,9 @@ class _SearchState extends State<Search> {
                       child: AdvancedSearch(
                         dtos: snapshot.data!,
                         selected: (value) => _includedTags.contains(value),
-                        onChanged: (flag, value) =>
-                            flag ? _includedTags.add(value) : _includedTags.remove(value),
+                        onChanged: (flag, value) => setState(
+                          () => flag ? _includedTags.add(value) : _includedTags.remove(value),
+                        ),
                       ),
                     );
                   },
@@ -109,39 +111,63 @@ class _SearchState extends State<Search> {
           );
         },
       ),
-      body: FutureBuilder<List<MangaDto>>(
-        future: _submittedFuture,
-        builder: (context, snapshot) {
-          return BuilderChecker(
-            snapshot: snapshot,
-            none: const Center(child: Text('点击搜索框输入漫画名')),
-            builder: (context) {
-              if (snapshot.data != null && snapshot.data!.isEmpty) {
-                return const Center(child: Text('没有找到漫画'));
-              }
-              return ListView.builder(
-                controller: _scrollController,
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return InkWell(
-                    onTap: () {
-                      /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
-                      if (index < snapshot.data!.length) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => Details(dto: snapshot.data![index]),
-                          ),
-                        );
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // 已选标签
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20),
+              child: CanDeleteChipWarp(
+                values: _includedTags,
+                onDeleted: (value) {
+                  if (_includedTags.contains(value)) {
+                    _includedTags.remove(value);
+                  }
+                },
+              ),
+            ),
+
+            // 内容
+            Expanded(
+              child: FutureBuilder<List<MangaDto>>(
+                future: _submittedFuture,
+                builder: (context, snapshot) {
+                  return BuilderChecker(
+                    snapshot: snapshot,
+                    none: const Center(child: Text('点击搜索框输入漫画名')),
+                    builder: (context) {
+                      if (snapshot.data != null && snapshot.data!.isEmpty) {
+                        return const Center(child: Text('没有找到漫画'));
                       }
+                      return ListView.builder(
+                        controller: _scrollController,
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
+                              if (index < snapshot.data!.length) {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => Details(dto: snapshot.data![index]),
+                                  ),
+                                );
+                              }
+                            },
+                            child: MangaListViewItem(dto: snapshot.data![index]),
+                          );
+                        },
+                      );
                     },
-                    child: MangaListViewItem(dto: snapshot.data![index]),
                   );
                 },
-              );
-            },
-          );
-        },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
