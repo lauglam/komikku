@@ -33,7 +33,7 @@ class ChapterListViewItem extends StatelessWidget {
               flex: 1,
               child: Text(timeAgo(dto.publishAt)),
             ),
-            Text(dto.uploader),
+            Text(dto.uploader ?? ''),
           ],
         ),
         trailing: const Icon(Icons.arrow_forward_rounded),

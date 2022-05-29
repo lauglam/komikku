@@ -5,7 +5,7 @@ import 'package:komikku/dex/models/attributes/user_attributes.dart';
 class ChapterDto {
   String id;
   DateTime publishAt;
-  String uploader;
+  String? uploader;
   String? scanlationGroup;
   String? title;
   String? chapter;
@@ -14,7 +14,7 @@ class ChapterDto {
   ChapterDto({
     required this.id,
     required this.publishAt,
-    required this.uploader,
+    this.uploader,
     this.scanlationGroup,
     this.title,
     this.chapter,
@@ -23,11 +23,12 @@ class ChapterDto {
 
   factory ChapterDto.fromSource(Chapter source) {
     /// NOTE: 必须含有 ScanlationAttributes UserAttributes
-    /// NOTE: 此处可能出出现没有scanlationGroup返回的情况
-    var map = source.relationships.firstTypeOrDefault(EntityType.scanlationGroup)?.attributes;
-    var scanlationAttributes = map == null ? null : ScanlationGroupAttributes.fromJson(map);
-    var userAttributes =
-        UserAttributes.fromJson(source.relationships.firstType(EntityType.user).attributes);
+    /// NOTE: 此处可能出出现没有返回的情况
+    var groupMap = source.relationships.firstTypeOrDefault(EntityType.scanlationGroup)?.attributes;
+    var userMap = source.relationships.firstTypeOrDefault(EntityType.user)?.attributes;
+
+    var groupAttributes = groupMap == null ? null : ScanlationGroupAttributes.fromJson(groupMap);
+    var userAttributes = userMap == null ? null : UserAttributes.fromJson(userMap);
 
     return ChapterDto(
       id: source.id,
@@ -35,8 +36,8 @@ class ChapterDto {
       chapter: source.attributes.chapter,
       volume: source.attributes.volume,
       publishAt: DateTime.parse(source.attributes.publishAt),
-      uploader: userAttributes.username,
-      scanlationGroup: scanlationAttributes?.name,
+      uploader: userAttributes?.username,
+      scanlationGroup: groupAttributes?.name,
     );
   }
 }
