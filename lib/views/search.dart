@@ -27,7 +27,6 @@ class _SearchState extends State<Search> {
   final _includedTags = <String>[];
   Future<List<TagDto>>? _tagListFuture;
   Future<List<MangaDto>>? _submittedFuture;
-  Widget? _alertWidget;
 
   String _queryTitle = '';
 
@@ -74,17 +73,32 @@ class _SearchState extends State<Search> {
         clipBehavior: Clip.antiAlias,
         child: const Icon(TaoIcons.filter),
         onPressed: () async {
-          var tagList = await _tagListFuture;
           showAlertDialog(
             title: '高级搜索',
             insetPadding: const EdgeInsets.all(0),
-            content: _alertWidget ??= SingleChildScrollView(
-              child: AdvancedSearch(
-                dtos: tagList!,
-                selected: (value) => _includedTags.contains(value),
-                onChanged: (flag, value) =>
-                    flag ? _includedTags.add(value) : _includedTags.remove(value),
-              ),
+            content: FutureBuilder<List<TagDto>>(
+              future: _tagListFuture,
+              builder: (context, snapshot) {
+                return BuilderChecker(
+                  snapshot: snapshot,
+                  // 在等待时撑满整个搜索屏幕
+                  waiting: SizedBox(
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height,
+                    child: const Center(child: CircularProgressIndicator()),
+                  ),
+                  builder: (context) {
+                    return SingleChildScrollView(
+                      child: AdvancedSearch(
+                        dtos: snapshot.data!,
+                        selected: (value) => _includedTags.contains(value),
+                        onChanged: (flag, value) =>
+                            flag ? _includedTags.add(value) : _includedTags.remove(value),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           );
         },
