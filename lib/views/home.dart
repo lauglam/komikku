@@ -91,7 +91,7 @@ class _LatestUpdateState extends State<LatestUpdate> {
         builder: (context, snapshot) {
           return BuilderChecker(
             snapshot: snapshot,
-            child: () => RefreshIndicator(
+            builder: (context) => RefreshIndicator(
               onRefresh: () async {
                 await _addMangaListToSink(refresh: true);
               },

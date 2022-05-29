@@ -75,7 +75,7 @@ class _SubscribesState extends State<Subscribes> {
         builder: (context, snapshot) {
           return BuilderChecker(
             snapshot: snapshot,
-            child: () {
+            builder: (context) {
               // 未登录
               if (!snapshot.data!) return const Center(child: Text('请先登录'));
 
@@ -90,7 +90,7 @@ class _SubscribesState extends State<Subscribes> {
                 builder: (context, snapshot) {
                   return BuilderChecker(
                     snapshot: snapshot,
-                    child: () => RefreshIndicator(
+                    builder: (context) => RefreshIndicator(
                       onRefresh: () async {
                         await _addMangaListToSink(refresh: true);
                       },

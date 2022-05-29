@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/manga_dto.dart';
+import 'package:komikku/utils/toast.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/manga_list_view_item.dart';
@@ -18,9 +19,10 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  final _streamController = StreamController<List<MangaDto>>();
+  final _streamController = StreamController<List<MangaDto>>.broadcast();
   final _scrollController = ScrollController();
   final _cacheMangaList = <MangaDto>[];
+  Future<void>? _submittedFuture;
 
   String queryString = '';
   int limit = 10;
@@ -32,7 +34,6 @@ class _SearchState extends State<Search> {
       offset = 0;
     }
 
-    // TODO: 这段代码有问题，可能是因为异步没有等待的原因。
     _cacheMangaList.addAll(await _searchManga());
     _streamController.sink.add(_cacheMangaList);
     offset += limit;
@@ -49,10 +50,10 @@ class _SearchState extends State<Search> {
         automaticallyImplyLeading: false,
         title: SearchAppBar(
           hintText: '搜索',
-          onSubmitted: (value) async {
+          onSubmitted: (value) => setState(() {
             queryString = value;
-            await _addMangaListToSink(refresh: true);
-          },
+            _submittedFuture = _addMangaListToSink(refresh: true);
+          }),
         ),
         actions: [
           TextButton(
@@ -61,39 +62,59 @@ class _SearchState extends State<Search> {
           ),
         ],
       ),
-      body: StreamBuilder<List<MangaDto>>(
-        stream: _streamController.stream,
-        builder: (context, snapshot) {
-          if (snapshot.data?.isEmpty ?? true) {
-            return const SizedBox();
-          }
-          return BuilderChecker(
-            snapshot: snapshot,
-            child: () => ListView.builder(
-              controller: _scrollController,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return InkWell(
-                  onTap: () {
-                    /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
-                    if (index < snapshot.data!.length) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => Details(dto: snapshot.data![index]),
-                        ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Expanded(
+            child: StreamBuilder<List<MangaDto>>(
+              stream: _streamController.stream,
+              builder: (context, snapshot) {
+                return BuilderChecker(
+                  snapshot: snapshot,
+                  indicator: false,
+                  builder: (context) {
+                    if (snapshot.data?.isEmpty ?? true) {
+                      return const Center(
+                        child: Text('没有找到漫画'),
                       );
                     }
+                    return ListView.builder(
+                      controller: _scrollController,
+                      itemCount: snapshot.data!.length,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
+                            if (index < snapshot.data!.length) {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Details(dto: snapshot.data![index]),
+                                ),
+                              );
+                            }
+                          },
+                          child: MangaListViewItem(dto: snapshot.data![index]),
+                        );
+                      },
+                    );
                   },
-                  //TODO: 异步原因，妥协
-                  child: snapshot.data!.length > index
-                      ? MangaListViewItem(dto: snapshot.data![index])
-                      : const SizedBox(),
                 );
               },
             ),
-          );
-        },
+          ),
+
+          // 用于给搜索按钮提供异步
+          FutureBuilder(
+            future: _submittedFuture,
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                showText(text: '出现错误$snapshot.error}');
+              }
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
       ),
     );
   }

@@ -11,7 +11,7 @@ class SearchAppBar extends StatelessWidget {
   }) : super(key: key);
 
   final String hintText;
-  final AsyncValueSetter<String> onSubmitted;
+  final ValueChanged<String> onSubmitted;
 
   @override
   Widget build(BuildContext context) {

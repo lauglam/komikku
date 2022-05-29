@@ -74,7 +74,7 @@ class _DetailsState extends State<Details> {
               return BuilderChecker(
                 snapshot: snapshot,
                 indicator: false,
-                child: () {
+                builder: (context) {
                   _followIconFlag.value = snapshot.data!;
                   return ValueListenableBuilder(
                     valueListenable: _followIconFlag,
@@ -166,7 +166,7 @@ class _DetailsState extends State<Details> {
                 builder: (context, snapshot) {
                   return BuilderChecker(
                     snapshot: snapshot,
-                    child: () => ListView.builder(
+                    builder: (context) => ListView.builder(
                       padding: const EdgeInsets.all(15),
                       itemCount: snapshot.data!.length,
                       // 必须设置shrinkWrap & physics

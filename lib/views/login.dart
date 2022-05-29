@@ -16,8 +16,8 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   final TapGestureRecognizer _tapGestureRecognizer = TapGestureRecognizer();
-  Future<void>? _launched;
   final _formKey = GlobalKey<FormState>();
+  Future<void>? _launched;
   String? _emailOrUsername;
   String? _password;
 
