@@ -12,7 +12,7 @@ import 'package:komikku/views/reading.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/chapter_list_view_item.dart';
 import 'package:komikku/widgets/delay_pop.dart';
-import 'package:komikku/widgets/tags_wrap.dart';
+import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/utils/toast.dart';
 
 class Details extends StatefulWidget {
@@ -145,7 +145,7 @@ class _DetailsState extends State<Details> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(widget.dto.title, style: const TextStyle(fontSize: 20)),
-                    TagsWarp(tags: widget.dto.tags),
+                    ChipWarp(widget.dto.tags.map((e) => e.name).toList()),
                     Padding(
                       padding: const EdgeInsets.only(bottom: 5),
                       child: Text(widget.dto.status, style: const TextStyle(fontSize: 12)),

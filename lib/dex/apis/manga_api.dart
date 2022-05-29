@@ -1,5 +1,6 @@
 import 'package:komikku/dex/models/query/chapter_list_query.dart';
 import 'package:komikku/dex/models/response.dart';
+import 'package:komikku/dex/models/tag.dart';
 import 'package:komikku/dex/util.dart';
 import 'package:komikku/dex/models/chapter_list.dart';
 import 'package:komikku/dex/models/manga_list.dart';
@@ -45,5 +46,11 @@ class MangaApi {
   static Future<Response> unfollowMangaAsync(String id) async {
     var response = await HttpUtil().delete('/manga/$id/follow');
     return Response.fromJson(response);
+  }
+
+  /// 获取标签列表
+  static Future<TagListResponse> getTagListAsync() async {
+    var response = await HttpUtil().get('/manga/tag');
+    return TagListResponse.fromJson(response);
   }
 }

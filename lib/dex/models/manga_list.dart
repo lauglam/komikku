@@ -3,7 +3,7 @@ import 'package:komikku/dex/models/enum/response_type.dart';
 import 'package:komikku/dex/models/manga.dart';
 import 'package:komikku/dex/models/response.dart';
 
-class MangaListResponse extends PageResponse<List<Manga>> {
+class MangaListResponse extends PageResponse<Manga> {
   MangaListResponse({
     required super.response,
     required super.data,

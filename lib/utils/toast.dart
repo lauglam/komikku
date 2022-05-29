@@ -52,7 +52,9 @@ void showAlertDialog({
   VoidCallback? onConfirm,
   VoidCallback? onCancel,
   VoidCallback? backgroundReturn,
+  EdgeInsets insetPadding = const EdgeInsets.fromLTRB(24.0, 20.0, 24.0, 24.0),
   BackButtonBehavior backButtonBehavior = BackButtonBehavior.close,
+  Widget? content,
 }) {
   BotToast.showAnimationWidget(
       clickClose: false,
@@ -87,8 +89,10 @@ void showAlertDialog({
             ],
           ),
       toastBuilder: (cancelFunc) => AlertDialog(
+            insetPadding: insetPadding,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
             title: Text(title),
+            content: content,
             actions: <Widget>[
               TextButton(
                 onPressed: () {

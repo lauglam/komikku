@@ -4,6 +4,7 @@ import 'package:komikku/dex/models/enum/status.dart';
 import 'package:komikku/dex/models/manga.dart';
 import 'package:komikku/dex/models/relationship.dart';
 import 'package:komikku/dex/retrieving.dart';
+import 'package:komikku/dto/tag_dto.dart';
 
 import '../dex/models/attributes/author_attributes.dart';
 
@@ -13,7 +14,7 @@ class MangaDto {
   final String title;
   final String status;
   final String author;
-  final List<String> tags;
+  final List<TagDto> tags;
   final String imageUrl256;
   final String imageUrl512;
   final String imageUrlOriginal;
@@ -43,7 +44,7 @@ class MangaDto {
       title: source.attributes.title.value(),
       status: statusEnumChineseMap[source.attributes.status]!,
       author: authorAttributes.name,
-      tags: source.attributes.tags.map((e) => e.attributes.name.value()).toList(),
+      tags: source.attributes.tags.map((e) => TagDto.fromSource(e)).toList(),
       imageUrl256: Retrieving.getCoverArtOn256(source.id, coverAttributes.fileName),
       imageUrl512: Retrieving.getCoverArtOn512(source.id, coverAttributes.fileName),
       imageUrlOriginal: Retrieving.getCoverArtOnOriginal(source.id, coverAttributes.fileName),

@@ -3,7 +3,7 @@ import 'package:komikku/dex/models/enum/content_rating.dart';
 import 'package:komikku/dex/models/enum/publication_demographic.dart';
 import 'package:komikku/dex/models/util.dart';
 import 'package:komikku/dex/models/enum/order_mode.dart';
-import 'package:komikku/dex/models/enum/tags_mode.dart';
+import 'package:komikku/dex/models/enum/logic_mode.dart';
 
 /// MangaList Query
 class MangaListQuery {
@@ -16,9 +16,9 @@ class MangaListQuery {
   List<String>? artists;
   int? year;
   List<String>? includedTags;
-  TagsMode? includedTagsMode;
+  LogicMode? includedTagsMode;
   List<String>? excludedTags;
-  TagsMode? excludedTagsMode;
+  LogicMode? excludedTagsMode;
   List<String>? status;
   List<String>? originalLanguage;
   List<String>? excludedOriginalLanguage;
@@ -67,9 +67,9 @@ class MangaListQuery {
         artists: (json['artists[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
         year: json['year'] as int?,
         includedTags: (json['includedTags[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
-        includedTagsMode: $enumDecodeNullable(tagsModeEnumMap, json['includedTagsMode']),
+        includedTagsMode: $enumDecodeNullable(logicModeEnumMap, json['includedTagsMode']),
         excludedTags: (json['excludedTags[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
-        excludedTagsMode: $enumDecodeNullable(tagsModeEnumMap, json['excludedTagsMode']),
+        excludedTagsMode: $enumDecodeNullable(logicModeEnumMap, json['excludedTagsMode']),
         status: (json['status[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
         originalLanguage:
             (json['originalLanguage[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
@@ -111,9 +111,9 @@ class MangaListQuery {
     writeNotNull('artists[]', artists);
     writeNotNull('year', year);
     writeNotNull('includedTags[]', includedTags);
-    writeNotNull('includedTagsMode', tagsModeEnumMap[includedTagsMode]);
+    writeNotNull('includedTagsMode', logicModeEnumMap[includedTagsMode]);
     writeNotNull('excludedTags[]', excludedTags);
-    writeNotNull('excludedTagsMode', tagsModeEnumMap[excludedTagsMode]);
+    writeNotNull('excludedTagsMode', logicModeEnumMap[excludedTagsMode]);
     writeNotNull('status[]', status);
     writeNotNull('originalLanguage[]', originalLanguage);
     writeNotNull('excludedOriginalLanguage[]', excludedOriginalLanguage);

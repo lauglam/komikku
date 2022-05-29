@@ -4,7 +4,7 @@ import 'package:komikku/dex/models/enum/result.dart';
 import 'enum/response_type.dart';
 
 /// 页响应
-class PageResponse<T> extends OkResponse<T> {
+abstract class PageResponse<T> extends OkResponse<List<T>> {
   int limit;
   int offset;
   int total;

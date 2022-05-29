@@ -4,7 +4,7 @@ import 'package:komikku/dex/models/response.dart';
 
 import 'enum/response_type.dart';
 
-class ChapterListResponse extends PageResponse<List<Chapter>> {
+class ChapterListResponse extends PageResponse<Chapter> {
   ChapterListResponse({
     required super.response,
     required super.data,
