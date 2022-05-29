@@ -73,6 +73,12 @@ class _SearchState extends State<Search> {
         clipBehavior: Clip.antiAlias,
         child: const Icon(TaoIcons.filter),
         onPressed: () async {
+          // 键盘是否是弹起状态
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+            FocusManager.instance.primaryFocus?.unfocus();
+          }
+
           showAlertDialog(
             title: '高级搜索',
             insetPadding: const EdgeInsets.all(0),
