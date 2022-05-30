@@ -21,9 +21,9 @@ class IconTextButton extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Transform.scale(scale: 1.5, child: Icon(icon)),
-          const Padding(padding: EdgeInsets.only(bottom: 10)),
-          Text(text),
+          Icon(icon),
+          const Padding(padding: EdgeInsets.only(bottom: 8)),
+          Text(text,style: const TextStyle(fontSize: 12),),
         ],
       ),
     );

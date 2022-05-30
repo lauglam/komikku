@@ -130,9 +130,9 @@ class _MeState extends State<Me> {
             Card(
               margin: const EdgeInsets.all(15),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                 child: Wrap(
-                  spacing: 30,
+                  spacing: 20,
                   children: [
                     // 内容分级
                     IconTextButton(
