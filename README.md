@@ -2,22 +2,52 @@
 
 # komikku
 
-## 一款使用[MangaDex](https://mangadex.org/)接口的漫画浏览软件
+### 一款使用[MangaDex](https://mangadex.org/)接口的漫画浏览软件
 
-![preview-1](screenshot/preview-1.jpg)
+</br></br></br></br>
 
-![preview-2](screenshot/preview-2.jpg)
+#### 首页
 
-![preview-3](screenshot/preview-3.jpg)
+<img src="screenshot/preview-1.jpg" width="300">
 
-![preview-4](screenshot/preview-4.jpg)
+</br></br></br></br>
 
-![preview-5](screenshot/preview-5.jpg)
+#### 订阅
 
-![preview-6](screenshot/preview-6.jpg)
+<img src="screenshot/preview-2.jpg" width="300">
 
-![preview-7](screenshot/preview-7.jpg)
+</br></br></br></br>
 
-![preview-8](screenshot/preview-8.jpg)
+#### 我的
 
+<img src="screenshot/preview-3.jpg" width="300">
 
+</br></br></br></br>
+
+#### 详情
+
+<img src="screenshot/preview-4.jpg" width="300">
+
+</br></br></br></br>
+
+#### 阅读
+
+<img src="screenshot/preview-5.jpg" width="300">
+
+</br></br></br></br>
+
+#### 登录
+
+<img src="screenshot/preview-6.jpg" width="300">
+
+</br></br></br></br>
+
+#### 搜索
+
+<img src="screenshot/preview-7.jpg" width="300">
+
+</br></br></br></br>
+
+#### 高级搜索
+
+<img src="screenshot/preview-8.jpg" width="300">
