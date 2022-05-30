@@ -87,6 +87,7 @@ class _SearchState extends State<Search> {
           showAlertDialog(
             title: '高级搜索',
             insetPadding: const EdgeInsets.all(0),
+            onConfirm: () async => await _addMangaListToSink(refresh: true),
             content: FutureBuilder<List<TagDto>>(
               future: _tagListFuture,
               builder: (context, snapshot) {
