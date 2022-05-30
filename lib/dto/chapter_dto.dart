@@ -4,7 +4,7 @@ import 'package:komikku/dex/models/attributes/user_attributes.dart';
 
 class ChapterDto {
   String id;
-  DateTime publishAt;
+  DateTime readableAt;
   String? uploader;
   String? scanlationGroup;
   String? title;
@@ -13,7 +13,7 @@ class ChapterDto {
 
   ChapterDto({
     required this.id,
-    required this.publishAt,
+    required this.readableAt,
     this.uploader,
     this.scanlationGroup,
     this.title,
@@ -35,7 +35,7 @@ class ChapterDto {
       title: source.attributes.title,
       chapter: source.attributes.chapter,
       volume: source.attributes.volume,
-      publishAt: DateTime.parse(source.attributes.publishAt),
+      readableAt: DateTime.parse(source.attributes.readableAt),
       uploader: userAttributes?.username,
       scanlationGroup: groupAttributes?.name,
     );

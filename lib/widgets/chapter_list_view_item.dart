@@ -31,7 +31,7 @@ class ChapterListViewItem extends StatelessWidget {
           children: [
             Expanded(
               flex: 1,
-              child: Text(timeAgo(dto.publishAt)),
+              child: Text(timeAgo(dto.readableAt)),
             ),
             Text(dto.uploader ?? ''),
           ],

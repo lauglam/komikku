@@ -18,4 +18,16 @@ class TagDto {
       group: source.attributes.group,
     );
   }
+
+  factory TagDto.fromJson(Map<String, dynamic> json) => TagDto(
+        id: json['id'] as String,
+        name: json['name'] as String,
+        group: json['group'] as String,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'name': name,
+        'group': group,
+      };
 }

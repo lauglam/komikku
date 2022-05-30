@@ -51,4 +51,28 @@ class MangaDto {
       description: source.attributes.description?.value(),
     );
   }
+
+  factory MangaDto.fromJson(Map<String, dynamic> json) => MangaDto(
+        id: json['id'] as String,
+        title: json['title'] as String,
+        status: json['status'] as String,
+        author: json['author'] as String,
+        tags: (json['tags'] as List<dynamic>)
+            .map((e) => TagDto.fromJson(e as Map<String, dynamic>))
+            .toList(),
+        imageUrl256: json['imageUrl256'] as String,
+        imageUrl512: json['imageUrl512'] as String,
+        imageUrlOriginal: json['imageUrlOriginal'] as String,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'title': title,
+        'status': status,
+        'author': author,
+        'tags': tags,
+        'imageUrl256': imageUrl256,
+        'imageUrl512': imageUrl512,
+        'imageUrlOriginal': imageUrlOriginal,
+      };
 }

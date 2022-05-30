@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dex/models.dart';
+import 'package:komikku/dex/models/chapter_list.dart';
 import 'package:komikku/dex/models/query/manga_feed_query.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/utils/authentication.dart';
 import 'package:komikku/utils/event_bus.dart';
+import 'package:komikku/utils/icons.dart';
 import 'package:komikku/views/reading.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/chapter_list_view_item.dart';
 import 'package:komikku/widgets/delay_pop.dart';
 import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/utils/toast.dart';
+import 'package:collection/collection.dart';
 
 class Details extends StatefulWidget {
   const Details({Key? key, required this.dto}) : super(key: key);
@@ -24,7 +27,10 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
-  final _followIconFlag = ValueNotifier<bool>(false);
+  final _followIconValueNotifier = ValueNotifier<bool>(false);
+  final _chapterListValueNotifier = ValueNotifier<bool>(false);
+  Future<ChapterListResponse>? _chapterListResponse;
+  var _orderMode = OrderMode.desc;
 
   // 是否正在执行关键任务
   bool _isBusy = false;
@@ -75,11 +81,11 @@ class _DetailsState extends State<Details> {
                 snapshot: snapshot,
                 indicator: false,
                 builder: (context) {
-                  _followIconFlag.value = snapshot.data!;
+                  _followIconValueNotifier.value = snapshot.data!;
                   return ValueListenableBuilder(
-                    valueListenable: _followIconFlag,
+                    valueListenable: _followIconValueNotifier,
                     builder: (context, value, child) {
-                      if (_followIconFlag.value) {
+                      if (_followIconValueNotifier.value) {
                         // 已订阅
                         return const Icon(Icons.star_rounded);
                       }
@@ -100,14 +106,14 @@ class _DetailsState extends State<Details> {
 
             // 已登录
             _isBusy = true;
-            if (_followIconFlag.value) {
+            if (_followIconValueNotifier.value) {
               // 取消订阅确认
               showAlertDialog(
                 title: '是否取消订阅',
                 cancelText: '再想想',
                 onConfirm: () async {
                   showText(text: '已取消订阅');
-                  _followIconFlag.value = !_followIconFlag.value;
+                  _followIconValueNotifier.value = !_followIconValueNotifier.value;
                   await _unfollowManga();
 
                   // 刷新subscribes页面
@@ -118,7 +124,7 @@ class _DetailsState extends State<Details> {
             } else {
               // 订阅
               showText(text: '已订阅');
-              _followIconFlag.value = !_followIconFlag.value;
+              _followIconValueNotifier.value = !_followIconValueNotifier.value;
               await _followManga();
 
               // 刷新subscribes页面
@@ -144,16 +150,19 @@ class _DetailsState extends State<Details> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // 漫画名
                     Text(widget.dto.title, style: const TextStyle(fontSize: 20)),
+
+                    // 标签
                     ChipWarp(widget.dto.tags.map((e) => e.name).toList()),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: Text(widget.dto.status, style: const TextStyle(fontSize: 12)),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 5),
-                      child: Text(widget.dto.author, style: const TextStyle(fontSize: 12)),
-                    ),
+
+                    // 状态
+                    const Padding(padding: EdgeInsets.only(bottom: 5)),
+                    Text(widget.dto.status, style: const TextStyle(fontSize: 12)),
+
+                    // 作者
+                    const Padding(padding: EdgeInsets.only(bottom: 5)),
+                    Text(widget.dto.author, style: const TextStyle(fontSize: 12)),
                   ],
                 ),
               ),
@@ -161,32 +170,64 @@ class _DetailsState extends State<Details> {
                 thickness: 0.5,
                 height: 1,
               ),
-              FutureBuilder<List<ChapterDto>>(
-                future: _getMangaFeed(),
-                builder: (context, snapshot) {
-                  return BuilderChecker(
-                    snapshot: snapshot,
-                    builder: (context) => ListView.builder(
-                      padding: const EdgeInsets.all(15),
-                      itemCount: snapshot.data!.length,
-                      // 必须设置shrinkWrap & physics
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return InkWell(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => Reading(id: snapshot.data![index].id),
-                            ),
-                          ),
-                          child: ChapterListViewItem(
-                            dto: snapshot.data![index],
-                            imageUrl: widget.dto.imageUrl256,
-                          ),
-                        );
+              Padding(
+                padding: const EdgeInsets.only(top: 10, right: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    IconButton(
+                      padding: EdgeInsets.zero,
+                      constraints: const BoxConstraints(),
+                      icon: const Icon(TaoIcons.filter),
+                      color: Colors.black45,
+                      onPressed: () {
+                        _orderMode == OrderMode.desc
+                            ? _orderMode = OrderMode.asc
+                            : _orderMode = OrderMode.desc;
+
+                        _chapterListValueNotifier.value = !_chapterListValueNotifier.value;
                       },
-                    ),
+                    )
+                  ],
+                ),
+              ),
+              ValueListenableBuilder(
+                valueListenable: _chapterListValueNotifier,
+                builder: (context, value, child) {
+                  return FutureBuilder<List<ChapterDto>>(
+                    future: _getMangaFeed(),
+                    builder: (context, snapshot) {
+                      return BuilderChecker(
+                        snapshot: snapshot,
+                        waiting: const Center(
+                          child: Padding(
+                            padding: EdgeInsets.only(top: 80),
+                            child: CircularProgressIndicator(),
+                          ),
+                        ),
+                        builder: (context) => ListView.builder(
+                          padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
+                          itemCount: snapshot.data!.length,
+                          // 必须设置shrinkWrap & physics
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, index) {
+                            return InkWell(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => Reading(id: snapshot.data![index].id),
+                                ),
+                              ),
+                              child: ChapterListViewItem(
+                                dto: snapshot.data![index],
+                                imageUrl: widget.dto.imageUrl256,
+                              ),
+                            );
+                          },
+                        ),
+                      );
+                    },
                   );
                 },
               ),
@@ -199,7 +240,7 @@ class _DetailsState extends State<Details> {
 
   /// 获取漫画章节
   Future<List<ChapterDto>> _getMangaFeed() async {
-    var chapterListResponse = await MangaApi.getMangaFeedAsync(widget.dto.id,
+    _chapterListResponse ??= MangaApi.getMangaFeedAsync(widget.dto.id,
         query: MangaFeedQuery(
           limit: 96,
           offset: 0,
@@ -218,7 +259,10 @@ class _DetailsState extends State<Details> {
           readableAt: OrderMode.desc,
         ));
 
-    return chapterListResponse.data.map((e) => ChapterDto.fromSource(e)).toList();
+    var list = (await _chapterListResponse)!.data.map((e) => ChapterDto.fromSource(e)).toList();
+    if (_orderMode == OrderMode.desc) return list;
+    return list.sortedByCompare(
+        (element) => element.readableAt, (DateTime a, DateTime b) => a.compareTo(b));
   }
 
   /// 检测漫画是否被订阅
