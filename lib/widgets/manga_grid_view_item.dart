@@ -21,16 +21,7 @@ class MangaGridViewItem extends StatelessWidget {
       child: CachedNetworkImage(
         imageUrl: dto.imageUrl256,
         fit: BoxFit.cover,
-        // placeholder: (context, url) => Image.asset('assets/images/image-default.png'),
         errorWidget: (context, url, error) => Image.asset('assets/images/image-failed.png'),
-        // progressIndicatorBuilder: (context, url, progress) => Center(
-        //   child: Transform.scale(
-        //     scale: 0.7,
-        //     child: CircularProgressIndicator(
-        //       value: progress.progress,
-        //     ),
-        //   ),
-        // ),
       ),
     );
 
@@ -42,13 +33,16 @@ class MangaGridViewItem extends StatelessWidget {
           header: Material(
             color: Colors.transparent,
             shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(top: Radius.circular(4)),
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(2),
+                bottom: Radius.circular(2),
+              ),
             ),
             clipBehavior: Clip.antiAlias,
-            child: GridTileBar(
+            child: _GridTileBar(
               title: _TitleText(text: dto.title),
               subtitle: _TitleText(text: dto.status),
-              backgroundColor: Colors.black45,
+              backgroundColor: Colors.black38,
             ),
           ),
           child: image,
@@ -58,17 +52,90 @@ class MangaGridViewItem extends StatelessWidget {
           footer: Material(
             color: Colors.transparent,
             shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(top: Radius.circular(4))),
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(2),
+                bottom: Radius.circular(2),
+              ),
+            ),
             clipBehavior: Clip.antiAlias,
-            child: GridTileBar(
+            child: _GridTileBar(
               title: _TitleText(text: dto.title),
-              subtitle: _TitleText(text: '[${dto.status}]'),
-              backgroundColor: Colors.black45,
+              subtitle: _TitleText(text: dto.status),
+              backgroundColor: Colors.black38,
             ),
           ),
           child: image,
         );
     }
+  }
+}
+
+/// 标题栏
+class _GridTileBar extends StatelessWidget {
+  const _GridTileBar({
+    Key? key,
+    this.backgroundColor,
+    this.title,
+    this.subtitle,
+  }) : super(key: key);
+
+  final Color? backgroundColor;
+  final Widget? title;
+  final Widget? subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    BoxDecoration? decoration;
+    if (backgroundColor != null) {
+      decoration = BoxDecoration(color: backgroundColor);
+    }
+
+    final ThemeData darkTheme = ThemeData.dark();
+    return Container(
+      padding: const EdgeInsetsDirectional.only(start: 2, end: 2),
+      decoration: decoration,
+      height: (title != null && subtitle != null) ? 40 : 30,
+      child: Theme(
+        data: darkTheme,
+        child: IconTheme.merge(
+          data: const IconThemeData(color: Colors.white),
+          child: Row(
+            children: <Widget>[
+              if (title != null && subtitle != null)
+                Expanded(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      DefaultTextStyle(
+                        style: darkTheme.textTheme.subtitle1!,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        child: title!,
+                      ),
+                      DefaultTextStyle(
+                        style: darkTheme.textTheme.caption!,
+                        softWrap: false,
+                        overflow: TextOverflow.ellipsis,
+                        child: subtitle!,
+                      ),
+                    ],
+                  ),
+                )
+              else if (title != null || subtitle != null)
+                Expanded(
+                  child: DefaultTextStyle(
+                    style: darkTheme.textTheme.subtitle1!,
+                    softWrap: false,
+                    overflow: TextOverflow.ellipsis,
+                    child: title ?? subtitle!,
+                  ),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }
 

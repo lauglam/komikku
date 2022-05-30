@@ -98,11 +98,11 @@ class _LatestUpdateState extends State<LatestUpdate> {
               child: GridView.builder(
                 // 永远滚动，即使在不满屏幕的情况下
                 physics: const AlwaysScrollableScrollPhysics(),
-                padding: const EdgeInsets.all(8),
+                padding: const EdgeInsets.all(15),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
-                  mainAxisSpacing: 8,
-                  crossAxisSpacing: 8,
+                  mainAxisSpacing: 15,
+                  crossAxisSpacing: 15,
                   childAspectRatio: 0.75,
                 ),
                 controller: _scrollController,
