@@ -126,76 +126,8 @@ class _MeState extends State<Me> {
               },
             ),
 
-            // 设置项
-            Card(
-              margin: const EdgeInsets.all(15),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: Wrap(
-                  spacing: 20,
-                  children: [
-                    // 内容分级
-                    IconTextButton(
-                      text: '内容分级',
-                      icon: TaoIcons.film,
-                      onPressed: () {
-                        // TODO: 内容分级
-                        showAlertDialog(
-                          title: '内容分级',
-                          content: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              CheckboxListTile(
-                                title: const Text('安全'),
-                                value: true,
-                                onChanged: (value) {},
-                              ),
-                              CheckboxListTile(
-                                title: const Text('性暗示'),
-                                value: true,
-                                onChanged: (value) {},
-                              ),
-                              CheckboxListTile(
-                                title: const Text('涉黄'),
-                                value: true,
-                                onChanged: (value) {},
-                              ),
-                              CheckboxListTile(
-                                title: const Text('色情'),
-                                value: true,
-                                onChanged: (value) {},
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-
-                    // 章节语言
-                    IconTextButton(
-                      text: '章节语言',
-                      icon: TaoIcons.comment,
-                      onPressed: () {
-                        // TODO: 章节语言
-                        showText(text: '功能暂未上线，敬请期待');
-                      },
-                    ),
-
-                    // 本地化
-                    IconTextButton(
-                      text: '本地化',
-                      icon: TaoIcons.cycle,
-                      onPressed: () {
-                        // TODO: 本地化
-                        showText(text: '功能暂未上线，敬请期待');
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
+            // TODO: 设置项
+            // _SettingPanel(),
           ],
         ),
       ],
@@ -220,5 +152,89 @@ class _MeState extends State<Me> {
     // 发出事件
     bus.emit('logout');
     showText(text: '已退出登录');
+  }
+}
+
+/// 设置面板
+class _SettingPanel extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.all(15),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        child: Wrap(
+          spacing: 20,
+          children: [
+            // 内容分级
+            IconTextButton(
+              text: '内容分级',
+              icon: TaoIcons.film,
+              onPressed: () {
+                // TODO: 内容分级
+                showAlertDialog(
+                  title: '内容分级',
+                  content: _ContentRating(),
+                );
+              },
+            ),
+
+            // 章节语言
+            IconTextButton(
+              text: '章节语言',
+              icon: TaoIcons.comment,
+              onPressed: () {
+                // TODO: 章节语言
+                showText(text: '功能暂未上线，敬请期待');
+              },
+            ),
+
+            // 本地化
+            IconTextButton(
+              text: '本地化',
+              icon: TaoIcons.cycle,
+              onPressed: () {
+                // TODO: 本地化
+                showText(text: '功能暂未上线，敬请期待');
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// 内容分级
+class _ContentRating extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CheckboxListTile(
+          title: const Text('安全'),
+          value: true,
+          onChanged: (value) {},
+        ),
+        CheckboxListTile(
+          title: const Text('性暗示'),
+          value: true,
+          onChanged: (value) {},
+        ),
+        CheckboxListTile(
+          title: const Text('涉黄'),
+          value: true,
+          onChanged: (value) {},
+        ),
+        CheckboxListTile(
+          title: const Text('色情'),
+          value: true,
+          onChanged: (value) {},
+        ),
+      ],
+    );
   }
 }

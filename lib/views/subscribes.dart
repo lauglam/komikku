@@ -8,7 +8,7 @@ import 'package:komikku/utils/authentication.dart';
 import 'package:komikku/utils/event_bus.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
-import 'package:komikku/widgets/manga_grid_view_item.dart';
+import 'package:komikku/widgets/grid_view_item.dart';
 
 class Subscribes extends StatefulWidget {
   const Subscribes({Key? key}) : super(key: key);
@@ -119,8 +119,10 @@ class _SubscribesState extends State<Subscribes> {
                                 );
                               }
                             },
-                            child: MangaGridViewItem(
-                              dto: snapshot.data![index],
+                            child: GridViewItem(
+                              imageUrl: snapshot.data![index].imageUrl256,
+                              title: snapshot.data![index].title,
+                              subtitle: snapshot.data![index].status,
                               titleStyle: TitleStyle.footer,
                             ),
                           );

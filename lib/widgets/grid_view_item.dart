@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
-import 'package:komikku/dto/manga_dto.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 /// 子项布局
-class MangaGridViewItem extends StatelessWidget {
-  const MangaGridViewItem({
+class GridViewItem extends StatelessWidget {
+  const GridViewItem({
     Key? key,
-    required this.dto,
+    required this.imageUrl,
+    required this.title,
+    required this.subtitle,
     required this.titleStyle,
   }) : super(key: key);
 
-  final MangaDto dto;
+  final String imageUrl;
+  final String title;
+  final String subtitle;
   final TitleStyle titleStyle;
 
   @override
@@ -19,7 +22,7 @@ class MangaGridViewItem extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       clipBehavior: Clip.antiAlias,
       child: CachedNetworkImage(
-        imageUrl: dto.imageUrl256,
+        imageUrl: imageUrl,
         fit: BoxFit.cover,
         errorWidget: (context, url, error) => Image.asset('assets/images/image-failed.png'),
       ),
@@ -40,8 +43,8 @@ class MangaGridViewItem extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: _GridTileBar(
-              title: _TitleText(text: dto.title),
-              subtitle: _TitleText(text: dto.status),
+              title: _TitleText(text: title),
+              subtitle: _TitleText(text: subtitle),
               backgroundColor: Colors.black38,
             ),
           ),
@@ -59,8 +62,8 @@ class MangaGridViewItem extends StatelessWidget {
             ),
             clipBehavior: Clip.antiAlias,
             child: _GridTileBar(
-              title: _TitleText(text: dto.title),
-              subtitle: _TitleText(text: dto.status),
+              title: _TitleText(text: title),
+              subtitle: _TitleText(text: subtitle),
               backgroundColor: Colors.black38,
             ),
           ),

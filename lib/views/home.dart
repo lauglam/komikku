@@ -6,7 +6,7 @@ import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
-import 'package:komikku/widgets/manga_grid_view_item.dart';
+import 'package:komikku/widgets/grid_view_item.dart';
 import 'package:komikku/widgets/search_bar.dart';
 
 class LatestUpdate extends StatefulWidget {
@@ -120,8 +120,10 @@ class _LatestUpdateState extends State<LatestUpdate> {
                         );
                       }
                     },
-                    child: MangaGridViewItem(
-                      dto: snapshot.data![index],
+                    child: GridViewItem(
+                      imageUrl: snapshot.data![index].imageUrl256,
+                      title: snapshot.data![index].title,
+                      subtitle: snapshot.data![index].status,
                       titleStyle: TitleStyle.footer,
                     ),
                   );

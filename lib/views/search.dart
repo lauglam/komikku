@@ -9,11 +9,12 @@ import 'package:komikku/utils/extensions.dart';
 import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/toast.dart';
 import 'package:komikku/views/details.dart';
-import 'package:komikku/widgets/advanced%20_search.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/widgets/manga_list_view_item.dart';
 import 'package:komikku/widgets/search_bar.dart';
+import 'package:collection/collection.dart';
+import 'package:komikku/widgets/chip.dart' as chip;
 
 /// 搜索页面
 class Search extends StatefulWidget {
@@ -87,7 +88,11 @@ class _SearchState extends State<Search> {
           showAlertDialog(
             title: '高级搜索',
             insetPadding: const EdgeInsets.all(0),
-            onConfirm: () async => await _addMangaListToSink(refresh: true),
+            onConfirm: () async {
+              if (_includedTags.isNotEmpty) {
+                await _addMangaListToSink(refresh: true);
+              }
+            },
             content: FutureBuilder<List<TagDto>>(
               future: _tagListFuture,
               builder: (context, snapshot) {
@@ -236,5 +241,38 @@ class _SearchState extends State<Search> {
   Future<List<TagDto>> _getTagList() async {
     var response = await MangaApi.getTagListAsync();
     return response.data.map((e) => TagDto.fromSource(e)).toList();
+  }
+}
+
+/// 高级搜索
+class AdvancedSearch extends StatelessWidget {
+  const AdvancedSearch({
+    Key? key,
+    required this.dtos,
+    required this.onChanged,
+    required this.selected,
+  }) : super(key: key);
+
+  final List<TagDto> dtos;
+  final chip.ValueChanged onChanged;
+  final chip.BooleanCallback selected;
+
+  @override
+  Widget build(BuildContext context) {
+    var grouped = dtos.groupListsBy((element) => element.group);
+    var children = <Widget>[];
+    grouped.forEach((key, value) {
+      var child = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        Text(key),
+        chip.ManyChoiceChipWarp(
+          values: value.map((e) => e.name).toList(),
+          selected: (value) => selected(value),
+          onChanged: (flag, value) => onChanged(flag, value),
+        ),
+      ]);
+
+      children.add(child);
+    });
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: children);
   }
 }

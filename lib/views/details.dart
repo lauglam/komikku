@@ -12,7 +12,7 @@ import 'package:komikku/utils/event_bus.dart';
 import 'package:komikku/utils/icons.dart';
 import 'package:komikku/views/reading.dart';
 import 'package:komikku/widgets/builder_checker.dart';
-import 'package:komikku/widgets/chapter_list_view_item.dart';
+import 'package:komikku/widgets/list_view_item.dart';
 import 'package:komikku/widgets/delay_pop.dart';
 import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/utils/toast.dart';
@@ -219,9 +219,16 @@ class _DetailsState extends State<Details> {
                                   builder: (context) => Reading(id: snapshot.data![index].id),
                                 ),
                               ),
-                              child: ChapterListViewItem(
-                                dto: snapshot.data![index],
-                                imageUrl: widget.dto.imageUrl256,
+                              child: ListViewItem(
+                                title: snapshot.data![index].chapter?.isEmpty ?? true
+                                    ? snapshot.data![index].title?.isEmpty ?? true
+                                        ? '无标题'
+                                        : '${snapshot.data![index].title}'
+                                    : snapshot.data![index].title?.isEmpty ?? true
+                                        ? '${snapshot.data![index].chapter} 无标题'
+                                        : '${snapshot.data![index].chapter} ${snapshot.data![index].title!}',
+                                subtitle: snapshot.data![index].uploader ?? '',
+                                date: snapshot.data![index].readableAt,
                               ),
                             );
                           },
