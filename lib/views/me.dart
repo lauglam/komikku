@@ -5,8 +5,10 @@ import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/apis/user_api.dart';
 import 'package:komikku/utils/authentication.dart';
 import 'package:komikku/utils/event_bus.dart';
+import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/toast.dart';
 import 'package:komikku/widgets/builder_checker.dart';
+import 'package:komikku/widgets/icon_text_button.dart';
 
 class Me extends StatefulWidget {
   const Me({Key? key}) : super(key: key);
@@ -30,15 +32,19 @@ class _MeState extends State<Me> {
   Widget build(BuildContext context) {
     return Column(
       children: [
+        // 大图
         Image.asset(
           'assets/images/background-${1 + Random().nextInt(2)}.jpg',
           fit: BoxFit.fitWidth,
           width: double.infinity,
           height: 220,
         ),
+
+        // 主体内容
         Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            // 资料卡片
             FutureBuilder<String?>(
               future: _getUserDetails(),
               builder: (context, snapshot) {
@@ -118,6 +124,77 @@ class _MeState extends State<Me> {
                   },
                 );
               },
+            ),
+
+            // 设置项
+            Card(
+              margin: const EdgeInsets.all(15),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Wrap(
+                  spacing: 30,
+                  children: [
+                    // 内容分级
+                    IconTextButton(
+                      text: '内容分级',
+                      icon: TaoIcons.film,
+                      onPressed: () {
+                        // TODO: 内容分级
+                        showAlertDialog(
+                          title: '内容分级',
+                          content: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CheckboxListTile(
+                                title: const Text('安全'),
+                                value: true,
+                                onChanged: (value) {},
+                              ),
+                              CheckboxListTile(
+                                title: const Text('性暗示'),
+                                value: true,
+                                onChanged: (value) {},
+                              ),
+                              CheckboxListTile(
+                                title: const Text('涉黄'),
+                                value: true,
+                                onChanged: (value) {},
+                              ),
+                              CheckboxListTile(
+                                title: const Text('色情'),
+                                value: true,
+                                onChanged: (value) {},
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    ),
+
+                    // 章节语言
+                    IconTextButton(
+                      text: '章节语言',
+                      icon: TaoIcons.comment,
+                      onPressed: () {
+                        // TODO: 章节语言
+                        showText(text: '功能暂未上线，敬请期待');
+                      },
+                    ),
+
+                    // 本地化
+                    IconTextButton(
+                      text: '本地化',
+                      icon: TaoIcons.cycle,
+                      onPressed: () {
+                        // TODO: 本地化
+                        showText(text: '功能暂未上线，敬请期待');
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
