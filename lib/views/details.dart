@@ -247,7 +247,7 @@ class _DetailsState extends State<Details> {
 
   /// 获取漫画章节
   Future<List<ChapterDto>> _getMangaFeed() async {
-    _chapterListResponse ??= MangaApi.getMangaFeedAsync(widget.dto.id,
+    var response = await (_chapterListResponse ??= MangaApi.getMangaFeedAsync(widget.dto.id,
         query: MangaFeedQuery(
           limit: 96,
           offset: 0,
@@ -260,16 +260,18 @@ class _DetailsState extends State<Details> {
             ContentRating.pornographic
           ],
         ),
+        // 切勿 readableAt: OrderMode.desc, 否则缺少章节
         order: MangaFeedOrder(
           volume: OrderMode.desc,
           chapter: OrderMode.desc,
-          readableAt: OrderMode.desc,
-        ));
+        )));
 
-    var list = (await _chapterListResponse)!.data.map((e) => ChapterDto.fromSource(e)).toList();
+    var list = response.data.map((e) => ChapterDto.fromSource(e)).toList();
     if (_orderMode == OrderMode.desc) return list;
     return list.sortedByCompare(
-        (element) => element.readableAt, (DateTime a, DateTime b) => a.compareTo(b));
+      (element) => element.readableAt,
+      (DateTime a, DateTime b) => a.compareTo(b),
+    );
   }
 
   /// 检测漫画是否被订阅
