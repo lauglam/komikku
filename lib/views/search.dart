@@ -11,7 +11,7 @@ import 'package:komikku/utils/toast.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/chip.dart';
-import 'package:komikku/widgets/manga_list_view_item.dart';
+import 'package:komikku/widgets/list_view_item.dart';
 import 'package:komikku/widgets/search_bar.dart';
 import 'package:collection/collection.dart';
 import 'package:komikku/widgets/chip.dart' as chip;
@@ -171,7 +171,11 @@ class _SearchState extends State<Search> {
                                 );
                               }
                             },
-                            child: MangaListViewItem(dto: snapshot.data![index]),
+                            child: ImageListViewItem(
+                              imageUrl: snapshot.data![index].imageUrl256,
+                              title: snapshot.data![index].title,
+                              subtitle: snapshot.data![index].status,
+                            ),
                           );
                         },
                       );
