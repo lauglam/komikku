@@ -10,9 +10,9 @@ import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/utils/authentication.dart';
 import 'package:komikku/utils/event_bus.dart';
 import 'package:komikku/utils/icons.dart';
+import 'package:komikku/utils/timeago.dart';
 import 'package:komikku/views/reading.dart';
 import 'package:komikku/widgets/builder_checker.dart';
-import 'package:komikku/widgets/list_view_item.dart';
 import 'package:komikku/widgets/delay_pop.dart';
 import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/utils/toast.dart';
@@ -205,34 +205,7 @@ class _DetailsState extends State<Details> {
                             child: CircularProgressIndicator(),
                           ),
                         ),
-                        builder: (context) => ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
-                          itemCount: snapshot.data!.length,
-                          // 必须设置shrinkWrap & physics
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return InkWell(
-                              onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => Reading(id: snapshot.data![index].id),
-                                ),
-                              ),
-                              child: ListViewItem(
-                                title: snapshot.data![index].chapter?.isEmpty ?? true
-                                    ? snapshot.data![index].title?.isEmpty ?? true
-                                        ? '无标题'
-                                        : '${snapshot.data![index].title}'
-                                    : snapshot.data![index].title?.isEmpty ?? true
-                                        ? '${snapshot.data![index].chapter} 无标题'
-                                        : '${snapshot.data![index].chapter} ${snapshot.data![index].title!}',
-                                subtitle: snapshot.data![index].uploader ?? '',
-                                date: snapshot.data![index].readableAt,
-                              ),
-                            );
-                          },
-                        ),
+                        builder: (context) => _DetailsGrid(snapshot.data!),
                       );
                     },
                   );
@@ -266,12 +239,25 @@ class _DetailsState extends State<Details> {
           chapter: OrderMode.desc,
         )));
 
-    var list = response.data.map((e) => ChapterDto.fromSource(e)).toList();
-    if (_orderMode == OrderMode.desc) return list;
-    return list.sortedByCompare(
-      (element) => element.readableAt,
-      (DateTime a, DateTime b) => a.compareTo(b),
-    );
+    var dtos = response.data.map((e) => ChapterDto.fromSource(e)).toList();
+
+    // 按章节排序
+    if (_orderMode == OrderMode.desc) {
+      if (dtos.any((value) => value.chapter != null && double.tryParse(value.chapter!) != null)) {
+        dtos.sortByCompare(
+          (value) => double.parse(value.chapter!),
+          (double a, double b) => b.compareTo(a),
+        );
+      }
+    } else {
+      if (dtos.any((value) => value.chapter != null && double.tryParse(value.chapter!) != null)) {
+        dtos.sortByCompare(
+          (value) => double.parse(value.chapter!),
+          (double a, double b) => a.compareTo(b),
+        );
+      }
+    }
+    return dtos;
   }
 
   /// 检测漫画是否被订阅
@@ -303,5 +289,91 @@ class _DetailsState extends State<Details> {
     if (!await isLogin) return;
 
     await MangaApi.unfollowMangaAsync(widget.dto.id);
+  }
+}
+
+/// 漫画栅格
+class _DetailsGrid extends StatelessWidget {
+  const _DetailsGrid(this.dtos, {Key? key}) : super(key: key);
+
+  final List<ChapterDto> dtos;
+
+  @override
+  Widget build(BuildContext context) {
+    var itemMap = dtos.groupListsBy((value) => value.chapter);
+
+    return GridView.builder(
+      padding: const EdgeInsets.all(15),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisSpacing: 15,
+        crossAxisSpacing: 15,
+        childAspectRatio: 2,
+      ),
+      itemCount: itemMap.length,
+      // 必须设置shrinkWrap & physics
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        var values = itemMap.values.elementAt(index);
+
+        // 弹出模态框按钮
+        if (values.length > 1) {
+          return OutlinedButton(
+            child: Text(
+              '${values[0].chapter ?? index}',
+              style: const TextStyle(color: Colors.black54),
+            ),
+            onPressed: () async => await showBottomModal(
+              context: context,
+              title: '第 ${values[0].chapter ?? index} 章',
+              child: ListView.builder(
+                padding: const EdgeInsets.all(10),
+                itemCount: values.length,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Material(
+                      borderRadius: BorderRadius.circular(4),
+                      color: Colors.black12,
+                      clipBehavior: Clip.antiAlias,
+                      child: ListTile(
+                        dense: true,
+                        title: Text('${values[index].title ?? index}'),
+                        subtitle: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(timeAgo(values[index].readableAt)),
+                            Text(values[index].scanlationGroup ?? ''),
+                            Text(values[index].uploader ?? ''),
+                            Text('共 ${values[index].pages} 页'),
+                          ],
+                        ),
+                        onTap: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Reading(id: values[index].id)),
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        }
+
+        // 单独按钮
+        return OutlinedButton(
+          onPressed: () => Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => Reading(id: values[0].id)),
+          ),
+          child: Text(
+            '${values[0].chapter ?? index}',
+            style: const TextStyle(color: Colors.black54),
+          ),
+        );
+      },
+    );
   }
 }

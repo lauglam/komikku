@@ -22,37 +22,37 @@ class ZhCnMessages implements LookupMessages {
   String suffixFromNow() => '后';
 
   @override
-  String lessThanOneMinute(int seconds) => '少于1分钟';
+  String lessThanOneMinute(int seconds) => '少于 1 分钟';
 
   @override
-  String aboutAMinute(int minutes) => '1分钟';
+  String aboutAMinute(int minutes) => '1 分钟';
 
   @override
   String minutes(int minutes) => '$minutes 分';
 
   @override
-  String aboutAnHour(int minutes) => '1小时';
+  String aboutAnHour(int minutes) => '1 小时';
 
   @override
-  String hours(int hours) => '$hours小时';
+  String hours(int hours) => '$hours 小时';
 
   @override
-  String aDay(int hours) => '1天';
+  String aDay(int hours) => '1 天';
 
   @override
-  String days(int days) => ' $days天';
+  String days(int days) => ' $days 天';
 
   @override
-  String aboutAMonth(int days) => '1个月';
+  String aboutAMonth(int days) => '1 个月';
 
   @override
-  String months(int months) => '$months个月';
+  String months(int months) => '$months 个月';
 
   @override
-  String aboutAYear(int year) => '1年';
+  String aboutAYear(int year) => '1 年';
 
   @override
-  String years(int years) => '$years年';
+  String years(int years) => '$years 年';
 
   @override
   String wordSeparator() => '';

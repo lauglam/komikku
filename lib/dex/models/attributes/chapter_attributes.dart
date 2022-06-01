@@ -58,7 +58,7 @@ class ChapterAttributes {
     val['createdAt'] = createdAt;
     val['updatedAt'] = updatedAt;
     val['version'] = version;
-    writeNotNull('pages', pages);
+    val['pages'] = pages;
     writeNotNull('title', title);
     writeNotNull('uploader', uploader);
     writeNotNull('volume', volume);

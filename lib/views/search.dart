@@ -263,7 +263,7 @@ class AdvancedSearch extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var grouped = dtos.groupListsBy((element) => element.group);
+    var grouped = dtos.groupListsBy((value) => value.group);
     var children = <Widget>[];
     grouped.forEach((key, value) {
       var child = Column(crossAxisAlignment: CrossAxisAlignment.start, children: [

@@ -10,10 +10,12 @@ class ChapterDto {
   String? title;
   String? chapter;
   String? volume;
+  int pages;
 
   ChapterDto({
     required this.id,
     required this.readableAt,
+    required this.pages,
     this.uploader,
     this.scanlationGroup,
     this.title,
@@ -38,6 +40,7 @@ class ChapterDto {
       readableAt: DateTime.parse(source.attributes.readableAt),
       uploader: userAttributes?.username,
       scanlationGroup: groupAttributes?.name,
+      pages: source.attributes.pages,
     );
   }
 }

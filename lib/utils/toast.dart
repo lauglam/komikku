@@ -1,5 +1,56 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
+import 'package:komikku/utils/icons.dart';
+
+Future<void> showBottomModal({
+  required BuildContext context,
+  required String title,
+  required Widget child,
+}) async {
+  await showModalBottomSheet(
+    backgroundColor: Colors.transparent,
+    isScrollControlled: true,
+    context: context,
+    builder: (BuildContext context) {
+      return Container(
+        clipBehavior: Clip.antiAlias,
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(4),
+            topRight: Radius.circular(4),
+          ),
+        ),
+        height: MediaQuery.of(context).size.height / 2.0,
+        child: Column(children: [
+          SizedBox(
+            height: 50,
+            child: Stack(
+              textDirection: TextDirection.rtl,
+              children: [
+                Center(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.0,
+                    ),
+                  ),
+                ),
+                IconButton(
+                  icon: const Icon(TaoIcons.wrong),
+                  onPressed: () => Navigator.of(context).pop(),
+                ),
+              ],
+            ),
+          ),
+          // const Divider(height: 1),
+          Expanded(child: child),
+        ]),
+      );
+    },
+  );
+}
 
 CancelFunc showText({
   required String text,
@@ -60,7 +111,7 @@ void showAlertDialog({
       clickClose: false,
       allowClick: false,
       onlyOne: true,
-      crossPage: true,
+      crossPage: false,
       backButtonBehavior: backButtonBehavior,
       wrapToastAnimation: (controller, cancel, child) => Stack(
             children: <Widget>[
