@@ -339,14 +339,23 @@ class _DetailsGrid extends StatelessWidget {
                       clipBehavior: Clip.antiAlias,
                       child: ListTile(
                         dense: true,
-                        title: Text('${values[index].title ?? index}'),
+                        title: Text(
+                          '${values[index].title ?? index}',
+                          style: const TextStyle(overflow: TextOverflow.ellipsis),
+                        ),
                         subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            Text(timeAgo(values[index].readableAt)),
-                            Text(values[index].scanlationGroup ?? ''),
-                            Text(values[index].uploader ?? ''),
-                            Text('共 ${values[index].pages} 页'),
+                            _ExpandedText(timeAgo(values[index].readableAt)),
+                            const Padding(padding: EdgeInsets.only(left: 5)),
+                            _ExpandedText(values[index].scanlationGroup ?? ''),
+                            const Padding(padding: EdgeInsets.only(left: 5)),
+                            _ExpandedText(values[index].uploader ?? ''),
+                            const Padding(padding: EdgeInsets.only(left: 5)),
+                            _ExpandedText(
+                              '共 ${values[index].pages} 页',
+                              alignment: Alignment.centerRight,
+                            ),
                           ],
                         ),
                         onTap: () => Navigator.push(
@@ -374,6 +383,29 @@ class _DetailsGrid extends StatelessWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class _ExpandedText extends StatelessWidget {
+  const _ExpandedText(this.text, {Key? key, this.alignment}) : super(key: key);
+
+  final String text;
+  final Alignment? alignment;
+
+  @override
+  Widget build(BuildContext context) {
+    if (alignment != null) {
+      return Expanded(
+        child: Container(
+          alignment: alignment,
+          child: Text(text, style: const TextStyle(overflow: TextOverflow.ellipsis)),
+        ),
+      );
+    }
+
+    return Expanded(
+      child: Text(text, style: const TextStyle(overflow: TextOverflow.ellipsis)),
     );
   }
 }
