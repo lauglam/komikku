@@ -22,14 +22,22 @@ class TagAttributes {
             ? null
             : json['description'] is Iterable
                 ? null
-                : LocalizedString.fromJson(
-                    json['description'] as Map<String, dynamic>),
+                : LocalizedString.fromJson(json['description'] as Map<String, dynamic>),
       );
 
-  Map<String, dynamic> toJson() => {
-        'name': name,
-        'group': group,
-        'version': version,
-        'description': description,
-      };
+  Map<String, dynamic> toJson() {
+    final val = <String, dynamic>{};
+
+    void writeNotNull(String key, dynamic value) {
+      if (value != null) {
+        val[key] = value;
+      }
+    }
+
+    val['name'] = name;
+    val['group'] = group;
+    val['version'] = version;
+    writeNotNull('description', description?.toJson());
+    return val;
+  }
 }

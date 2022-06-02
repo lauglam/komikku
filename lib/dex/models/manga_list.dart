@@ -25,7 +25,7 @@ class MangaListResponse extends PageResponse<Manga> {
 
   Map<String, dynamic> toJson() => {
         'response': responseTypeEnumMap[response],
-        'data': data,
+        'data': data.map((e) => e.toJson()).toList(),
         'limit': limit,
         'offset': offset,
         'total': total,

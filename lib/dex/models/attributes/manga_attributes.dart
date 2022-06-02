@@ -98,17 +98,17 @@ class MangaAttributes {
       }
     }
 
-    val['title'] = title;
+    val['title'] = title.toJson();
     val['isLocked'] = isLocked;
     val['originalLanguage'] = originalLanguage;
     val['contentRating'] = contentRatingEnumMap[contentRating];
     val['chapterNumbersResetOnNewVolume'] = chapterNumbersResetOnNewVolume;
     val['availableTranslatedLanguages'] = availableTranslatedLanguages;
-    val['tags'] = tags;
+    val['tags'] = tags.map((e) => e.toJson()).toList();
     val['status'] = statusEnumMap[status];
     val['state'] = stateEnumMap[state];
-    writeNotNull('altTitle', altTitle);
-    writeNotNull('description', description);
+    writeNotNull('altTitle', altTitle?.map((e) => e.toJson()).toList());
+    writeNotNull('description', description?.toJson());
     writeNotNull('lastVolume', lastVolume);
     writeNotNull('lastChapter', lastChapter);
     writeNotNull('publicationDemographic',

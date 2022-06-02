@@ -84,7 +84,7 @@ class AuthorAttributes {
     val['updatedAt'] = updatedAt;
     val['version'] = version;
     writeNotNull('imageUrl', imageUrl);
-    writeNotNull('biography', biography);
+    writeNotNull('biography', biography?.toJson());
     writeNotNull('twitter', twitter);
     writeNotNull('pixiv', pixiv);
     writeNotNull('melonBook', melonBook);

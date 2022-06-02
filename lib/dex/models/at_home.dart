@@ -17,6 +17,6 @@ class AtHome {
 
   Map<String, dynamic> toJson() => {
         'baseUrl': baseUrl,
-        'chapter': chapter,
+        'chapter': chapter.toJson(),
       };
 }

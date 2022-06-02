@@ -9,6 +9,7 @@ class LogoutResponse extends Response {
         result: $enumDecode(resultEnumMap, json['result']),
       );
 
+  @override
   Map<String, dynamic> toJson() => {
         'result': resultEnumMap[result],
       };

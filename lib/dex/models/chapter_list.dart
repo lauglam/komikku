@@ -13,8 +13,7 @@ class ChapterListResponse extends PageResponse<Chapter> {
     required super.total,
   });
 
-  factory ChapterListResponse.fromJson(Map<String, dynamic> json) =>
-      ChapterListResponse(
+  factory ChapterListResponse.fromJson(Map<String, dynamic> json) => ChapterListResponse(
         response: $enumDecode(responseTypeEnumMap, json['response']),
         data: (json['data'] as List<dynamic>)
             .map((e) => Chapter.fromJson(e as Map<String, dynamic>))
@@ -26,11 +25,9 @@ class ChapterListResponse extends PageResponse<Chapter> {
 
   Map<String, dynamic> toJson() => {
         'response': responseTypeEnumMap[response],
-        'data': data,
+        'data': data.map((e) => e.toJson()).toList(),
         'limit': limit,
         'offset': offset,
         'total': total,
       };
 }
-
-

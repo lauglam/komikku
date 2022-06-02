@@ -4,6 +4,7 @@ import 'package:komikku/dex/models/query/chapter_list_query.dart';
 import 'package:komikku/utils/http.dart';
 
 class ChapterApi {
+  /// 获取章节列表
   static Future<ChapterListResponse> getChapterListAsync({
     ChapterListQuery? query,
     ChapterListOrder? order,

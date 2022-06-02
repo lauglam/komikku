@@ -75,7 +75,7 @@ class Tag {
   Map<String, dynamic> toJson() => {
         'id': id,
         'type': entityTypeEnumMap[type],
-        'attributes': attributes,
-        'relationships': relationships,
+        'attributes': attributes.toJson(),
+        'relationships': relationships.map((e) => e.toJson()).toList(),
       };
 }

@@ -40,7 +40,7 @@ class User {
 
   Map<String, dynamic> toJson() => {
         'id': id,
-        'attributes': attributes,
-        'relationships': relationships,
+        'attributes': attributes.toJson(),
+        'relationships': relationships.map((e) => e.toJson()).toList(),
       };
 }
