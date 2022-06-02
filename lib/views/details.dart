@@ -294,13 +294,13 @@ class _DetailsState extends State<Details> {
 
 /// 漫画栅格
 class _DetailsGrid extends StatelessWidget {
-  const _DetailsGrid(this.dtos, {Key? key}) : super(key: key);
+  const _DetailsGrid(this.chapters, {Key? key}) : super(key: key);
 
-  final List<ChapterDto> dtos;
+  final List<ChapterDto> chapters;
 
   @override
   Widget build(BuildContext context) {
-    var itemMap = dtos.groupListsBy((value) => value.chapter);
+    var itemMap = chapters.groupListsBy((value) => value.chapter);
 
     return GridView.builder(
       padding: const EdgeInsets.all(15),
@@ -387,6 +387,7 @@ class _DetailsGrid extends StatelessWidget {
   }
 }
 
+/// 自适应文字
 class _ExpandedText extends StatelessWidget {
   const _ExpandedText(this.text, {Key? key, this.alignment}) : super(key: key);
 
