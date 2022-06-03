@@ -24,9 +24,9 @@ class MangaAttributes {
   final int? year;
   final dynamic links;
 
-  String createdAt;
-  String updatedAt;
-  int version;
+  final String createdAt;
+  final String updatedAt;
+  final int version;
 
   MangaAttributes({
     required this.title,

@@ -34,12 +34,8 @@ dependencies:
   dio: ^4.0.6
   # 简单的Key-Value缓存
   shared_preferences: ^2.0.15
-  # 文件持久化
-  path_provider: ^2.0.10
   # 配合build_runner、json_serializable一起使用，本身也提供帮助类
   json_annotation: ^4.5.0
-  # 主要用于时间格式化，后续考虑移除
-  intl: ^0.17.0
   # 网络图片加载
   cached_network_image: ^3.2.1
   # 集合处理
@@ -50,6 +46,16 @@ dependencies:
   timeago: ^3.2.2
   # 跳转Url
   url_launcher: ^6.1.2
+  # 对象传递相关[InheritedWidget]
+  provider: ^6.0.3
+  # 文件目录相关
+  path_provider: ^2.0.10
+  # 路径
+  path: ^1.8.1
+  # 唯一键
+  uuid: 3.0.6
+  # 数据库
+  sqflite: ^2.0.2+1
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
