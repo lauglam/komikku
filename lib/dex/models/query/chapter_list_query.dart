@@ -1,33 +1,32 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/enum/content_rating.dart';
 import 'package:komikku/dex/models/enum/order_mode.dart';
-import 'package:komikku/dex/models/util.dart';
 
 /// ChapterList Query
 class ChapterListQuery {
-  List<String>? ids;
-  String? title;
-  List<String>? groups;
-  String? uploader;
-  String? manga;
-  List<String>? volume;
-  String? chapter;
-  List<ContentRating>? contentRating;
+  final List<String>? ids;
+  final String? title;
+  final List<String>? groups;
+  final String? uploader;
+  final String? manga;
+  final List<String>? volume;
+  final String? chapter;
+  final List<ContentRating>? contentRating;
 
-  List<String>? translatedLanguage;
-  List<String>? originalLanguage;
-  List<String>? excludedOriginalLanguage;
-  List<String>? excludedGroups;
-  List<String>? excludedUploaders;
-  List<String>? includeFutureUpdates;
+  final List<String>? translatedLanguage;
+  final List<String>? originalLanguage;
+  final List<String>? excludedOriginalLanguage;
+  final List<String>? excludedGroups;
+  final List<String>? excludedUploaders;
+  final List<String>? includeFutureUpdates;
 
-  DateTime? createdAtSince;
-  DateTime? updatedAtSince;
-  DateTime? publishAtSince;
+  final DateTime? createdAtSince;
+  final DateTime? updatedAtSince;
+  final DateTime? publishAtSince;
 
-  List<String>? includes;
-  int? limit;
-  int? offset;
+  final List<String>? includes;
+  final int? limit;
+  final int? offset;
 
   ChapterListQuery({
     this.ids,
@@ -57,11 +56,11 @@ class ChapterListQuery {
         offset: json['offset'] as int?,
         includes: (json['includes[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
         createdAtSince:
-            json['createdAtSince'] == null ? null : parseDate(json['createdAtSince'] as String),
+            json['createdAtSince'] == null ? null : DateTime.parse(json['createdAtSince'] as String),
         updatedAtSince:
-            json['updatedAtSince'] == null ? null : parseDate(json['updatedAtSince'] as String),
+            json['updatedAtSince'] == null ? null : DateTime.parse(json['updatedAtSince'] as String),
         publishAtSince:
-            json['publishAtSince'] == null ? null : parseDate(json['publishAtSince'] as String),
+            json['publishAtSince'] == null ? null : DateTime.parse(json['publishAtSince'] as String),
         translatedLanguage:
             (json['translatedLanguage[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
         originalLanguage:
@@ -99,9 +98,9 @@ class ChapterListQuery {
     writeNotNull('limit', limit?.toString());
     writeNotNull('offset', offset?.toString());
     writeNotNull('includes[]', includes);
-    writeNotNull('createdAtSince', formatDate(createdAtSince));
-    writeNotNull('updatedAtSince', formatDate(updatedAtSince));
-    writeNotNull('publishAtSince', formatDate(publishAtSince));
+    writeNotNull('createdAtSince', createdAtSince?.toIso8601String());
+    writeNotNull('updatedAtSince', updatedAtSince?.toIso8601String());
+    writeNotNull('publishAtSince', publishAtSince?.toIso8601String());
     writeNotNull('translatedLanguage[]', translatedLanguage);
     writeNotNull('originalLanguage[]', originalLanguage);
     writeNotNull('excludedOriginalLanguage[]', excludedOriginalLanguage);
@@ -122,12 +121,12 @@ class ChapterListQuery {
 
 /// ChapterList Order
 class ChapterListOrder {
-  OrderMode? createdAt;
-  OrderMode? updatedAt;
-  OrderMode? publishAt;
-  OrderMode? readableAt;
-  OrderMode? volume;
-  OrderMode? chapter;
+  final OrderMode? createdAt;
+  final OrderMode? updatedAt;
+  final OrderMode? publishAt;
+  final OrderMode? readableAt;
+  final OrderMode? volume;
+  final OrderMode? chapter;
 
   ChapterListOrder({
     this.createdAt,

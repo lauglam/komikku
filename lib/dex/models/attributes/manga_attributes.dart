@@ -7,22 +7,22 @@ import 'package:komikku/dex/models/enum/publication_demographic.dart';
 import 'package:komikku/dex/models/tag.dart';
 
 class MangaAttributes {
-  LocalizedString title;
-  bool isLocked;
-  String originalLanguage;
-  ContentRating contentRating;
-  bool chapterNumbersResetOnNewVolume;
-  List<String?> availableTranslatedLanguages;
-  List<Tag> tags;
-  Status status;
-  State state;
-  List<LocalizedString>? altTitle;
-  LocalizedString? description;
-  String? lastVolume;
-  String? lastChapter;
-  PublicationDemographic? publicationDemographic;
-  int? year;
-  dynamic links;
+  final LocalizedString title;
+  final bool isLocked;
+  final String originalLanguage;
+  final ContentRating contentRating;
+  final bool chapterNumbersResetOnNewVolume;
+  final List<String?> availableTranslatedLanguages;
+  final List<Tag> tags;
+  final Status status;
+  final State state;
+  final List<LocalizedString>? altTitle;
+  final LocalizedString? description;
+  final String? lastVolume;
+  final String? lastChapter;
+  final PublicationDemographic? publicationDemographic;
+  final int? year;
+  final dynamic links;
 
   String createdAt;
   String updatedAt;

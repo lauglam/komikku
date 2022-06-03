@@ -1,7 +1,7 @@
 class UsualQuery {
-  List<String>? includes;
-  int? limit;
-  int? offset;
+  final List<String>? includes;
+  final int? limit;
+  final int? offset;
 
   UsualQuery({
     this.includes,

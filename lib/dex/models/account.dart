@@ -2,9 +2,9 @@ import 'package:komikku/dex/models/response.dart';
 
 /// 创建账号
 class AccountCreate {
-  String username;
-  String password;
-  String email;
+  final String username;
+  final String password;
+  final String email;
 
   AccountCreate({
     required this.username,
@@ -46,7 +46,7 @@ class SendAccountActivationCode {
 
 /// 完成恢复(修改密码)
 class RecoverComplete {
-  String newPassword;
+  final String newPassword;
 
   RecoverComplete({required this.newPassword});
 

@@ -20,9 +20,9 @@ class UserResponse extends OkResponse<User> {
 }
 
 class User {
-  String id;
-  UserAttributes attributes;
-  List<Relationship> relationships;
+  final String id;
+  final UserAttributes attributes;
+  final List<Relationship> relationships;
 
   User({
     required this.id,

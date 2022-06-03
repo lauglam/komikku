@@ -1,26 +1,26 @@
 import 'package:komikku/dex/models/localized_string.dart';
 
 class AuthorAttributes {
-  String name;
-  String? imageUrl;
-  LocalizedString? biography;
-  String? twitter;
-  String? pixiv;
-  String? melonBook;
-  String? fanBox;
-  String? booth;
-  String? nicoVideo;
-  String? skeb;
-  String? fantia;
-  String? tumber;
-  String? youtube;
-  String? weibo;
-  String? naver;
-  String? website;
+  final String name;
+  final String? imageUrl;
+  final LocalizedString? biography;
+  final String? twitter;
+  final String? pixiv;
+  final String? melonBook;
+  final String? fanBox;
+  final String? booth;
+  final String? nicoVideo;
+  final String? skeb;
+  final String? fantia;
+  final String? tumber;
+  final String? youtube;
+  final String? weibo;
+  final String? naver;
+  final String? website;
 
-  String createdAt;
-  String updatedAt;
-  int version;
+  final String createdAt;
+  final String updatedAt;
+  final int version;
 
   AuthorAttributes({
     required this.name,

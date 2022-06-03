@@ -1,20 +1,20 @@
 import 'package:komikku/dex/models/localized_string.dart';
 
 class ScanlationGroupAttributes {
-  String name;
-  bool locked;
-  bool official;
-  bool inactive;
-  String? publishDelay;
-  List<LocalizedString>? altNames;
-  String? website;
-  String? ircServer;
-  String? ircChannel;
-  String? discord;
-  String? contactEmail;
-  String? description;
-  String? twitter;
-  String? mangaUpdates;
+  final String name;
+  final bool locked;
+  final bool official;
+  final bool inactive;
+  final String? publishDelay;
+  final List<LocalizedString>? altNames;
+  final String? website;
+  final String? ircServer;
+  final String? ircChannel;
+  final String? discord;
+  final String? contactEmail;
+  final String? description;
+  final String? twitter;
+  final String? mangaUpdates;
   List<String>? focusedLanguage;
 
   String createdAt;

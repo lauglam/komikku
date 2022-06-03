@@ -1,17 +1,17 @@
 class ChapterAttributes {
-  String publishAt;
-  String readableAt;
-  String translatedLanguage;
-  int pages;
-  String? title;
-  String? uploader;
-  String? volume;
-  String? chapter;
-  String? externalUrl;
+  final String publishAt;
+  final String readableAt;
+  final String translatedLanguage;
+  final int pages;
+  final String? title;
+  final String? uploader;
+  final String? volume;
+  final String? chapter;
+  final String? externalUrl;
 
-  String createdAt;
-  String updatedAt;
-  int version;
+  final String createdAt;
+  final String updatedAt;
+  final int version;
 
   ChapterAttributes({
     required this.publishAt,
@@ -46,7 +46,7 @@ class ChapterAttributes {
   Map<String, dynamic> toJson() {
     final val = <String, dynamic>{};
 
-    void writeNotNull(String key, dynamic value) {
+    void writeNotNull(final String key, dynamic value) {
       if (value != null) {
         val[key] = value;
       }

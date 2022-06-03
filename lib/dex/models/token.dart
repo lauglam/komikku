@@ -1,10 +1,10 @@
 /// 用户令牌
 class Token {
   // 有效期15分钟
-  String session;
+  final String session;
 
   // 有效期30天
-  String refresh;
+  final String refresh;
 
   Token({
     required this.session,

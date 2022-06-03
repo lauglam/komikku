@@ -5,9 +5,9 @@ import 'enum/response_type.dart';
 
 /// 页响应
 abstract class PageResponse<T> extends OkResponse<List<T>> {
-  int limit;
-  int offset;
-  int total;
+  final int limit;
+  final int offset;
+  final int total;
 
   PageResponse({
     required super.response,
@@ -20,8 +20,8 @@ abstract class PageResponse<T> extends OkResponse<List<T>> {
 
 /// 成功响应
 class OkResponse<T> {
-  ResponseType response;
-  T data;
+  final ResponseType response;
+  final T data;
 
   OkResponse({
     required this.response,
@@ -31,7 +31,7 @@ class OkResponse<T> {
 
 /// 响应
 class Response {
-  Result result;
+  final Result result;
 
   Response({
     required this.result,

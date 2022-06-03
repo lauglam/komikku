@@ -2,10 +2,10 @@ import 'package:komikku/dex/models/localized_string.dart';
 
 /// 标签属性
 class TagAttributes {
-  LocalizedString name;
-  String group;
-  int version;
-  LocalizedString? description;
+  final LocalizedString name;
+  final String group;
+  final int version;
+  final LocalizedString? description;
 
   TagAttributes({
     required this.name,

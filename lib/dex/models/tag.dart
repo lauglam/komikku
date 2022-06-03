@@ -51,10 +51,10 @@ class TagResponse extends OkResponse<Tag> {
 
 /// 标签
 class Tag {
-  String id;
-  EntityType type;
-  TagAttributes attributes;
-  List<Relationship> relationships;
+  final String id;
+  final EntityType type;
+  final TagAttributes attributes;
+  final List<Relationship> relationships;
 
   Tag({
     required this.id,

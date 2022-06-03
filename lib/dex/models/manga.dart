@@ -4,10 +4,10 @@ import 'package:komikku/dex/models/enum/entity_type.dart';
 import 'package:komikku/dex/models/relationship.dart';
 
 class Manga {
-  String id;
-  EntityType type;
-  MangaAttributes attributes;
-  List<Relationship> relationships;
+  final String id;
+  final EntityType type;
+  final MangaAttributes attributes;
+  final List<Relationship> relationships;
 
   Manga({
     required this.id,

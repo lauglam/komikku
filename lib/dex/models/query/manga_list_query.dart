@@ -1,37 +1,35 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/enum/content_rating.dart';
 import 'package:komikku/dex/models/enum/publication_demographic.dart';
-import 'package:komikku/dex/models/util.dart';
 import 'package:komikku/dex/models/enum/order_mode.dart';
 import 'package:komikku/dex/models/enum/logic_mode.dart';
 
 /// MangaList Query
 class MangaListQuery {
-  @JsonKey(includeIfNull: false)
-  List<String>? ids;
-  String? title;
-  String? group;
-  bool? hasAvailableChapters;
-  List<String>? authors;
-  List<String>? artists;
-  int? year;
-  List<String>? includedTags;
-  LogicMode? includedTagsMode;
-  List<String>? excludedTags;
-  LogicMode? excludedTagsMode;
-  List<String>? status;
-  List<String>? originalLanguage;
-  List<String>? excludedOriginalLanguage;
-  List<String>? availableTranslatedLanguage;
-  List<PublicationDemographic>? publicationDemographic;
-  List<ContentRating>? contentRating;
+  final List<String>? ids;
+  final String? title;
+  final String? group;
+  final bool? hasAvailableChapters;
+  final List<String>? authors;
+  final List<String>? artists;
+  final int? year;
+  final List<String>? includedTags;
+  final LogicMode? includedTagsMode;
+  final List<String>? excludedTags;
+  final LogicMode? excludedTagsMode;
+  final List<String>? status;
+  final List<String>? originalLanguage;
+  final List<String>? excludedOriginalLanguage;
+  final List<String>? availableTranslatedLanguage;
+  final List<PublicationDemographic>? publicationDemographic;
+  final List<ContentRating>? contentRating;
 
-  DateTime? createdAtSince;
-  DateTime? updatedAtSince;
+  final DateTime? createdAtSince;
+  final DateTime? updatedAtSince;
 
-  List<String>? includes;
-  int? limit;
-  int? offset;
+  final List<String>? includes;
+  final int? limit;
+  final int? offset;
 
   MangaListQuery({
     this.ids,
@@ -85,10 +83,12 @@ class MangaListQuery {
         contentRating: (json['contentRating[]'] as List<dynamic>?)
             ?.map((e) => $enumDecode(contentRatingEnumMap, e))
             .toList(),
-        createdAtSince:
-            json['createdAtSince'] == null ? null : parseDate(json['createdAtSince'] as String),
-        updatedAtSince:
-            json['updatedAtSince'] == null ? null : parseDate(json['updatedAtSince'] as String),
+        createdAtSince: json['createdAtSince'] == null
+            ? null
+            : DateTime.parse(json['createdAtSince'] as String),
+        updatedAtSince: json['updatedAtSince'] == null
+            ? null
+            : DateTime.parse(json['updatedAtSince'] as String),
         includes: (json['includes[]'] as List<dynamic>?)?.map((e) => e as String).toList(),
         limit: json['limit'] as int?,
         offset: json['offset'] as int?,
@@ -121,8 +121,8 @@ class MangaListQuery {
     writeNotNull('publicationDemographic[]',
         publicationDemographic?.map((e) => publicationDemographicEnumMap[e]).toList());
     writeNotNull('contentRating[]', contentRating?.map((e) => contentRatingEnumMap[e]).toList());
-    writeNotNull('createdAtSince', formatDate(createdAtSince));
-    writeNotNull('updatedAtSince', formatDate(updatedAtSince));
+    writeNotNull('createdAtSince', createdAtSince?.toIso8601String());
+    writeNotNull('updatedAtSince', updatedAtSince?.toIso8601String());
     writeNotNull('includes[]', includes);
     writeNotNull('limit', limit?.toString());
     writeNotNull('offset', offset?.toString());
@@ -132,13 +132,13 @@ class MangaListQuery {
 
 /// MangaList Order
 class MangaListOrder {
-  OrderMode? title;
-  OrderMode? year;
-  OrderMode? createdAt;
-  OrderMode? updatedAt;
-  OrderMode? latestUploadedChapter;
-  OrderMode? followedCount;
-  OrderMode? relevance;
+  final OrderMode? title;
+  final OrderMode? year;
+  final OrderMode? createdAt;
+  final OrderMode? updatedAt;
+  final OrderMode? latestUploadedChapter;
+  final OrderMode? followedCount;
+  final OrderMode? relevance;
 
   MangaListOrder({
     this.title,

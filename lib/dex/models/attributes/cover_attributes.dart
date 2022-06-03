@@ -1,8 +1,8 @@
 class CoverAttributes {
-  String fileName;
-  String? volume;
-  String? description;
-  String? locale;
+  final String fileName;
+  final String? volume;
+  final String? description;
+  final String? locale;
 
   CoverAttributes({
     required this.fileName,

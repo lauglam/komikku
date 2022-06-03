@@ -5,7 +5,7 @@ typedef RefreshResponse = LoginResponse;
 
 /// 刷新请求
 class RefreshToken {
-  String token;
+  final String token;
 
   RefreshToken({required this.token});
 

@@ -22,10 +22,10 @@ class ChapterResponse extends OkResponse<Chapter> {
 
 /// 章节
 class Chapter {
-  String id;
-  EntityType type;
-  ChapterAttributes attributes;
-  List<Relationship> relationships;
+  final String id;
+  final EntityType type;
+  final ChapterAttributes attributes;
+  final List<Relationship> relationships;
 
   Chapter({
     required this.id,

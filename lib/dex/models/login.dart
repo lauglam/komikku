@@ -23,9 +23,9 @@ class LoginResponse extends Response {
 
 /// 登录请求
 class Login {
-  String? username;
-  String? email;
-  String password;
+  final String? username;
+  final String? email;
+  final String password;
 
   Login({
     this.username,

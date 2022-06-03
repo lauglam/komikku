@@ -1,7 +1,7 @@
 class AtHomeChapter {
-  String hash;
-  List<String> data;
-  List<String> dataSaver;
+  final String hash;
+  final List<String> data;
+  final List<String> dataSaver;
 
   AtHomeChapter({
     required this.hash,

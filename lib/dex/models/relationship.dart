@@ -4,10 +4,10 @@ import 'package:komikku/dex/models/enum/related.dart';
 import 'package:collection/collection.dart';
 
 class Relationship {
-  String id;
-  EntityType type;
-  Related? related;
-  dynamic attributes;
+  final String id;
+  final EntityType type;
+  final Related? related;
+  final dynamic attributes;
 
   Relationship({
     required this.id,

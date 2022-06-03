@@ -212,6 +212,12 @@ class _SearchState extends State<Search> {
 
   /// 搜索漫画
   Future<List<MangaDto>> _searchManga() async {
+    List<String>? ids;
+    if (_includedTags.isNotEmpty) {
+      var tagList = await _tagListFuture;
+      ids = tagList!.where((e) => _includedTags.contains(e.name)).map((e) => e.id).toList();
+    }
+
     var query = MangaListQuery(
       limit: _limit,
       offset: _offset,
@@ -224,14 +230,8 @@ class _SearchState extends State<Search> {
         ContentRating.pornographic,
       ],
       availableTranslatedLanguage: ['zh', 'zh-hk'],
-      includedTags: _includedTags.isEmpty ? null : _includedTags,
+      includedTags: ids,
     );
-
-    if (_includedTags.isNotEmpty) {
-      var tagList = await _tagListFuture;
-      var ids = tagList!.where((e) => _includedTags.contains(e.name)).map((e) => e.id);
-      query.includedTags = ids.toList();
-    }
 
     var response = await MangaApi.getMangaListAsync(
       query: query,

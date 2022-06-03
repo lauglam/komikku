@@ -3,14 +3,14 @@ import 'package:komikku/dex/models/attributes/scanlation_group_attributes.dart';
 import 'package:komikku/dex/models/attributes/user_attributes.dart';
 
 class ChapterDto {
-  String id;
-  DateTime readableAt;
-  String? uploader;
-  String? scanlationGroup;
-  String? title;
-  String? chapter;
-  String? volume;
-  int pages;
+  final String id;
+  final DateTime readableAt;
+  final String? uploader;
+  final String? scanlationGroup;
+  final String? title;
+  final String? chapter;
+  final String? volume;
+  final int pages;
 
   ChapterDto({
     required this.id,

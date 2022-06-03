@@ -1,8 +1,8 @@
 import 'package:komikku/dex/models/at_home_chapter.dart';
 
 class AtHome {
-  String baseUrl;
-  AtHomeChapter chapter;
+  final String baseUrl;
+  final AtHomeChapter chapter;
 
   AtHome({
     required this.baseUrl,

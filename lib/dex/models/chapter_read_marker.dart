@@ -6,7 +6,7 @@ import 'package:komikku/dex/models/response.dart';
 class ChapterReadMarkerResponse extends Response {
   ChapterReadMarkerResponse({required super.result, required this.data});
 
-  List<String> data;
+  final List<String> data;
 
   factory ChapterReadMarkerResponse.fromJson(Map<String, dynamic> json) =>
       ChapterReadMarkerResponse(
@@ -25,7 +25,7 @@ class ChapterReadMarkerResponse extends Response {
 class GroupedChapterReadMarkerResponse extends Response {
   GroupedChapterReadMarkerResponse({required super.result, required this.data});
 
-  Map<String, List<String>> data;
+  final Map<String, List<String>> data;
 
   factory GroupedChapterReadMarkerResponse.fromJson(Map<String, dynamic> json) =>
       GroupedChapterReadMarkerResponse(
@@ -43,8 +43,8 @@ class GroupedChapterReadMarkerResponse extends Response {
 
 /// 批量上传阅读记录
 class ChapterReadMarkerBatch {
-  List<String>? chapterIdsRead;
-  List<String>? chapterIdsUnread;
+  final List<String>? chapterIdsRead;
+  final List<String>? chapterIdsUnread;
 
   ChapterReadMarkerBatch({this.chapterIdsRead, this.chapterIdsUnread});
 

@@ -1,9 +1,9 @@
 import 'package:komikku/dex/models/tag.dart';
 
 class TagDto {
-  String id;
-  String name;
-  String group;
+  final String id;
+  final String name;
+  final String group;
 
   TagDto({
     required this.id,

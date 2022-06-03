@@ -1,7 +1,7 @@
 class UserAttributes {
-  String username;
-  List<String> roles;
-  int version;
+  final String username;
+  final List<String> roles;
+  final int version;
 
   UserAttributes({
     required this.username,
