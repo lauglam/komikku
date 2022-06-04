@@ -1,6 +1,7 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:komikku/provider/history_provider.dart';
+import 'package:komikku/provider/follow_provider.dart';
+import 'package:komikku/provider/user_provider.dart';
 import 'package:komikku/views/login.dart';
 import 'package:komikku/views/search.dart';
 import 'package:komikku/views/shell.dart';
@@ -18,7 +19,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => HistoryProvider()),
+        ChangeNotifierProvider(create: (context) => UserProvider()),
+        ChangeNotifierProvider(create: (context) => FollowProvider()),
       ],
       builder: (context, child) => MaterialApp(
         builder: BotToastInit(),

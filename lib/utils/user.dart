@@ -1,19 +1,23 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:komikku/models/refresh.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+/// 刷新令牌过期时间
 const _refreshExpire = Duration(days: 29);
+
+/// 会话令牌过期时间
 const _sessionExpire = Duration(minutes: 14);
 
-/// 是否登录
-Future<bool> get isLogin async {
-  return await session != null || await refresh != null;
+/// 用户状态
+Future<bool> userLoginState() async {
+  return await getSession() != null || await getRefresh() != null;
 }
 
 /// 获取会话令牌
-Future<String?> get session async {
+Future<String?> getSession() async {
   final prefs = await SharedPreferences.getInstance();
   final list = prefs.getStringList('session');
   if (list == null) return null;
@@ -27,7 +31,7 @@ Future<String?> get session async {
 }
 
 /// 获取刷新令牌
-Future<String?> get refresh async {
+Future<String?> getRefresh() async {
   var file = await _localFile;
   // 不存在时返回 null
   if (!await file.exists()) return null;
@@ -88,25 +92,4 @@ Future<File> get _localFile async {
 Future<String> get _localPath async {
   final directory = await getApplicationDocumentsDirectory();
   return directory.path;
-}
-
-/// 刷新令牌
-class Refresh {
-  String token;
-  DateTime expire;
-
-  Refresh({
-    required this.token,
-    required this.expire,
-  });
-
-  factory Refresh.fromJson(Map<String, dynamic> json) => Refresh(
-        token: json['token'] as String,
-        expire: DateTime.parse(json['expire'] as String),
-      );
-
-  Map<String, dynamic> toJson() => {
-        'token': token,
-        'expire': expire.toIso8601String(),
-      };
 }

@@ -1,10 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:komikku/dex/apis/auth_api.dart';
-import 'package:komikku/dex/models/login.dart' as auth;
-import 'package:komikku/utils/authentication.dart';
-import 'package:komikku/utils/event_bus.dart';
+import 'package:komikku/provider/user_provider.dart';
 import 'package:komikku/utils/toast.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {
@@ -23,6 +21,8 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    var userProvider = Provider.of<UserProvider>(context,listen: false);
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Column(
@@ -96,7 +96,24 @@ class _LoginState extends State<Login> {
                   side: MaterialStateProperty.all(const BorderSide(color: Colors.orange, width: 1)),
                   minimumSize: MaterialStateProperty.all(const Size(300, 35)),
                 ),
-                onPressed: () => _login(),
+                /// 登录
+                onPressed: () async {
+                  _formKey.currentState?.save();
+                  if (!_validate()) return;
+
+                  try {
+                    await userProvider.login(_emailOrUsername!, _password!);
+
+                    // 登录成功，退出本页面
+                    showText(text: '登录成功');
+
+                    // 回退
+                    if (mounted) Navigator.of(context).pop();
+                  } catch (e) {
+                    showText(text: '账号或密码有误');
+                    return;
+                  }
+                },
                 child: const Text('登录', style: TextStyle(color: Colors.orange)),
               ),
             ),
@@ -155,34 +172,6 @@ class _LoginState extends State<Login> {
       mode: LaunchMode.externalApplication,
     )) {
       throw 'Could not launch $url';
-    }
-  }
-
-  /// 登录
-  _login() async {
-    _formKey.currentState?.save();
-    if (!_validate()) return;
-
-    try {
-      var login = _emailOrUsername!.contains('@')
-          ? auth.Login(email: _emailOrUsername!, password: _password!)
-          : auth.Login(username: _emailOrUsername!, password: _password!);
-
-      var response = await AuthApi.loginAsync(login);
-      await setRefresh(response.token.refresh);
-      await setSession(response.token.session);
-
-      // 发送事件
-      bus.emit('login');
-
-      // 登录成功，退出本页面
-      showText(text: '登录成功');
-
-      // 回退
-      if (mounted) Navigator.of(context).pop();
-    } catch (e) {
-      showText(text: '账号或密码有误');
-      return;
     }
   }
 

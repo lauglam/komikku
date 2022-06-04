@@ -7,16 +7,17 @@ import 'package:komikku/dex/models/chapter_list.dart';
 import 'package:komikku/dex/models/query/manga_feed_query.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
-import 'package:komikku/utils/authentication.dart';
-import 'package:komikku/utils/event_bus.dart';
+import 'package:komikku/provider/follow_provider.dart';
 import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/timeago.dart';
+import 'package:komikku/utils/user.dart';
 import 'package:komikku/views/reading.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/delay_pop.dart';
 import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/utils/toast.dart';
 import 'package:collection/collection.dart';
+import 'package:provider/provider.dart';
 
 class Details extends StatefulWidget {
   const Details({Key? key, required this.dto}) : super(key: key);
@@ -37,6 +38,8 @@ class _DetailsState extends State<Details> {
 
   @override
   Widget build(BuildContext context) {
+    var followProvider = Provider.of<FollowProvider>(context, listen: false);
+
     return DelayPop(
       flag: _isBusy,
       duration: const Duration(seconds: 1),
@@ -99,7 +102,7 @@ class _DetailsState extends State<Details> {
           ),
           onPressed: () async {
             // 未登录
-            if (!await isLogin) {
+            if (!await userLoginState()) {
               showText(text: '请先登录');
               return;
             }
@@ -114,10 +117,7 @@ class _DetailsState extends State<Details> {
                 onConfirm: () async {
                   showText(text: '已取消订阅');
                   _followIconValueNotifier.value = !_followIconValueNotifier.value;
-                  await _unfollowManga();
-
-                  // 刷新subscribes页面
-                  bus.emit('refresh_subscribes');
+                  await followProvider.unfollowManga(widget.dto.id);
                   _isBusy = false;
                 },
               );
@@ -125,10 +125,7 @@ class _DetailsState extends State<Details> {
               // 订阅
               showText(text: '已订阅');
               _followIconValueNotifier.value = !_followIconValueNotifier.value;
-              await _followManga();
-
-              // 刷新subscribes页面
-              bus.emit('refresh_subscribes');
+              await followProvider.followManga(widget.dto.id);
               _isBusy = false;
             }
           },
@@ -263,7 +260,7 @@ class _DetailsState extends State<Details> {
   /// 检测漫画是否被订阅
   Future<bool> _checkUserFollow() async {
     // 未登录，直接返回false
-    if (!await isLogin) {
+    if (!await userLoginState()) {
       return false;
     }
 
@@ -274,21 +271,6 @@ class _DetailsState extends State<Details> {
       // 返回404，为未订阅
       return false;
     }
-  }
-
-  /// 订阅漫画
-  Future<void> _followManga() async {
-    // 未登录，直接返回
-    if (!await isLogin) return;
-    await MangaApi.followMangaAsync(widget.dto.id);
-  }
-
-  /// 退订漫画
-  Future<void> _unfollowManga() async {
-    // 未登录，直接返回
-    if (!await isLogin) return;
-
-    await MangaApi.unfollowMangaAsync(widget.dto.id);
   }
 }
 

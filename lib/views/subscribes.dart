@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dex/models/query/usual_query.dart';
 import 'package:komikku/dto/manga_dto.dart';
-import 'package:komikku/utils/authentication.dart';
-import 'package:komikku/utils/event_bus.dart';
+import 'package:komikku/provider/follow_provider.dart';
+import 'package:komikku/provider/user_provider.dart';
+import 'package:komikku/utils/user.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/grid_view_item.dart';
+import 'package:provider/provider.dart';
 
 class Subscribes extends StatefulWidget {
   const Subscribes({Key? key}) : super(key: key);
@@ -18,22 +20,11 @@ class Subscribes extends StatefulWidget {
 }
 
 class _SubscribesState extends State<Subscribes> {
-  // 在FutureBuilder中包裹StreamBuilder时必须多播
-  final _streamController = StreamController<List<MangaDto>>.broadcast();
+  final _streamController = StreamController<List<MangaDto>>();
   final _scrollController = ScrollController();
   final _cacheMangaList = <MangaDto>[];
   int mangaLimit = 40;
   int mangaOffset = 0;
-
-  @override
-  void initState() {
-    super.initState();
-
-    // 订阅事件
-    bus.on('login', (arg) => setState(() => _clear()));
-    bus.on('logout', (arg) => setState(() => _clear()));
-    bus.on('refresh_subscribes', (arg) => setState(() => _clear()));
-  }
 
   @override
   void dispose() {
@@ -44,7 +35,10 @@ class _SubscribesState extends State<Subscribes> {
 
   /// 推入流中
   Future<void> _addMangaListToSink({bool refresh = false}) async {
-    if (refresh) _clear();
+    if (refresh) {
+      _cacheMangaList.clear();
+      mangaOffset = 0;
+    }
 
     _cacheMangaList.addAll(await _getUserFollowedMangaList());
     _streamController.sink.add(_cacheMangaList);
@@ -61,80 +55,86 @@ class _SubscribesState extends State<Subscribes> {
     }
   }
 
-  /// 清理(登录、登出、刷新时使用)
-  void _clear() {
-    _cacheMangaList.clear();
-    mangaOffset = 0;
-  }
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: FutureBuilder<bool>(
-        future: isLogin,
-        builder: (context, snapshot) {
-          return BuilderChecker(
-            snapshot: snapshot,
-            builder: (context) {
-              // 未登录
-              if (!snapshot.data!) return const Center(child: Text('请先登录'));
-
-              // 加载数据
-              _addMangaListToSink();
-              // 监听滚动控制器
-              _scrollController.removeListener(listener);
-              _scrollController.addListener(listener);
-
-              return StreamBuilder<List<MangaDto>>(
-                stream: _streamController.stream,
-                builder: (context, snapshot) {
-                  return BuilderChecker(
-                    snapshot: snapshot,
-                    builder: (context) => RefreshIndicator(
-                      onRefresh: () async {
-                        await _addMangaListToSink(refresh: true);
-                      },
-                      child: GridView.builder(
-                        // 永远滚动，即使在不满屏幕的情况下
-                        physics: const AlwaysScrollableScrollPhysics(),
-                        padding: const EdgeInsets.all(15),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 3,
-                          mainAxisSpacing: 15,
-                          crossAxisSpacing: 15,
-                          childAspectRatio: 0.75,
-                        ),
-                        controller: _scrollController,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
-                              if (index < snapshot.data!.length) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Details(dto: snapshot.data![index]),
-                                  ),
-                                );
-                              }
-                            },
-                            child: GridViewItem(
-                              imageUrl: snapshot.data![index].imageUrl256,
-                              title: snapshot.data![index].title,
-                              subtitle: snapshot.data![index].status,
-                              titleStyle: TitleStyle.footer,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
-                  );
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          // 登录后的内容（处于底层）
+          StreamBuilder<List<MangaDto>>(
+            stream: _streamController.stream,
+            builder: (context, snapshot) => BuilderChecker(
+              snapshot: snapshot,
+              builder: (context) => RefreshIndicator(
+                onRefresh: () async {
+                  await _addMangaListToSink(refresh: true);
                 },
-              );
-            },
-          );
-        },
+                child: GridView.builder(
+                  // 永远滚动，即使在不满屏幕的情况下
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  padding: const EdgeInsets.all(15),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 15,
+                    crossAxisSpacing: 15,
+                    childAspectRatio: 0.75,
+                  ),
+                  controller: _scrollController,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) => InkWell(
+                    onTap: () {
+                      /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
+                      if (index < snapshot.data!.length) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => Details(dto: snapshot.data![index]),
+                          ),
+                        );
+                      }
+                    },
+                    child: GridViewItem(
+                      imageUrl: snapshot.data![index].imageUrl256,
+                      title: snapshot.data![index].title,
+                      subtitle: snapshot.data![index].status,
+                      titleStyle: TitleStyle.footer,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+
+          // 遮盖的内容（处于上层）
+          Consumer2<UserProvider, FollowProvider>(
+            builder: (context, userProvider, followProvider, child) => FutureBuilder<bool>(
+              future: userLoginState(),
+              builder: (context, snapshot) {
+                return BuilderChecker(
+                  snapshot: snapshot,
+                  builder: (context) {
+                    // 未登录时，此控件会遮盖住[StreamBuilder]
+                    if (!snapshot.data!) {
+                      return Container(
+                        color: Colors.white,
+                        child: const Center(child: Text('请先登录')),
+                      );
+                    }
+
+                    // 加载数据
+                    _addMangaListToSink(refresh: true);
+                    // 监听滚动控制器
+                    _scrollController.removeListener(listener);
+                    _scrollController.addListener(listener);
+
+                    return const SizedBox.shrink();
+                  },
+                );
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

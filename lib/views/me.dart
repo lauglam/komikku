@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/apis/user_api.dart';
-import 'package:komikku/utils/authentication.dart';
-import 'package:komikku/utils/event_bus.dart';
+import 'package:komikku/provider/user_provider.dart';
 import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/toast.dart';
+import 'package:komikku/utils/user.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/icon_text_button.dart';
+import 'package:provider/provider.dart';
 
 class Me extends StatefulWidget {
   const Me({Key? key}) : super(key: key);
@@ -18,16 +18,6 @@ class Me extends StatefulWidget {
 }
 
 class _MeState extends State<Me> {
-  final _loginFlag = ValueNotifier<bool>(false);
-
-  @override
-  initState() {
-    super.initState();
-
-    // 订阅事件
-    bus.on('login', (arg) => setState(() {}));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -45,85 +35,96 @@ class _MeState extends State<Me> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // 资料卡片
-            FutureBuilder<String?>(
-              future: _getUserDetails(),
-              builder: (context, snapshot) {
-                _loginFlag.value = snapshot.data != null;
-                return BuilderChecker(
-                  snapshot: snapshot,
-                  builder: (context) {
-                    return Card(
-                      clipBehavior: Clip.antiAlias,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const CircleAvatar(
-                                  radius: 40,
-                                  backgroundImage: ExactAssetImage('assets/images/avatar.png'),
+            Card(
+              clipBehavior: Clip.antiAlias,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const CircleAvatar(
+                          radius: 40,
+                          backgroundImage: ExactAssetImage('assets/images/avatar.png'),
+                        ),
+                        Consumer<UserProvider>(
+                          builder: (context, userProvider, child) => FutureBuilder<bool>(
+                            future: userLoginState(),
+                            builder: (context, snapshot) => BuilderChecker(
+                              snapshot: snapshot,
+                              builder: (context) => OutlinedButton(
+                                style: ButtonStyle(
+                                  side: MaterialStateProperty.all(
+                                    const BorderSide(color: Colors.orange, width: 1),
+                                  ),
+                                  minimumSize: MaterialStateProperty.all(const Size(200, 35)),
                                 ),
-                                OutlinedButton(
-                                  style: ButtonStyle(
-                                    side: MaterialStateProperty.all(
-                                      const BorderSide(color: Colors.orange, width: 1),
-                                    ),
-                                    minimumSize: MaterialStateProperty.all(const Size(200, 35)),
-                                  ),
-                                  child: ValueListenableBuilder(
-                                    valueListenable: _loginFlag,
-                                    builder: (context, value, child) {
-                                      return Text(
-                                        _loginFlag.value ? '退出登录' : '登录',
-                                        style: const TextStyle(fontSize: 15),
-                                      );
-                                    },
-                                  ),
-                                  onPressed: () {
-                                    // 未登录
-                                    if (!_loginFlag.value) {
-                                      Navigator.pushNamed(context, '/login');
-                                      return;
-                                    }
+                                child: Text(
+                                  snapshot.data! ? '退出登录' : '登录',
+                                  style: const TextStyle(fontSize: 15),
+                                ),
+                                onPressed: () {
+                                  // 未登录
+                                  if (!snapshot.data!) {
+                                    Navigator.pushNamed(context, '/login');
+                                    return;
+                                  }
 
-                                    showAlertDialog(
-                                        title: '是否退出登录',
-                                        onConfirm: () {
-                                          _logout();
-                                          _loginFlag.value = !_loginFlag.value;
-                                        });
-                                  },
-                                ),
-                                IconButton(
-                                  icon: const Icon(Icons.arrow_forward_ios_rounded),
-                                  onPressed: () {
-                                    // TODO: 去往个人资料
-                                    showText(text: '功能暂未上线，敬请期待');
-                                  },
-                                ),
-                              ],
-                            ),
-                            // Username
-                            Padding(
-                              padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
-                              child: ValueListenableBuilder(
-                                valueListenable: _loginFlag,
-                                builder: (context, value, child) => Text(
-                                  _loginFlag.value ? snapshot.data! : '未登录',
-                                  style: const TextStyle(fontSize: 16),
-                                ),
+                                  showAlertDialog(
+                                    title: '是否退出登录',
+                                    onConfirm: () async => await userProvider.logout(),
+                                  );
+                                },
                               ),
                             ),
-                          ],
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.arrow_forward_ios_rounded),
+                          onPressed: () {
+                            // TODO: 去往个人资料
+                            showText(text: '功能暂未上线，敬请期待');
+                          },
+                        ),
+                      ],
+                    ),
+                    // Username
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
+                      child: Consumer<UserProvider>(
+                        builder: (context, userProvider, child) => FutureBuilder<bool>(
+                          future: userLoginState(),
+                          builder: (context, snapshot) => BuilderChecker(
+                            snapshot: snapshot,
+                            builder: (context) {
+                              // 未登录
+                              if (!snapshot.data!) {
+                                return const Text('未登录', style: TextStyle(fontSize: 16));
+                              }
+
+                              // 已登录
+                              return FutureBuilder<String?>(
+                                future: _getUserDetails(),
+                                builder: (context, snapshot) => BuilderChecker(
+                                  snapshot: snapshot,
+                                  builder: (context) {
+                                    return Text(
+                                      snapshot.data!,
+                                      style: const TextStyle(fontSize: 16),
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
-                    );
-                  },
-                );
-              },
+                    ),
+                  ],
+                ),
+              ),
             ),
 
             // TODO: 设置项
@@ -135,23 +136,11 @@ class _MeState extends State<Me> {
   }
 
   /// 获取用户信息
-  Future<String?> _getUserDetails() async {
-    if (!await isLogin) return null;
+  Future<String> _getUserDetails() async {
+    if (!await userLoginState()) throw Exception('Invalid operation');
 
     var response = await UserApi.getUserDetailsAsync();
     return response.data.attributes.username;
-  }
-
-  /// 退出登录
-  _logout() async {
-    // 清除refresh和session
-    await removeSession();
-    await removeRefresh();
-
-    await AuthApi.logoutAsync();
-    // 发出事件
-    bus.emit('logout');
-    showText(text: '已退出登录');
   }
 }
 
