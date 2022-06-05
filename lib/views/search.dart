@@ -192,22 +192,20 @@ class _SearchState extends State<Search> {
 
   @override
   void initState() {
-    super.initState();
     _scrollController.addListener(listener);
     _tagListFuture = _getTagList();
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _streamController.close();
     _scrollController.dispose();
+    super.dispose();
   }
 
   Future<void> listener() async {
-    if (_scrollController.position.atEdge && _scrollController.position.pixels != 0) {
-      await _addMangaListToSink();
-    }
+    if (_scrollController.onBottom) await _addMangaListToSink();
   }
 
   /// 搜索漫画

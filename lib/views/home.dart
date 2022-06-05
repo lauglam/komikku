@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/manga_dto.dart';
+import 'package:komikku/utils/extensions.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/grid_view_item.dart';
@@ -28,23 +29,20 @@ class _LatestUpdateState extends State<LatestUpdate> {
 
   @override
   void initState() {
-    super.initState();
+    _scrollController.addListener(listener);
     _addMangaListToSink();
-
-    /// 监听滚动控制器
-    _scrollController.addListener(() {
-      if (_scrollController.position.atEdge && _scrollController.position.pixels != 0) {
-        // On bottom
-        _addMangaListToSink();
-      }
-    });
+    super.initState();
   }
 
   @override
   void dispose() {
-    super.dispose();
     _streamController.close();
     _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> listener() async {
+    if (_scrollController.onBottom) await _addMangaListToSink();
   }
 
   /// 推入流中

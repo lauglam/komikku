@@ -6,6 +6,7 @@ import 'package:komikku/dex/models/query/usual_query.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/provider/follow_provider.dart';
 import 'package:komikku/provider/user_provider.dart';
+import 'package:komikku/utils/extensions.dart';
 import 'package:komikku/utils/user.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
@@ -48,11 +49,8 @@ class _SubscribesState extends State<Subscribes> {
   }
 
   /// 滚动监听器
-  void listener() {
-    if (_scrollController.position.atEdge && _scrollController.position.pixels != 0) {
-      // on bottom
-      _addMangaListToSink();
-    }
+  Future<void> listener() async {
+    if (_scrollController.onBottom) await _addMangaListToSink();
   }
 
   @override
