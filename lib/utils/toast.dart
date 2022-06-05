@@ -2,6 +2,7 @@ import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:komikku/utils/icons.dart';
 
+/// 底部模态框
 Future<void> showBottomModal({
   required BuildContext context,
   required String title,
@@ -52,6 +53,7 @@ Future<void> showBottomModal({
   );
 }
 
+/// 提示信息
 CancelFunc showText({
   required String text,
   WrapAnimation? wrapAnimation,
@@ -94,6 +96,7 @@ CancelFunc showText({
   );
 }
 
+/// 确认框
 void showAlertDialog({
   required String title,
   String confirmText = '确认',

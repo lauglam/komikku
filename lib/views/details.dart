@@ -8,7 +8,6 @@ import 'package:komikku/dex/models/query/manga_feed_query.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/provider/follow_provider.dart';
-import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/timeago.dart';
 import 'package:komikku/utils/user.dart';
 import 'package:komikku/views/reading.dart';
@@ -90,10 +89,10 @@ class _DetailsState extends State<Details> {
                     builder: (context, value, child) {
                       if (_followIconValueNotifier.value) {
                         // 已订阅
-                        return const Icon(Icons.star_rounded);
+                        return const Icon(Icons.star_rounded, size: 30);
                       }
                       // 未登录/未订阅
-                      return const Icon(Icons.star_outline_rounded);
+                      return const Icon(Icons.star_outline_rounded, size: 30);
                     },
                   );
                 },
@@ -134,6 +133,7 @@ class _DetailsState extends State<Details> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // 上方大图
               CachedNetworkImage(
                 imageUrl: widget.dto.imageUrlOriginal,
                 fit: BoxFit.fitWidth,
@@ -142,6 +142,8 @@ class _DetailsState extends State<Details> {
                 errorWidget: (context, url, progress) =>
                     Image.asset('assets/images/image-failed.png'),
               ),
+
+              // 漫画信息
               Padding(
                 padding: const EdgeInsets.all(15),
                 child: Column(
@@ -167,46 +169,55 @@ class _DetailsState extends State<Details> {
                 thickness: 0.5,
                 height: 1,
               ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, right: 15),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      padding: EdgeInsets.zero,
-                      constraints: const BoxConstraints(),
-                      icon: const Icon(TaoIcons.filter),
-                      color: Colors.black45,
-                      onPressed: () {
-                        _orderMode == OrderMode.desc
-                            ? _orderMode = OrderMode.asc
-                            : _orderMode = OrderMode.desc;
 
-                        _chapterListValueNotifier.value = !_chapterListValueNotifier.value;
-                      },
-                    )
-                  ],
+              // 排序
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                child: Align(
+                  alignment: Alignment.centerRight,
+                  child: Directionality(
+                    textDirection: TextDirection.rtl,
+                    child: ValueListenableBuilder(
+                      valueListenable: _chapterListValueNotifier,
+                      builder: (context, value, child) => TextButton.icon(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
+                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          foregroundColor: MaterialStateProperty.all(Colors.black54),
+                        ),
+                        label: const Text('排序'),
+                        icon: _chapterListValueNotifier.value
+                            ? const Icon(Icons.arrow_upward_rounded)
+                            : const Icon(Icons.arrow_downward_rounded),
+                        onPressed: () {
+                          _orderMode == OrderMode.desc
+                              ? _orderMode = OrderMode.asc
+                              : _orderMode = OrderMode.desc;
+
+                          _chapterListValueNotifier.value = !_chapterListValueNotifier.value;
+                        },
+                      ),
+                    ),
+                  ),
                 ),
               ),
+
+              // 内容
               ValueListenableBuilder(
                 valueListenable: _chapterListValueNotifier,
-                builder: (context, value, child) {
-                  return FutureBuilder<List<ChapterDto>>(
-                    future: _getMangaFeed(),
-                    builder: (context, snapshot) {
-                      return BuilderChecker(
-                        snapshot: snapshot,
-                        waiting: const Center(
-                          child: Padding(
-                            padding: EdgeInsets.only(top: 80),
-                            child: CircularProgressIndicator(),
-                          ),
-                        ),
-                        builder: (context) => _DetailsGrid(snapshot.data!),
-                      );
-                    },
-                  );
-                },
+                builder: (context, value, child) => FutureBuilder<List<ChapterDto>>(
+                  future: _getMangaFeed(),
+                  builder: (context, snapshot) => BuilderChecker(
+                    snapshot: snapshot,
+                    waiting: const Center(
+                      child: Padding(
+                        padding: EdgeInsets.only(top: 80),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                    builder: (context) => _DetailsGrid(snapshot.data!),
+                  ),
+                ),
               ),
             ],
           ),
@@ -285,7 +296,7 @@ class _DetailsGrid extends StatelessWidget {
     var itemMap = chapters.groupListsBy((value) => value.chapter);
 
     return GridView.builder(
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 4,
         mainAxisSpacing: 15,
