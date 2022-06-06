@@ -36,6 +36,7 @@ class Reading extends StatefulWidget {
 
 class _ReadingState extends State<Reading> {
   final _scrollController = ScrollController();
+  final _progressNotifier = ValueNotifier(0);
   var _currentId = '';
   var _currentIndex = 0;
 
@@ -62,29 +63,58 @@ class _ReadingState extends State<Reading> {
         builder: (context, snapshot) {
           return BuilderChecker(
             snapshot: snapshot,
-            builder: (context) => ListView.builder(
-              controller: _scrollController,
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return CachedNetworkImage(
-                  imageUrl: snapshot.data![index],
-                  fit: BoxFit.fitWidth,
-                  fadeOutDuration: const Duration(milliseconds: 1),
-                  progressIndicatorBuilder: (context, url, progress) {
-                    return SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      width: MediaQuery.of(context).size.width,
-                      child: Center(
-                        child: CircularProgressIndicator(
-                          value: progress.progress,
-                        ),
-                      ),
+            builder: (context) => Stack(
+              fit: StackFit.expand,
+              children: [
+                // 主内容
+                ListView.builder(
+                  controller: _scrollController,
+                  itemCount: snapshot.data!.length,
+                  itemBuilder: (context, index) {
+                    return CachedNetworkImage(
+                      imageUrl: snapshot.data![index],
+                      fit: BoxFit.fitWidth,
+                      fadeOutDuration: const Duration(milliseconds: 1),
+                      progressIndicatorBuilder: (context, url, progress) {
+                        return SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.5,
+                          width: MediaQuery.of(context).size.width,
+                          child: Center(
+                            child: CircularProgressIndicator(
+                              value: progress.progress,
+                            ),
+                          ),
+                        );
+                      },
+                      errorWidget: (context, url, progress) =>
+                          Image.asset('assets/images/image-failed.png'),
                     );
                   },
-                  errorWidget: (context, url, progress) =>
-                      Image.asset('assets/images/image-failed.png'),
-                );
-              },
+                ),
+
+                // 右下角显示（阅读进度、章节）
+                Align(
+                  alignment: Alignment.bottomRight,
+                  child: Material(
+                    clipBehavior: Clip.antiAlias,
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(2),
+                      topRight: Radius.circular(2),
+                    ),
+                    textStyle: const TextStyle(color: Colors.white),
+                    color: Colors.black54,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      child: ValueListenableBuilder<int>(
+                        valueListenable: _progressNotifier,
+                        builder: (context, value, child) => Text(
+                          '$value %    第 ${widget.arrays.elementAt(_currentIndex).first.chapter ?? _currentIndex} 章',
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         },
@@ -115,6 +145,11 @@ class _ReadingState extends State<Reading> {
       }
       await _pageTurn(false);
     }
+
+    // 阅读进度
+    var current = _scrollController.position.pixels;
+    var max = _scrollController.position.maxScrollExtent;
+    _progressNotifier.value = (current / max * 100).round();
   }
 
   /// 翻页
@@ -124,11 +159,10 @@ class _ReadingState extends State<Reading> {
     var values = widget.arrays.elementAt(_currentIndex).toList();
 
     // 只有一条内容时，不弹窗显示，而是自己显示上一章/下一章
-    if (values.length == 1) {
-      setState(() => _currentId = values[0].id);
-      showText(text: '第 ${values[0].chapter ?? _currentIndex} 章，共 ${values[0].pages} 页');
-      return;
-    }
+    // if (values.length == 1) {
+    //   setState(() => _currentId = values[0].id);
+    //   return;
+    // }
 
     await showBottomModal(
       context: context,
@@ -150,6 +184,7 @@ class _ReadingState extends State<Reading> {
                 next ? _currentIndex++ : _currentIndex--;
                 Navigator.pop(context);
                 setState(() => _currentId = values[index].id);
+                _progressNotifier.value = 0;
               },
             ),
           );
