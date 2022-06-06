@@ -90,10 +90,10 @@ class _DetailsState extends State<Details> {
                     builder: (context, value, child) {
                       if (_followIconValueNotifier.value) {
                         // 已订阅
-                        return const Icon(Icons.star_rounded, size: 30);
+                        return const Icon(Icons.star_rounded, size: 25);
                       }
                       // 未登录/未订阅
-                      return const Icon(Icons.star_outline_rounded, size: 30);
+                      return const Icon(Icons.star_outline_rounded, size: 25);
                     },
                   );
                 },
@@ -166,10 +166,7 @@ class _DetailsState extends State<Details> {
                   ],
                 ),
               ),
-              const Divider(
-                thickness: 0.5,
-                height: 1,
-              ),
+              const Divider(thickness: 0.5, height: 1),
 
               // 排序
               Padding(
@@ -188,8 +185,8 @@ class _DetailsState extends State<Details> {
                         ),
                         label: const Text('排序'),
                         icon: _chapterListValueNotifier.value
-                            ? const Icon(Icons.arrow_upward_rounded)
-                            : const Icon(Icons.arrow_downward_rounded),
+                            ? const Icon(Icons.arrow_upward_rounded, size: 18)
+                            : const Icon(Icons.arrow_downward_rounded, size: 18),
                         onPressed: () {
                           _orderMode == OrderMode.desc
                               ? _orderMode = OrderMode.asc
