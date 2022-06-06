@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:komikku/utils/icons.dart';
 
-typedef BooleanCallback = bool Function(String);
-typedef ValueChanged = void Function(bool, String);
 
 /// 普通的 Chip
 class ChipWarp extends StatelessWidget {
@@ -75,7 +73,7 @@ class SingleChoiceChipWarp extends StatefulWidget {
   }) : super(key: key);
 
   final List<String> values;
-  final ValueChanged onChanged;
+  final void Function(bool, String) onChanged;
 
   @override
   State<SingleChoiceChipWarp> createState() => _SingleChoiceChipWarpState();
@@ -117,8 +115,8 @@ class ManyChoiceChipWarp extends StatefulWidget {
   }) : super(key: key);
 
   final List<String> values;
-  final ValueChanged onChanged;
-  final BooleanCallback selected;
+  final void Function(bool, String) onChanged;
+  final bool Function(String) selected;
 
   @override
   State<ManyChoiceChipWarp> createState() => _ManyChoiceChipWrapState();

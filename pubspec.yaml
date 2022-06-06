@@ -56,6 +56,8 @@ dependencies:
   uuid: 3.0.6
   # 数据库
   sqflite: ^2.0.2+1
+  # 滚动分页
+  infinite_scroll_pagination: ^3.2.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

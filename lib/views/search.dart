@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/dto/tag_dto.dart';
-import 'package:komikku/utils/extensions.dart';
 import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/toast.dart';
 import 'package:komikku/views/details.dart';
@@ -25,29 +25,23 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  final _streamController = StreamController<List<MangaDto>>();
+  final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
   final _chipValueNotifier = ValueNotifier(false);
-  final _scrollController = ScrollController();
-  final _cacheMangaList = <MangaDto>[];
-  final _includedTags = <String>[];
-  Future<List<TagDto>>? _tagListFuture;
+  final _includedTags = <String, String>{};
+  static const _pageSize = 20;
+  late final Future<List<TagDto>> _tagFuture = _getTagList();
+  String _title = '';
 
-  String _queryTitle = '';
+  @override
+  void initState() {
+    _pagingController.addPageRequestListener((pageKey) async => await _searchManga(pageKey));
+    super.initState();
+  }
 
-  final _limit = 10;
-  int _offset = 0;
-
-  Future<void> _addMangaListToSink({bool refresh = false}) async {
-    if (refresh) {
-      _cacheMangaList.clear();
-      _offset = 0;
-    }
-
-    _cacheMangaList.addAll(await _searchManga());
-    // 克隆一次，防止在clear()时影响_streamController
-    var clone = _cacheMangaList.map((e) => MangaDto.fromJson(e.deepClone)).toList();
-    _streamController.sink.add(clone);
-    _offset += _limit;
+  @override
+  void dispose() {
+    _pagingController.dispose();
+    super.dispose();
   }
 
   @override
@@ -61,9 +55,9 @@ class _SearchState extends State<Search> {
         automaticallyImplyLeading: false,
         title: SearchAppBar(
           hintText: '搜索',
-          onSubmitted: (value) async {
-            _queryTitle = value;
-            await _addMangaListToSink(refresh: true);
+          onSubmitted: (value) {
+            _title = value;
+            _pagingController.refresh();
           },
         ),
         actions: [
@@ -88,13 +82,11 @@ class _SearchState extends State<Search> {
           showAlertDialog(
             title: '高级搜索',
             insetPadding: const EdgeInsets.all(0),
-            onConfirm: () async {
-              if (_includedTags.isNotEmpty) {
-                await _addMangaListToSink(refresh: true);
-              }
+            onConfirm: () {
+              if (_includedTags.isNotEmpty) _pagingController.refresh();
             },
             content: FutureBuilder<List<TagDto>>(
-              future: _tagListFuture,
+              future: _tagFuture,
               builder: (context, snapshot) {
                 return BuilderChecker(
                   snapshot: snapshot,
@@ -108,9 +100,11 @@ class _SearchState extends State<Search> {
                     return SingleChildScrollView(
                       child: AdvancedSearch(
                         dtos: snapshot.data!,
-                        selected: (value) => _includedTags.contains(value),
+                        selected: (value) => _includedTags.values.contains(value),
                         onChanged: (flag, value) {
-                          flag ? _includedTags.add(value) : _includedTags.remove(value);
+                          flag
+                              ? _includedTags.addAll({value.id: value.name})
+                              : _includedTags.remove(value.id);
                           _chipValueNotifier.value = !_chipValueNotifier.value;
                         },
                       ),
@@ -122,6 +116,8 @@ class _SearchState extends State<Search> {
           );
         },
       ),
+
+      // 主内容
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
@@ -133,55 +129,36 @@ class _SearchState extends State<Search> {
               builder: (context, value, child) => Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: CanDeleteChipWarp(
-                  values: _includedTags,
+                  values: _includedTags.values.toList(),
                   onDeleted: (value) {
-                    if (_includedTags.contains(value)) {
-                      _includedTags.remove(value);
+                    if (_includedTags.values.contains(value)) {
+                      _includedTags.removeWhere((k, v) => v == value);
+                      _chipValueNotifier.value = !_chipValueNotifier.value;
                     }
                   },
                 ),
               ),
             ),
 
-            // 内容
+            // 列表内容
             Expanded(
-              child: StreamBuilder<List<MangaDto>>(
-                stream: _streamController.stream,
-                builder: (context, snapshot) {
-                  return BuilderChecker(
-                    indicator: false,
-                    snapshot: snapshot,
-                    builder: (context) {
-                      if (snapshot.data != null && snapshot.data!.isEmpty) {
-                        return const Center(child: Text('没有找到漫画'));
-                      }
-                      return ListView.builder(
-                        controller: _scrollController,
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                            onTap: () {
-                              /// 在刷新时点击可能会出现index > snapshot.data!.length的情况
-                              if (index < snapshot.data!.length) {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Details(dto: snapshot.data![index]),
-                                  ),
-                                );
-                              }
-                            },
-                            child: ImageListViewItem(
-                              imageUrl: snapshot.data![index].imageUrl256,
-                              title: snapshot.data![index].title,
-                              subtitle: snapshot.data![index].status,
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
+              child: PagedListView(
+                pagingController: _pagingController,
+                builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+                  itemBuilder: (context, item, index) {
+                    return InkWell(
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Details(dto: item)),
+                      ),
+                      child: ListViewItem(
+                        imageUrl: item.imageUrl256,
+                        title: item.title,
+                        subtitle: item.status,
+                      ),
+                    );
+                  },
+                ),
               ),
             ),
           ],
@@ -190,36 +167,12 @@ class _SearchState extends State<Search> {
     );
   }
 
-  @override
-  void initState() {
-    _scrollController.addListener(listener);
-    _tagListFuture = _getTagList();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _streamController.close();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  Future<void> listener() async {
-    if (_scrollController.onBottom) await _addMangaListToSink();
-  }
-
   /// 搜索漫画
-  Future<List<MangaDto>> _searchManga() async {
-    List<String>? ids;
-    if (_includedTags.isNotEmpty) {
-      var tagList = await _tagListFuture;
-      ids = tagList!.where((e) => _includedTags.contains(e.name)).map((e) => e.id).toList();
-    }
-
+  Future<void> _searchManga(int pageKey) async {
     var query = MangaListQuery(
-      limit: _limit,
-      offset: _offset,
-      title: _queryTitle,
+      limit: _pageSize,
+      offset: pageKey,
+      title: _title,
       includes: ['cover_art', 'author'],
       contentRating: [
         ContentRating.safe,
@@ -228,7 +181,7 @@ class _SearchState extends State<Search> {
         ContentRating.pornographic,
       ],
       availableTranslatedLanguage: ['zh', 'zh-hk'],
-      includedTags: ids,
+      includedTags: _includedTags.keys.toList(),
     );
 
     var response = await MangaApi.getMangaListAsync(
@@ -236,13 +189,20 @@ class _SearchState extends State<Search> {
       order: MangaListOrder(relevance: OrderMode.desc),
     );
 
-    return response.data.map((e) => MangaDto.fromSource(e)).toList();
+    var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
+    if (newItems.length < _pageSize) {
+      // Last
+      _pagingController.appendLastPage(newItems);
+    } else {
+      var nextPageKey = pageKey + newItems.length;
+      _pagingController.appendPage(newItems, nextPageKey);
+    }
   }
 
   /// 获取标签列表
   Future<List<TagDto>> _getTagList() async {
     var response = await MangaApi.getTagListAsync();
-    return response.data.map((e) => TagDto.fromSource(e)).toList();
+    return response.data.map((e) => TagDto.fromDex(e)).toList();
   }
 }
 
@@ -256,8 +216,8 @@ class AdvancedSearch extends StatelessWidget {
   }) : super(key: key);
 
   final List<TagDto> dtos;
-  final chip.ValueChanged onChanged;
-  final chip.BooleanCallback selected;
+  final void Function(bool, TagDto) onChanged;
+  final bool Function(String) selected;
 
   @override
   Widget build(BuildContext context) {
@@ -269,7 +229,7 @@ class AdvancedSearch extends StatelessWidget {
         chip.ManyChoiceChipWarp(
           values: value.map((e) => e.name).toList(),
           selected: (value) => selected(value),
-          onChanged: (flag, value) => onChanged(flag, value),
+          onChanged: (flag, value) => onChanged(flag, dtos.firstWhere((e) => e.name == value)),
         ),
       ]);
 

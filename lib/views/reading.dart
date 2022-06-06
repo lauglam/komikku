@@ -37,13 +37,11 @@ class Reading extends StatefulWidget {
 class _ReadingState extends State<Reading> {
   final _scrollController = ScrollController();
   final _progressNotifier = ValueNotifier(0);
-  var _currentId = '';
-  var _currentIndex = 0;
+  late String _currentId = widget.id;
+  late int _currentIndex = widget.index;
 
   @override
   void initState() {
-    _currentId = widget.id;
-    _currentIndex = widget.index;
     _scrollController.addListener(listener);
     super.initState();
   }

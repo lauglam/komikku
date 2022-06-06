@@ -11,7 +11,7 @@ class TagDto {
     required this.group,
   });
 
-  factory TagDto.fromSource(Tag source) {
+  factory TagDto.fromDex(Tag source) {
     return TagDto(
       id: source.id,
       name: source.attributes.name.value(),

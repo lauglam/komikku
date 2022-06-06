@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dex/models.dart';
-import 'package:komikku/dex/models/chapter_list.dart';
 import 'package:komikku/dex/models/query/manga_feed_query.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
@@ -30,8 +29,8 @@ class Details extends StatefulWidget {
 class _DetailsState extends State<Details> {
   final _followIconValueNotifier = ValueNotifier<bool>(false);
   final _chapterListValueNotifier = ValueNotifier<bool>(false);
-  Future<ChapterListResponse>? _chapterListResponse;
   var _orderMode = OrderMode.desc;
+  late final Future<List<ChapterDto>> _chapterListFuture = _getMangaFeed();
 
   // 是否正在执行关键任务
   bool _isBusy = false;
@@ -204,7 +203,7 @@ class _DetailsState extends State<Details> {
               ValueListenableBuilder(
                 valueListenable: _chapterListValueNotifier,
                 builder: (context, value, child) => FutureBuilder<List<ChapterDto>>(
-                  future: _getMangaFeed(),
+                  future: _chapterListFuture,
                   builder: (context, snapshot) => BuilderChecker(
                     snapshot: snapshot,
                     waiting: const Center(
@@ -226,7 +225,7 @@ class _DetailsState extends State<Details> {
 
   /// 获取漫画章节
   Future<List<ChapterDto>> _getMangaFeed() async {
-    var response = await (_chapterListResponse ??= MangaApi.getMangaFeedAsync(widget.dto.id,
+    var response = await MangaApi.getMangaFeedAsync(widget.dto.id,
         query: MangaFeedQuery(
           limit: 96,
           offset: 0,
@@ -236,34 +235,33 @@ class _DetailsState extends State<Details> {
             ContentRating.safe,
             ContentRating.suggestive,
             ContentRating.erotica,
-            ContentRating.pornographic
+            ContentRating.pornographic,
           ],
         ),
         // 切勿 readableAt: OrderMode.desc, 否则缺少章节
-        order: MangaFeedOrder(
-          volume: OrderMode.desc,
-          chapter: OrderMode.desc,
-        )));
+        order: MangaFeedOrder(volume: OrderMode.desc, chapter: OrderMode.desc));
 
-    var dtos = response.data.map((e) => ChapterDto.fromSource(e)).toList();
+    var newItems = response.data.map((e) => ChapterDto.fromDex(e)).toList();
 
     // 按章节排序
     if (_orderMode == OrderMode.desc) {
-      if (dtos.any((value) => value.chapter != null && double.tryParse(value.chapter!) != null)) {
-        dtos.sortByCompare(
+      if (newItems
+          .any((value) => value.chapter != null && double.tryParse(value.chapter!) != null)) {
+        newItems.sortByCompare(
           (value) => double.parse(value.chapter!),
           (double a, double b) => b.compareTo(a),
         );
       }
     } else {
-      if (dtos.any((value) => value.chapter != null && double.tryParse(value.chapter!) != null)) {
-        dtos.sortByCompare(
+      if (newItems
+          .any((value) => value.chapter != null && double.tryParse(value.chapter!) != null)) {
+        newItems.sortByCompare(
           (value) => double.parse(value.chapter!),
           (double a, double b) => a.compareTo(b),
         );
       }
     }
-    return dtos;
+    return newItems;
   }
 
   /// 检测漫画是否被订阅

@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
-/// Image ListView Item
-class ImageListViewItem extends StatelessWidget {
-  const ImageListViewItem({
+/// ListView Item
+class ListViewItem extends StatelessWidget {
+  const ListViewItem({
     Key? key,
     required this.imageUrl,
     required this.title,
@@ -28,14 +28,15 @@ class ImageListViewItem extends StatelessWidget {
             child: CachedNetworkImage(
               imageUrl: imageUrl,
               fit: BoxFit.fill,
-              width: 70,
+              width: 75,
+              height: 120,
               errorWidget: (context, url, progress) =>
                   Image.asset('assets/images/image-failed.png'),
             ),
           ),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 2, 2, 2),
+              padding: const EdgeInsets.fromLTRB(25, 2, 2, 2),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [

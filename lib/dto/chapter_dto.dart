@@ -23,7 +23,7 @@ class ChapterDto {
     this.volume,
   });
 
-  factory ChapterDto.fromSource(Chapter source) {
+  factory ChapterDto.fromDex(Chapter source) {
     /// NOTE: 必须含有 ScanlationAttributes UserAttributes
     /// NOTE: 此处可能出出现没有返回的情况
     var groupMap = source.relationships.firstTypeOrDefault(EntityType.scanlationGroup)?.attributes;

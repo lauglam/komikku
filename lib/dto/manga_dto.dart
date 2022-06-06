@@ -32,7 +32,7 @@ class MangaDto {
     this.description,
   });
 
-  factory MangaDto.fromSource(Manga source) {
+  factory MangaDto.fromDex(Manga source) {
     /// NOTE: 必须含有 CoverAttributes AuthorAttributes
     var coverAttributes =
         CoverAttributes.fromJson(source.relationships.firstType(EntityType.coverArt).attributes);
@@ -44,7 +44,7 @@ class MangaDto {
       title: source.attributes.title.value(),
       status: statusEnumChineseMap[source.attributes.status]!,
       author: authorAttributes.name,
-      tags: source.attributes.tags.map((e) => TagDto.fromSource(e)).toList(),
+      tags: source.attributes.tags.map((e) => TagDto.fromDex(e)).toList(),
       imageUrl256: Retrieving.getCoverArtOn256(source.id, coverAttributes.fileName),
       imageUrl512: Retrieving.getCoverArtOn512(source.id, coverAttributes.fileName),
       imageUrlOriginal: Retrieving.getCoverArtOnOriginal(source.id, coverAttributes.fileName),
