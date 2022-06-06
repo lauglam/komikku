@@ -159,10 +159,11 @@ class _ReadingState extends State<Reading> {
     var values = widget.arrays.elementAt(_currentIndex).toList();
 
     // 只有一条内容时，不弹窗显示，而是自己显示上一章/下一章
-    // if (values.length == 1) {
-    //   setState(() => _currentId = values[0].id);
-    //   return;
-    // }
+    if (values.length == 1) {
+      setState(() => _currentId = values[0].id);
+      _progressNotifier.value = 0;
+      return;
+    }
 
     await showBottomModal(
       context: context,
