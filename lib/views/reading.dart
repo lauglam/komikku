@@ -6,6 +6,7 @@ import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/utils/extensions.dart';
 import 'package:komikku/utils/timeago.dart';
 import 'package:komikku/utils/toast.dart';
+import 'package:komikku/widgets/bottom_modal_item.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 
 /// 阅读页
@@ -138,67 +139,23 @@ class _ReadingState extends State<Reading> {
         itemBuilder: (context, index) {
           return Padding(
             padding: const EdgeInsets.only(bottom: 10),
-            child: Material(
-              borderRadius: BorderRadius.circular(4),
-              color: Colors.black12,
-              clipBehavior: Clip.antiAlias,
-              child: ListTile(
-                dense: true,
-                title: Text(
-                  '${values[index].title ?? index}',
-                  style: const TextStyle(overflow: TextOverflow.ellipsis),
-                ),
-                subtitle: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    _ExpandedText(timeAgo(values[index].readableAt)),
-                    const Padding(padding: EdgeInsets.only(left: 5)),
-                    _ExpandedText(values[index].scanlationGroup ?? ''),
-                    const Padding(padding: EdgeInsets.only(left: 5)),
-                    _ExpandedText(values[index].uploader ?? ''),
-                    const Padding(padding: EdgeInsets.only(left: 5)),
-                    _ExpandedText(
-                      '共 ${values[index].pages} 页',
-                      alignment: Alignment.centerRight,
-                    ),
-                  ],
-                ),
-                onTap: () {
-                  // 点击事件时，再次将页数更改（相当于更改了2次，但后续在关闭时会恢复一次）
-                  next ? _currentIndex++ : _currentIndex--;
-                  Navigator.pop(context);
-                  setState(() => _currentId = values[index].id);
-                },
-              ),
+            child: BottomModalItem(
+              title: '${values[index].title ?? index}',
+              subtitle1: timeAgo(values[index].readableAt),
+              subtitle2: values[index].scanlationGroup ?? '',
+              subtitle3: values[index].uploader ?? '',
+              subtitle4: '共 ${values[index].pages} 页',
+              onTap: () {
+                // 点击事件时，再次将页数更改（相当于更改了2次，但后续在关闭时会恢复一次）
+                next ? _currentIndex++ : _currentIndex--;
+                Navigator.pop(context);
+                setState(() => _currentId = values[index].id);
+              },
             ),
           );
         },
       ),
       // 关闭时恢复一次（此时如果没有onTap操作，则状态未变）
     ).then((value) => next ? _currentIndex-- : _currentIndex++);
-  }
-}
-
-/// 自适应文字
-class _ExpandedText extends StatelessWidget {
-  const _ExpandedText(this.text, {Key? key, this.alignment}) : super(key: key);
-
-  final String text;
-  final Alignment? alignment;
-
-  @override
-  Widget build(BuildContext context) {
-    if (alignment != null) {
-      return Expanded(
-        child: Container(
-          alignment: alignment,
-          child: Text(text, style: const TextStyle(overflow: TextOverflow.ellipsis)),
-        ),
-      );
-    }
-
-    return Expanded(
-      child: Text(text, style: const TextStyle(overflow: TextOverflow.ellipsis)),
-    );
   }
 }

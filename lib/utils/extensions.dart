@@ -11,11 +11,11 @@ extension ObjectExtensions<T> on T {
 extension ScrollControllerExtensions on ScrollController {
   /// 在底部
   bool get onBottom {
-    return position.atEdge && position.pixels != 0;
+    return position.atEdge && position.pixels == position.maxScrollExtent;
   }
 
   /// 在顶部
   bool get onTop {
-    return position.atEdge && position.pixels == 0;
+    return position.atEdge && position.pixels == position.minScrollExtent;
   }
 }

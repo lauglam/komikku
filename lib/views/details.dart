@@ -11,6 +11,7 @@ import 'package:komikku/provider/follow_provider.dart';
 import 'package:komikku/utils/timeago.dart';
 import 'package:komikku/utils/user.dart';
 import 'package:komikku/views/reading.dart';
+import 'package:komikku/widgets/bottom_modal_item.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/delay_pop.dart';
 import 'package:komikku/widgets/chip.dart';
@@ -339,27 +340,12 @@ class _DetailsGrid extends StatelessWidget {
                       borderRadius: BorderRadius.circular(4),
                       color: Colors.black12,
                       clipBehavior: Clip.antiAlias,
-                      child: ListTile(
-                        dense: true,
-                        title: Text(
-                          '${values[index].title ?? index}',
-                          style: const TextStyle(overflow: TextOverflow.ellipsis),
-                        ),
-                        subtitle: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            _ExpandedText(timeAgo(values[index].readableAt)),
-                            const Padding(padding: EdgeInsets.only(left: 5)),
-                            _ExpandedText(values[index].scanlationGroup ?? ''),
-                            const Padding(padding: EdgeInsets.only(left: 5)),
-                            _ExpandedText(values[index].uploader ?? ''),
-                            const Padding(padding: EdgeInsets.only(left: 5)),
-                            _ExpandedText(
-                              '共 ${values[index].pages} 页',
-                              alignment: Alignment.centerRight,
-                            ),
-                          ],
-                        ),
+                      child: BottomModalItem(
+                        title: '${values[index].title ?? index}',
+                        subtitle1: timeAgo(values[index].readableAt),
+                        subtitle2: values[index].scanlationGroup ?? '',
+                        subtitle3: values[index].uploader ?? '',
+                        subtitle4: '共 ${values[index].pages} 页',
                         onTap: () {
                           // 先关闭模态框
                           Navigator.pop(context);
@@ -403,30 +389,6 @@ class _DetailsGrid extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-/// 自适应文字
-class _ExpandedText extends StatelessWidget {
-  const _ExpandedText(this.text, {Key? key, this.alignment}) : super(key: key);
-
-  final String text;
-  final Alignment? alignment;
-
-  @override
-  Widget build(BuildContext context) {
-    if (alignment != null) {
-      return Expanded(
-        child: Container(
-          alignment: alignment,
-          child: Text(text, style: const TextStyle(overflow: TextOverflow.ellipsis)),
-        ),
-      );
-    }
-
-    return Expanded(
-      child: Text(text, style: const TextStyle(overflow: TextOverflow.ellipsis)),
     );
   }
 }
