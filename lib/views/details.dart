@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dex/models.dart';
+import 'package:komikku/dex/models/chapter_list.dart';
 import 'package:komikku/dex/models/query/manga_feed_query.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/provider/follow_provider.dart';
 import 'package:komikku/utils/timeago.dart';
-import 'package:komikku/utils/user.dart';
+import 'package:komikku/utils/auth.dart';
 import 'package:komikku/views/reading.dart';
 import 'package:komikku/widgets/bottom_modal_item.dart';
 import 'package:komikku/widgets/builder_checker.dart';
@@ -27,12 +28,13 @@ class Details extends StatefulWidget {
 }
 
 class _DetailsState extends State<Details> {
-  final _followIconValueNotifier = ValueNotifier<bool>(false);
-  final _chapterListValueNotifier = ValueNotifier<bool>(false);
-  var _orderMode = OrderMode.desc;
-  late final Future<List<ChapterDto>> _chapterListFuture = _getMangaFeed();
+  final _followIconValueNotifier = ValueNotifier(false);
+  final _orderValueNotifier = ValueNotifier(OrderMode.desc);
 
-  // 是否正在执行关键任务
+  /// 因为需要排序，所以将响应内容缓存
+  Future<ChapterListResponse>? _getMangaFeedFuture;
+
+  /// 是否正在执行关键任务
   bool _isBusy = false;
 
   @override
@@ -40,7 +42,7 @@ class _DetailsState extends State<Details> {
     var followProvider = Provider.of<FollowProvider>(context, listen: false);
 
     return DelayPop(
-      flag: _isBusy,
+      flag: () => _isBusy,
       duration: const Duration(seconds: 1),
       child: Scaffold(
         extendBodyBehindAppBar: true,
@@ -101,19 +103,19 @@ class _DetailsState extends State<Details> {
           ),
           onPressed: () async {
             // 未登录
-            if (!await userLoginState()) {
+            if (!await Auth.userLoginState) {
               showText(text: '请先登录');
               return;
             }
 
             // 已登录
-            _isBusy = true;
             if (_followIconValueNotifier.value) {
               // 取消订阅确认
               showAlertDialog(
                 title: '是否取消订阅',
                 cancelText: '再想想',
                 onConfirm: () async {
+                  _isBusy = true;
                   showText(text: '已取消订阅');
                   _followIconValueNotifier.value = !_followIconValueNotifier.value;
                   await followProvider.unfollowManga(widget.dto.id);
@@ -122,6 +124,7 @@ class _DetailsState extends State<Details> {
               );
             } else {
               // 订阅
+              _isBusy = true;
               showText(text: '已订阅');
               _followIconValueNotifier.value = !_followIconValueNotifier.value;
               await followProvider.followManga(widget.dto.id);
@@ -175,7 +178,7 @@ class _DetailsState extends State<Details> {
                   child: Directionality(
                     textDirection: TextDirection.rtl,
                     child: ValueListenableBuilder(
-                      valueListenable: _chapterListValueNotifier,
+                      valueListenable: _orderValueNotifier,
                       builder: (context, value, child) => TextButton.icon(
                         style: ButtonStyle(
                           padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
@@ -183,15 +186,15 @@ class _DetailsState extends State<Details> {
                           foregroundColor: MaterialStateProperty.all(Colors.black54),
                         ),
                         label: const Text('排序'),
-                        icon: _chapterListValueNotifier.value
+                        icon: _orderValueNotifier.value == OrderMode.asc
                             ? const Icon(Icons.arrow_upward_rounded, size: 18)
                             : const Icon(Icons.arrow_downward_rounded, size: 18),
                         onPressed: () {
-                          _orderMode == OrderMode.desc
-                              ? _orderMode = OrderMode.asc
-                              : _orderMode = OrderMode.desc;
-
-                          _chapterListValueNotifier.value = !_chapterListValueNotifier.value;
+                          if (_orderValueNotifier.value == OrderMode.desc) {
+                            _orderValueNotifier.value = OrderMode.asc;
+                          } else {
+                            _orderValueNotifier.value = OrderMode.desc;
+                          }
                         },
                       ),
                     ),
@@ -201,9 +204,9 @@ class _DetailsState extends State<Details> {
 
               // 内容
               ValueListenableBuilder(
-                valueListenable: _chapterListValueNotifier,
+                valueListenable: _orderValueNotifier,
                 builder: (context, value, child) => FutureBuilder<List<ChapterDto>>(
-                  future: _chapterListFuture,
+                  future: _getMangaFeed(),
                   builder: (context, snapshot) => BuilderChecker(
                     snapshot: snapshot,
                     waiting: const Center(
@@ -225,7 +228,7 @@ class _DetailsState extends State<Details> {
 
   /// 获取漫画章节
   Future<List<ChapterDto>> _getMangaFeed() async {
-    var response = await MangaApi.getMangaFeedAsync(widget.dto.id,
+    var response = await (_getMangaFeedFuture ??= MangaApi.getMangaFeedAsync(widget.dto.id,
         query: MangaFeedQuery(
           limit: 96,
           offset: 0,
@@ -239,35 +242,46 @@ class _DetailsState extends State<Details> {
           ],
         ),
         // 切勿 readableAt: OrderMode.desc, 否则缺少章节
-        order: MangaFeedOrder(volume: OrderMode.desc, chapter: OrderMode.desc));
+        order: MangaFeedOrder(volume: OrderMode.desc, chapter: OrderMode.desc)));
 
     var newItems = response.data.map((e) => ChapterDto.fromDex(e)).toList();
 
-    // 按章节排序
-    if (_orderMode == OrderMode.desc) {
-      if (newItems
-          .any((value) => value.chapter != null && double.tryParse(value.chapter!) != null)) {
+    if (!newItems
+        .any((value) => value.chapter == null || double.tryParse(value.chapter!) == null)) {
+      // 按章节排序
+      if (_orderValueNotifier.value == OrderMode.desc) {
         newItems.sortByCompare(
           (value) => double.parse(value.chapter!),
           (double a, double b) => b.compareTo(a),
         );
-      }
-    } else {
-      if (newItems
-          .any((value) => value.chapter != null && double.tryParse(value.chapter!) != null)) {
+      } else {
         newItems.sortByCompare(
           (value) => double.parse(value.chapter!),
           (double a, double b) => a.compareTo(b),
         );
       }
+    } else {
+      // 没有章节，按readableAt排序
+      if (_orderValueNotifier.value == OrderMode.desc) {
+        newItems.sortByCompare(
+          (value) => value.readableAt,
+          (DateTime a, DateTime b) => b.compareTo(a),
+        );
+      } else {
+        newItems.sortByCompare(
+          (value) => value.readableAt,
+          (DateTime a, DateTime b) => a.compareTo(b),
+        );
+      }
     }
+
     return newItems;
   }
 
   /// 检测漫画是否被订阅
   Future<bool> _checkUserFollow() async {
     // 未登录，直接返回false
-    if (!await userLoginState()) {
+    if (!await Auth.userLoginState) {
       return false;
     }
 

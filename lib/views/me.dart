@@ -5,7 +5,7 @@ import 'package:komikku/dex/apis/user_api.dart';
 import 'package:komikku/provider/user_provider.dart';
 import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/toast.dart';
-import 'package:komikku/utils/user.dart';
+import 'package:komikku/utils/auth.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/icon_text_button.dart';
 import 'package:provider/provider.dart';
@@ -51,7 +51,7 @@ class _MeState extends State<Me> {
                         ),
                         Consumer<UserProvider>(
                           builder: (context, userProvider, child) => FutureBuilder<bool>(
-                            future: userLoginState(),
+                            future: Auth.userLoginState,
                             builder: (context, snapshot) => BuilderChecker(
                               snapshot: snapshot,
                               builder: (context) => OutlinedButton(
@@ -95,7 +95,7 @@ class _MeState extends State<Me> {
                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                       child: Consumer<UserProvider>(
                         builder: (context, userProvider, child) => FutureBuilder<bool>(
-                          future: userLoginState(),
+                          future: Auth.userLoginState,
                           builder: (context, snapshot) => BuilderChecker(
                             snapshot: snapshot,
                             builder: (context) {
@@ -137,7 +137,7 @@ class _MeState extends State<Me> {
 
   /// 获取用户信息
   Future<String> _getUserDetails() async {
-    if (!await userLoginState()) throw Exception('Invalid operation');
+    if (!await Auth.userLoginState) throw Exception('Invalid operation');
 
     var response = await UserApi.getUserDetailsAsync();
     return response.data.attributes.username;

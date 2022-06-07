@@ -8,7 +8,7 @@ class DelayPop extends StatelessWidget {
     required this.child,
   }) : super(key: key);
 
-  final bool flag;
+  final bool Function() flag;
   final Duration duration;
   final Widget child;
 
@@ -18,7 +18,7 @@ class DelayPop extends StatelessWidget {
       child: child,
       onWillPop: () async {
         // 如果正在执行关键任务，则等待再返回
-        if (flag) await Future.delayed(duration);
+        if (flag()) await Future.delayed(duration);
         return true;
       },
     );

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/models/login.dart';
-import 'package:komikku/utils/user.dart';
+import 'package:komikku/utils/auth.dart';
 
 class UserProvider extends ChangeNotifier {
   /// 登录
@@ -11,16 +11,16 @@ class UserProvider extends ChangeNotifier {
         : Login(username: emailOrUsername, password: password);
 
     var response = await AuthApi.loginAsync(login);
-    await setRefresh(response.token.refresh);
-    await setSession(response.token.session);
+    await Auth.setRefresh(response.token.refresh);
+    await Auth.setSession(response.token.session);
 
     notifyListeners();
   }
 
   /// 登出
   Future<void> logout() async {
-    await removeSession();
-    await removeRefresh();
+    await Auth.removeSession();
+    await Auth.removeRefresh();
     await AuthApi.logoutAsync();
 
     notifyListeners();
