@@ -58,20 +58,23 @@ class _LatestUpdateState extends State<LatestUpdate> {
             childAspectRatio: 0.75,
           ),
           pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<MangaDto>(itemBuilder: (context, item, index) {
-            return InkWell(
-              onTap: () => Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Details(dto: item)),
-              ),
-              child: GridViewItem(
-                imageUrl: item.imageUrl256,
-                title: item.title,
-                subtitle: item.status,
-                titleStyle: TitleStyle.footer,
-              ),
-            );
-          }),
+          builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+            noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有漫画数据')),
+            itemBuilder: (context, item, index) {
+              return InkWell(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Details(dto: item)),
+                ),
+                child: GridViewItem(
+                  imageUrl: item.imageUrl256,
+                  title: item.title,
+                  subtitle: item.status,
+                  titleStyle: TitleStyle.footer,
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

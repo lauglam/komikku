@@ -59,6 +59,9 @@ class _SubscribesState extends State<Subscribes> {
               ),
               pagingController: _pagingController,
               builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+                noItemsFoundIndicatorBuilder: (context) => const Center(
+                  child: Text('没有订阅的漫画'),
+                ),
                 itemBuilder: (context, item, index) {
                   return InkWell(
                     onTap: () => Navigator.push(

@@ -145,6 +145,9 @@ class _SearchState extends State<Search> {
               child: PagedListView(
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+                  noItemsFoundIndicatorBuilder: (context) => const Center(
+                    child: Text('没有找到符合条件的漫画'),
+                  ),
                   itemBuilder: (context, item, index) {
                     return InkWell(
                       onTap: () => Navigator.push(
