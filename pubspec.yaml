@@ -48,14 +48,8 @@ dependencies:
   url_launcher: ^6.1.2
   # 对象传递相关[InheritedWidget]
   provider: ^6.0.3
-  # 文件目录相关
-  path_provider: ^2.0.10
-  # 路径
-  path: ^1.8.1
   # 唯一键
   uuid: 3.0.6
-  # 数据库
-  sqflite: ^2.0.2+1
   # 滚动分页
   infinite_scroll_pagination: ^3.2.0
 

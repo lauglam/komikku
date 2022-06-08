@@ -3,11 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis.dart';
-import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/manga_dto.dart';
+import 'package:komikku/provider/local_setting_provider.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/grid_view_item.dart';
 import 'package:komikku/widgets/search_bar.dart';
+import 'package:provider/provider.dart';
 
 class LatestUpdate extends StatefulWidget {
   const LatestUpdate({Key? key}) : super(key: key);
@@ -18,7 +19,9 @@ class LatestUpdate extends StatefulWidget {
 
 class _LatestUpdateState extends State<LatestUpdate> {
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
+  late final _provider = Provider.of<LocalSettingProvider>(context, listen: false);
   static const _pageSize = 20;
+  var _markNeedRefresh = false;
 
   @override
   void initState() {
@@ -47,34 +50,51 @@ class _LatestUpdateState extends State<LatestUpdate> {
       ),
       body: RefreshIndicator(
         onRefresh: () async => _pagingController.refresh(),
-        child: PagedGridView(
-          // 永远滚动，即使在不满屏幕的情况下
-          physics: const AlwaysScrollableScrollPhysics(),
-          padding: const EdgeInsets.all(15),
-          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 3,
-            mainAxisSpacing: 15,
-            crossAxisSpacing: 15,
-            childAspectRatio: 0.75,
-          ),
-          pagingController: _pagingController,
-          builderDelegate: PagedChildBuilderDelegate<MangaDto>(
-            noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有漫画数据')),
-            itemBuilder: (context, item, index) {
-              return InkWell(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => Details(dto: item)),
-                ),
-                child: GridViewItem(
-                  imageUrl: item.imageUrl256,
-                  title: item.title,
-                  subtitle: item.status,
-                  titleStyle: TitleStyle.footer,
-                ),
-              );
-            },
-          ),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            Consumer<LocalSettingProvider>(
+              builder: (context, provider, child) {
+                if (_markNeedRefresh) {
+                  // 延后1秒钟执行refresh()
+                  var delay = const Duration(seconds: 1);
+                  Future.delayed(delay, () => _pagingController.refresh());
+                }
+
+                _markNeedRefresh = true;
+                return const SizedBox.shrink();
+              },
+            ),
+            PagedGridView(
+              // 永远滚动，即使在不满屏幕的情况下
+              physics: const AlwaysScrollableScrollPhysics(),
+              padding: const EdgeInsets.all(15),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                mainAxisSpacing: 15,
+                crossAxisSpacing: 15,
+                childAspectRatio: 0.75,
+              ),
+              pagingController: _pagingController,
+              builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+                noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有漫画数据')),
+                itemBuilder: (context, item, index) {
+                  return InkWell(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => Details(dto: item)),
+                    ),
+                    child: GridViewItem(
+                      imageUrl: item.imageUrl256,
+                      title: item.title,
+                      subtitle: item.status,
+                      titleStyle: TitleStyle.footer,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
         ),
       ),
     );
@@ -82,28 +102,30 @@ class _LatestUpdateState extends State<LatestUpdate> {
 
   /// 获取漫画列表
   Future<void> _getMangaList(int pageKey) async {
-    var mangaListResponse = await MangaApi.getMangaListAsync(
-      query: MangaListQuery(
-        limit: _pageSize,
-        offset: pageKey,
-        includes: ['cover_art', 'author'],
-        availableTranslatedLanguage: ['zh', 'zh-hk'],
-        contentRating: [
-          ContentRating.safe,
-          ContentRating.suggestive,
-          ContentRating.erotica,
-          ContentRating.pornographic
-        ],
-      ),
-    );
+    await _provider.get();
 
-    var newItems = mangaListResponse.data.map((e) => MangaDto.fromDex(e)).toList();
-    if (newItems.length < _pageSize) {
-      // Last
-      _pagingController.appendLastPage(newItems);
-    } else {
-      var nextPageKey = pageKey + newItems.length;
-      _pagingController.appendPage(newItems, nextPageKey);
+    final queryMap = {
+      'limit': '$_pageSize',
+      'offset': '$pageKey',
+      'contentRating[]': _provider.contentRating,
+      'availableTranslatedLanguage[]': _provider.translatedLanguage,
+      'includes[]': ["cover_art", "author"],
+    };
+
+    try {
+      var mangaListResponse = await MangaApi.getMangaListAsync(queryParameters: queryMap);
+
+      var newItems = mangaListResponse.data.map((e) => MangaDto.fromDex(e)).toList();
+      if (newItems.length < _pageSize) {
+        // Last
+        _pagingController.appendLastPage(newItems);
+      } else {
+        var nextPageKey = pageKey + newItems.length;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (e) {
+      _pagingController.error = e;
+      _pagingController.retryLastFailedRequest();
     }
   }
 }

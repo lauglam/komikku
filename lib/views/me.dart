@@ -2,13 +2,16 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis/user_api.dart';
+import 'package:komikku/provider/local_setting_provider.dart';
 import 'package:komikku/provider/user_provider.dart';
 import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/toast.dart';
-import 'package:komikku/utils/auth.dart';
+import 'package:komikku/database/local_storage.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/icon_text_button.dart';
 import 'package:provider/provider.dart';
+
+part 'me.setting.dart';
 
 class Me extends StatefulWidget {
   const Me({Key? key}) : super(key: key);
@@ -51,7 +54,7 @@ class _MeState extends State<Me> {
                         ),
                         Consumer<UserProvider>(
                           builder: (context, userProvider, child) => FutureBuilder<bool>(
-                            future: Auth.userLoginState,
+                            future: LocalStorage.userLoginState,
                             builder: (context, snapshot) => BuilderChecker(
                               snapshot: snapshot,
                               builder: (context) => OutlinedButton(
@@ -95,7 +98,7 @@ class _MeState extends State<Me> {
                       padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 8),
                       child: Consumer<UserProvider>(
                         builder: (context, userProvider, child) => FutureBuilder<bool>(
-                          future: Auth.userLoginState,
+                          future: LocalStorage.userLoginState,
                           builder: (context, snapshot) => BuilderChecker(
                             snapshot: snapshot,
                             builder: (context) {
@@ -127,8 +130,8 @@ class _MeState extends State<Me> {
               ),
             ),
 
-            // TODO: 设置项
-            // _SettingPanel(),
+            // 设置项
+            _SettingPanel(),
           ],
         ),
       ],
@@ -137,93 +140,9 @@ class _MeState extends State<Me> {
 
   /// 获取用户信息
   Future<String> _getUserDetails() async {
-    if (!await Auth.userLoginState) throw Exception('Invalid operation');
+    if (!await LocalStorage.userLoginState) throw Exception('Invalid operation');
 
     var response = await UserApi.getUserDetailsAsync();
     return response.data.attributes.username;
-  }
-}
-
-/// 设置面板
-class _SettingPanel extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.all(15),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        child: Wrap(
-          spacing: 20,
-          children: [
-            // 内容分级
-            IconTextButton(
-              text: '内容分级',
-              icon: TaoIcons.film,
-              onPressed: () {
-                // TODO: 内容分级
-                showAlertDialog(
-                  title: '内容分级',
-                  content: _ContentRating(),
-                );
-              },
-            ),
-
-            // 章节语言
-            IconTextButton(
-              text: '章节语言',
-              icon: TaoIcons.comment,
-              onPressed: () {
-                // TODO: 章节语言
-                showText(text: '功能暂未上线，敬请期待');
-              },
-            ),
-
-            // 本地化
-            IconTextButton(
-              text: '本地化',
-              icon: TaoIcons.cycle,
-              onPressed: () {
-                // TODO: 本地化
-                showText(text: '功能暂未上线，敬请期待');
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-/// 内容分级
-class _ContentRating extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        CheckboxListTile(
-          title: const Text('安全'),
-          value: true,
-          onChanged: (value) {},
-        ),
-        CheckboxListTile(
-          title: const Text('性暗示'),
-          value: true,
-          onChanged: (value) {},
-        ),
-        CheckboxListTile(
-          title: const Text('涉黄'),
-          value: true,
-          onChanged: (value) {},
-        ),
-        CheckboxListTile(
-          title: const Text('色情'),
-          value: true,
-          onChanged: (value) {},
-        ),
-      ],
-    );
   }
 }

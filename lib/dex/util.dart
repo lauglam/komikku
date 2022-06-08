@@ -1,18 +1,9 @@
 /// 建造请求Uri
-String buildUri({
-  required String path,
-  Map<String, dynamic>? queryParameters,
-  String? order,
-}) {
+String buildUri({required String path, Map<String, dynamic>? queryParameters}) {
   var uri = Uri(
     path: path,
     queryParameters: queryParameters,
   );
 
-  path = uri.toString();
-  return order == null
-      ? path
-      : queryParameters == null
-          ? '$path?$order'
-          : '$path&$order';
+  return uri.toString();
 }

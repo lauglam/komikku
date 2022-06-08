@@ -1,15 +1,16 @@
 import 'package:komikku/dex/models/response.dart';
 import 'package:komikku/dex/util.dart';
 import 'package:komikku/dex/models/manga_list.dart';
-import 'package:komikku/dex/models/query/usual_query.dart';
 import 'package:komikku/utils/http.dart';
 
 class FollowsApi {
   /// 获取用户订阅的漫画列表
-  static Future<MangaListResponse> getUserFollowedMangaListAsync({UsualQuery? query}) async {
+  static Future<MangaListResponse> getUserFollowedMangaListAsync({
+    Map<String, dynamic>? queryParameters,
+  }) async {
     var response = await HttpUtil().get(buildUri(
       path: '/user/follows/manga',
-      queryParameters: query?.toJson(),
+      queryParameters: queryParameters,
     ));
     return MangaListResponse.fromJson(response);
   }

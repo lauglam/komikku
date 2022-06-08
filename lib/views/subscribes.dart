@@ -3,11 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
-import 'package:komikku/dex/models/query/usual_query.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/provider/follow_provider.dart';
 import 'package:komikku/provider/user_provider.dart';
-import 'package:komikku/utils/auth.dart';
+import 'package:komikku/database/local_storage.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/grid_view_item.dart';
@@ -23,6 +22,7 @@ class Subscribes extends StatefulWidget {
 class _SubscribesState extends State<Subscribes> {
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
   static const _pageSize = 20;
+  var _markNeedRefresh = false;
 
   @override
   void initState() {
@@ -83,27 +83,29 @@ class _SubscribesState extends State<Subscribes> {
           // 遮盖的内容（处于上层）
           Consumer2<UserProvider, FollowProvider>(
             builder: (context, userProvider, followProvider, child) => FutureBuilder<bool>(
-              future: Auth.userLoginState,
+              future: LocalStorage.userLoginState,
               builder: (context, snapshot) {
                 return BuilderChecker(
                   snapshot: snapshot,
                   builder: (context) {
                     // 未登录时，此控件会遮盖住[StreamBuilder]
-                    if (!snapshot.data!) {
-                      return Container(
-                        color: Colors.white,
-                        child: const Center(child: Text('请先登录')),
-                      );
+                    if (!snapshot.data!) return child!;
+
+                    if (_markNeedRefresh) {
+                      // 延后1秒钟执行refresh()
+                      var delay = const Duration(seconds: 1);
+                      Future.delayed(delay, () => _pagingController.refresh());
                     }
 
-                    // 延后1秒钟执行refresh()
-                    var delay = const Duration(seconds: 1);
-                    (() async => await Future.delayed(delay, () => _pagingController.refresh()))();
-
+                    _markNeedRefresh = true;
                     return const SizedBox.shrink();
                   },
                 );
               },
+            ),
+            child: Container(
+              color: Colors.white,
+              child: const Center(child: Text('请先登录')),
             ),
           ),
         ],
@@ -113,23 +115,31 @@ class _SubscribesState extends State<Subscribes> {
 
   /// 获取用户订阅的漫画
   Future<void> _getUserFollowedMangaList(int pageKey) async {
-    if (!await Auth.userLoginState) {
+    if (!await LocalStorage.userLoginState) {
       _pagingController.appendPage(<MangaDto>[], 0);
       return;
     }
 
-    var response = await FollowsApi.getUserFollowedMangaListAsync(
-      query: UsualQuery(limit: _pageSize, offset: pageKey, includes: ['cover_art', 'author']),
-    );
+    final queryMap = {
+      'limit': '$_pageSize',
+      'offset': '$pageKey',
+      'includes[]': ["cover_art", "author"],
+    };
 
-    var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
+    try {
+      var response = await FollowsApi.getUserFollowedMangaListAsync(queryParameters: queryMap);
+      var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
 
-    if (newItems.length < _pageSize) {
-      // Last
-      _pagingController.appendLastPage(newItems);
-    } else {
-      var nextPageKey = pageKey + newItems.length;
-      _pagingController.appendPage(newItems, nextPageKey);
+      if (newItems.length < _pageSize) {
+        // Last
+        _pagingController.appendLastPage(newItems);
+      } else {
+        var nextPageKey = pageKey + newItems.length;
+        _pagingController.appendPage(newItems, nextPageKey);
+      }
+    } catch (e) {
+      _pagingController.error = e;
+      _pagingController.retryLastFailedRequest();
     }
   }
 }

@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/settings.dart';
 import 'package:komikku/dex/models/refresh_token.dart';
-import 'package:komikku/utils/auth.dart';
+import 'package:komikku/database/local_storage.dart';
 
 class HttpUtil {
   static final HttpUtil _instance = HttpUtil._internal();
@@ -16,9 +16,8 @@ class HttpUtil {
   HttpUtil._internal() {
     BaseOptions options = BaseOptions(
       baseUrl: serverUrl,
-      connectTimeout: 20000,
-      receiveTimeout: 20000,
-      sendTimeout: 20000,
+      connectTimeout: 10000,
+      receiveTimeout: 5000,
       headers: {},
       contentType: 'application/json; charset=utf-8',
       responseType: ResponseType.json,
@@ -93,14 +92,14 @@ class HttpUtil {
     Options options = Options();
 
     // 查看是否登录
-    if (await Auth.userLoginState) {
-      var token = await Auth.session;
+    if (await LocalStorage.userLoginState) {
+      var token = await LocalStorage.session;
 
       // session 为空的情况，请求刷新session
       if (token == null) {
-        var response = await AuthApi.refreshAsync(RefreshToken(token: (await Auth.refresh)!));
+        var response = await AuthApi.refreshAsync(RefreshToken(token: (await LocalStorage.refresh)!));
         token = response.token.session;
-        await Auth.setSession(token);
+        await LocalStorage.setSession(token);
       }
 
       options = Options(headers: {
