@@ -147,15 +147,11 @@ class _ReadingState extends State<Reading> {
     }
 
     // 阅读进度
-    if (_scrollController.positions.isEmpty) {
-      // 在顶部，但还未滑动的状态
-      _progressNotifier.value = 0;
-      return;
+    if(_scrollController.positions.isNotEmpty){
+      final current = _scrollController.position.pixels;
+      final max = _scrollController.position.maxScrollExtent;
+      _progressNotifier.value = (current / max * 100).round();
     }
-
-    final current = _scrollController.position.pixels;
-    final max = _scrollController.position.maxScrollExtent;
-    _progressNotifier.value = (current / max * 100).round();
   }
 
   /// 翻页
@@ -168,9 +164,10 @@ class _ReadingState extends State<Reading> {
 
     // 只有一条内容时，不弹窗显示，而是自己显示上一章/下一章
     if (values.length == 1) {
-      setState(() {
-        _currentId = values[0].id;
-      });
+      setState(() => _currentId = values[0].id);
+
+      // 延迟200毫秒
+      Future.delayed(const Duration(milliseconds: 200), () => _progressNotifier.value = 0);
 
       // 设为已读
       await provider.mark(values[0].id);
@@ -196,9 +193,10 @@ class _ReadingState extends State<Reading> {
                 // 点击事件时，再次将页数更改（相当于更改了2次，但后续在关闭时会恢复一次）
                 next ? _currentIndex++ : _currentIndex--;
                 Navigator.pop(context);
-                setState(() {
-                  _currentId = values[index].id;
-                });
+                setState(() => _currentId = values[index].id);
+
+                // 延迟200毫秒
+                Future.delayed(const Duration(milliseconds: 200), () => _progressNotifier.value = 0);
 
                 // 设为已读
                 await provider.mark(values[index].id);

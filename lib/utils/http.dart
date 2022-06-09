@@ -11,7 +11,6 @@ class HttpUtil {
 
   Dio? dio;
   CancelToken? cancelToken = CancelToken();
-  static const _retries = 3;
 
   HttpUtil._internal() {
     BaseOptions options = BaseOptions(
@@ -40,40 +39,6 @@ class HttpUtil {
       // 这样请求将被中止并触发异常，上层catchError会被调用。
     }, onError: (DioError e, handler) async {
       // Do something with response error
-      var retryCount = 0;
-      if ((e.type == DioErrorType.other ||
-              e.type == DioErrorType.connectTimeout ||
-              e.type == DioErrorType.receiveTimeout) &&
-          retryCount < _retries) {
-        retryCount++;
-        final response = await dio?.request(
-          e.requestOptions.path,
-          data: e.requestOptions.data,
-          queryParameters: e.requestOptions.queryParameters,
-          cancelToken: e.requestOptions.cancelToken,
-          onSendProgress: e.requestOptions.onReceiveProgress,
-          onReceiveProgress: e.requestOptions.onReceiveProgress,
-          options: Options(
-            method: e.requestOptions.method,
-            sendTimeout: e.requestOptions.sendTimeout,
-            receiveTimeout: e.requestOptions.receiveTimeout,
-            extra: e.requestOptions.extra,
-            headers: e.requestOptions.headers,
-            responseType: e.requestOptions.responseType,
-            contentType: e.requestOptions.contentType,
-            validateStatus: e.requestOptions.validateStatus,
-            receiveDataWhenStatusError: e.requestOptions.receiveDataWhenStatusError,
-            followRedirects: e.requestOptions.followRedirects,
-            maxRedirects: e.requestOptions.maxRedirects,
-            requestEncoder: e.requestOptions.requestEncoder,
-            responseDecoder: e.requestOptions.responseDecoder,
-            listFormat: e.requestOptions.listFormat,
-          ),
-        );
-        if (response != null) {
-          return handler.resolve(response);
-        }
-      }
       return handler.next(e); //continue
       // 如果你想完成请求并返回一些自定义数据，可以resolve 一个`Response`,如`handler.resolve(response)`。
       // 这样请求将会被终止，上层then会被调用，then中返回的数据将是你的自定义response.
