@@ -7,6 +7,7 @@ import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/provider/local_setting_provider.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/grid_view_item.dart';
+import 'package:komikku/widgets/indicator.dart';
 import 'package:komikku/widgets/search_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -19,6 +20,7 @@ class LatestUpdate extends StatefulWidget {
 
 class _LatestUpdateState extends State<LatestUpdate> {
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
+  late final _provider = Provider.of<LocalSettingProvider>(context, listen: false);
   static const _pageSize = 20;
   var _markNeedRefresh = false;
 
@@ -76,6 +78,12 @@ class _LatestUpdateState extends State<LatestUpdate> {
               ),
               pagingController: _pagingController,
               builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+                firstPageErrorIndicatorBuilder: (context) => TryAgainExceptionIndicator(
+                  onTryAgain: () => _pagingController.retryLastFailedRequest(),
+                ),
+                newPageErrorIndicatorBuilder: (context) => TryAgainIconExceptionIndicator(
+                  onTryAgain: () => _pagingController.retryLastFailedRequest(),
+                ),
                 noItemsFoundIndicatorBuilder: (context) => const Center(child: Text('没有漫画数据')),
                 itemBuilder: (context, item, index) {
                   return InkWell(
@@ -101,14 +109,13 @@ class _LatestUpdateState extends State<LatestUpdate> {
 
   /// 获取漫画列表
   Future<void> _getMangaList(int pageKey) async {
-    final provider = Provider.of<LocalSettingProvider>(context, listen: false);
-    await provider.get();
+    await _provider.get();
 
     final queryMap = {
       'limit': '$_pageSize',
       'offset': '$pageKey',
-      'contentRating[]': provider.contentRating,
-      'availableTranslatedLanguage[]': provider.translatedLanguage,
+      'contentRating[]': _provider.contentRating,
+      'availableTranslatedLanguage[]': _provider.translatedLanguage,
       'includes[]': ["cover_art", "author"],
     };
 
@@ -125,7 +132,6 @@ class _LatestUpdateState extends State<LatestUpdate> {
       }
     } catch (e) {
       _pagingController.error = e;
-      _pagingController.retryLastFailedRequest();
     }
   }
 }

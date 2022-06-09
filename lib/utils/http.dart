@@ -224,7 +224,7 @@ class HttpUtil {
               default:
                 {
                   return HttpException(
-                      code: errCode, message: error.response?.statusMessage ?? '未知错误');
+                      code: errCode, message: error.response?.statusMessage ?? '网络错误');
                 }
             }
           } on Exception catch (_) {

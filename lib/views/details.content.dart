@@ -12,10 +12,23 @@ class _DetailsContent extends StatefulWidget {
 }
 
 class _DetailsContentState extends State<_DetailsContent> {
-  final _orderValueNotifier = ValueNotifier(OrderMode.desc);
+  /// 倒序排序通知
+  /// 默认为ture
+  final _orderByDescValueNotifier = ValueNotifier(true);
 
-  /// 因为需要排序，所以将响应内容缓存
-  Future<ChapterListResponse>? _getMangaFeedFuture;
+  /// 倒序排序字典
+  var _descChapters = <String, List<ChapterDto>>{};
+
+  /// 正序排序字典
+  var _ascChapters = <String, List<ChapterDto>>{};
+
+  /// 因为已经将排序都装入了[_descChapters]和[_ascChapters]
+  /// 所以将响应内容缓存，只执行一次
+  Future<void>? _getMangaFeedFuture;
+
+  /// 请求阅读记录的异步操作也只执行一次
+  /// 如果在每次排序时都执行一次可能会导致网络请求过多
+  Future<void>? _getMangaReadMarkersFuture;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +42,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             child: Directionality(
               textDirection: TextDirection.rtl,
               child: ValueListenableBuilder(
-                valueListenable: _orderValueNotifier,
+                valueListenable: _orderByDescValueNotifier,
                 builder: (context, value, child) => TextButton.icon(
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
@@ -37,15 +50,11 @@ class _DetailsContentState extends State<_DetailsContent> {
                     foregroundColor: MaterialStateProperty.all(Colors.black54),
                   ),
                   label: const Text('排序'),
-                  icon: _orderValueNotifier.value == OrderMode.asc
-                      ? const Icon(Icons.arrow_upward_rounded, size: 18)
-                      : const Icon(Icons.arrow_downward_rounded, size: 18),
+                  icon: _orderByDescValueNotifier.value
+                      ? const Icon(Icons.arrow_downward_rounded, size: 18)
+                      : const Icon(Icons.arrow_upward_rounded, size: 18),
                   onPressed: () {
-                    if (_orderValueNotifier.value == OrderMode.desc) {
-                      _orderValueNotifier.value = OrderMode.asc;
-                    } else {
-                      _orderValueNotifier.value = OrderMode.desc;
-                    }
+                    _orderByDescValueNotifier.value = !_orderByDescValueNotifier.value;
                   },
                 ),
               ),
@@ -55,22 +64,27 @@ class _DetailsContentState extends State<_DetailsContent> {
 
         // 内容
         ValueListenableBuilder(
-          valueListenable: _orderValueNotifier,
+          valueListenable: _orderByDescValueNotifier,
           builder: (context, value, child) => FutureBuilder<dynamic>(
-            // 1: List<Chapter>   2: void
             future: Future.wait([
-              _getMangaFeed(),
-              Provider.of<ChapterReadMarkerProvider>(context, listen: false).get(widget.id)
+              // 只执行一次请求
+              _getMangaFeedFuture ??= _getMangaFeed(),
+              _getMangaReadMarkersFuture ??=
+                  Provider.of<ChapterReadMarkerProvider>(context, listen: false).get(widget.id)
             ]),
             builder: (context, snapshot) => BuilderChecker(
               snapshot: snapshot,
               onWaiting: child,
-              builder: (context) => _DetailsGrid(chapters: snapshot.data![0]),
+              builder: (context) => _DetailsGrid(
+                ascChapters: _ascChapters,
+                descChapters: _descChapters,
+                isDesc: _orderByDescValueNotifier.value,
+              ),
             ),
           ),
           child: const Center(
             child: Padding(
-              padding: EdgeInsets.only(top: 80),
+              padding: EdgeInsets.only(top: 100),
               child: CircularProgressIndicator(),
             ),
           ),
@@ -81,7 +95,8 @@ class _DetailsContentState extends State<_DetailsContent> {
   }
 
   /// 获取漫画章节
-  Future<List<ChapterDto>> _getMangaFeed() async {
+  /// 此方法只执行一次
+  Future<void> _getMangaFeed() async {
     final provider = Provider.of<LocalSettingProvider>(context, listen: false);
     await provider.get();
 
@@ -97,57 +112,72 @@ class _DetailsContentState extends State<_DetailsContent> {
       'order[chapter]': 'desc',
     };
 
-    final response = await (_getMangaFeedFuture ??= MangaApi.getMangaFeedAsync(
+    final response = await MangaApi.getMangaFeedAsync(
       widget.id,
       queryParameters: queryMap,
-    ));
+    );
 
     final newItems = response.data.map((e) => ChapterDto.fromDex(e)).toList();
 
     if (!newItems
         .any((value) => value.chapter == null || double.tryParse(value.chapter!) == null)) {
       // 按章节排序
-      if (_orderValueNotifier.value == OrderMode.desc) {
-        newItems.sortByCompare(
-          (value) => double.parse(value.chapter!),
-          (double a, double b) => b.compareTo(a),
-        );
-      } else {
-        newItems.sortByCompare(
-          (value) => double.parse(value.chapter!),
-          (double a, double b) => a.compareTo(b),
-        );
-      }
+      _descChapters = newItems
+          .sortedByCompare(
+            (value) => double.parse(value.chapter!),
+            (double a, double b) => b.compareTo(a),
+          )
+          .groupListsBy(
+            (e) => e.chapter!,
+          );
+
+      _ascChapters = newItems
+          .sortedByCompare(
+            (value) => double.parse(value.chapter!),
+            (double a, double b) => a.compareTo(b),
+          )
+          .groupListsBy(
+            (e) => e.chapter!,
+          );
     } else {
       // 没有章节，按readableAt排序
-      if (_orderValueNotifier.value == OrderMode.desc) {
-        newItems.sortByCompare(
-          (value) => value.readableAt,
-          (DateTime a, DateTime b) => b.compareTo(a),
-        );
-      } else {
-        newItems.sortByCompare(
-          (value) => value.readableAt,
-          (DateTime a, DateTime b) => a.compareTo(b),
-        );
-      }
-    }
+      _descChapters = newItems
+          .sortedByCompare(
+            (value) => value.readableAt,
+            (DateTime a, DateTime b) => b.compareTo(a),
+          )
+          .groupListsBy(
+            (e) => '${e.readableAt}',
+          );
 
-    return newItems;
+      _ascChapters = newItems
+          .sortedByCompare(
+            (value) => value.readableAt,
+            (DateTime a, DateTime b) => a.compareTo(b),
+          )
+          .groupListsBy(
+            (e) => '${e.readableAt}',
+          );
+    }
   }
 }
 
 /// 漫画栅格
 class _DetailsGrid extends StatelessWidget {
-  const _DetailsGrid({Key? key, required this.chapters}) : super(key: key);
+  const _DetailsGrid({
+    Key? key,
+    required this.ascChapters,
+    required this.descChapters,
+    required this.isDesc,
+  }) : super(key: key);
 
-  final List<ChapterDto> chapters;
-
-  // final List<String> chapterReadMarkers;
+  final Map<String, List<ChapterDto>> ascChapters;
+  final Map<String, List<ChapterDto>> descChapters;
+  final bool isDesc;
 
   @override
   Widget build(BuildContext context) {
-    final itemsMap = chapters.groupListsBy((value) => value.chapter);
+    final itemsMap = isDesc ? descChapters : ascChapters;
 
     return Consumer<ChapterReadMarkerProvider>(
       builder: (context, provider, child) {
@@ -165,15 +195,6 @@ class _DetailsGrid extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (context, chapterIndex) {
             final values = itemsMap.values.elementAt(chapterIndex);
-
-            // 因为排序的原因，所以要明确上一章到底位于数组的前一个还是后一个
-            // 如果是倒序，则反转
-            var ascIndex = chapterIndex;
-            var ascArrays = itemsMap.values;
-            if (chapters.length > 2 && chapters[0].readableAt.isAfter(chapters[1].readableAt)) {
-              ascIndex = itemsMap.length - chapterIndex - 1;
-              ascArrays = itemsMap.values.toList().reversed.toList();
-            }
 
             // 按钮颜色
             Color buttonColor = Colors.orange;
@@ -200,8 +221,8 @@ class _DetailsGrid extends StatelessWidget {
                     MaterialPageRoute(
                       builder: (context) => Reading(
                         id: values[0].id,
-                        index: ascIndex,
-                        arrays: ascArrays,
+                        index: isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex,
+                        arrays: ascChapters.values,
                       ),
                     ),
                   );
@@ -252,8 +273,8 @@ class _DetailsGrid extends StatelessWidget {
                               MaterialPageRoute(
                                 builder: (context) => Reading(
                                   id: values[index].id,
-                                  index: ascIndex,
-                                  arrays: ascArrays,
+                                  index: isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex,
+                                  arrays: ascChapters.values,
                                 ),
                               ),
                             );

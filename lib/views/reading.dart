@@ -42,6 +42,8 @@ class _ReadingState extends State<Reading> {
   late String _currentId = widget.id;
   late int _currentIndex = widget.index;
 
+  late final _provider = Provider.of<ChapterReadMarkerProvider>(context, listen: false);
+
   @override
   void initState() {
     _scrollController.addListener(listener);
@@ -76,14 +78,9 @@ class _ReadingState extends State<Reading> {
                       fit: BoxFit.fitWidth,
                       fadeOutDuration: const Duration(milliseconds: 1),
                       progressIndicatorBuilder: (context, url, progress) {
-                        return SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.5,
-                          width: MediaQuery.of(context).size.width,
-                          child: Center(
-                            child: CircularProgressIndicator(
-                              value: progress.progress,
-                            ),
-                          ),
+                        return _ProgressIndicator(
+                          index: '${index + 1}',
+                          progress: progress.progress,
                         );
                       },
                       errorWidget: (context, url, progress) =>
@@ -147,7 +144,7 @@ class _ReadingState extends State<Reading> {
     }
 
     // 阅读进度
-    if(_scrollController.positions.isNotEmpty){
+    if (_scrollController.positions.isNotEmpty) {
       final current = _scrollController.position.pixels;
       final max = _scrollController.position.maxScrollExtent;
       _progressNotifier.value = (current / max * 100).round();
@@ -156,8 +153,6 @@ class _ReadingState extends State<Reading> {
 
   /// 翻页
   Future<void> _pageTurn(bool next) async {
-    final provider = Provider.of<ChapterReadMarkerProvider>(context, listen: false);
-
     // 是否是下一章
     next ? _currentIndex++ : _currentIndex--;
     final values = widget.arrays.elementAt(_currentIndex).toList();
@@ -170,7 +165,7 @@ class _ReadingState extends State<Reading> {
       Future.delayed(const Duration(milliseconds: 200), () => _progressNotifier.value = 0);
 
       // 设为已读
-      await provider.mark(values[0].id);
+      await _provider.mark(values[0].id);
       return;
     }
 
@@ -196,10 +191,11 @@ class _ReadingState extends State<Reading> {
                 setState(() => _currentId = values[index].id);
 
                 // 延迟200毫秒
-                Future.delayed(const Duration(milliseconds: 200), () => _progressNotifier.value = 0);
+                Future.delayed(
+                    const Duration(milliseconds: 200), () => _progressNotifier.value = 0);
 
                 // 设为已读
-                await provider.mark(values[index].id);
+                await _provider.mark(values[index].id);
               },
             ),
           );
@@ -207,5 +203,32 @@ class _ReadingState extends State<Reading> {
       ),
       // 关闭时恢复一次（此时如果没有onTap操作，则状态未变）
     ).then((value) => next ? _currentIndex-- : _currentIndex++);
+  }
+}
+
+/// 图片加载进度
+class _ProgressIndicator extends StatelessWidget {
+  const _ProgressIndicator({required this.index, required this.progress});
+
+  final String index;
+  final double? progress;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.5,
+      width: MediaQuery.of(context).size.width,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(index, style: const TextStyle(fontSize: 50, color: Colors.black54)),
+            const Padding(padding: EdgeInsets.only(bottom: 10)),
+            CircularProgressIndicator(value: progress),
+          ],
+        ),
+      ),
+    );
   }
 }

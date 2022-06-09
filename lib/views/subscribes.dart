@@ -11,6 +11,7 @@ import 'package:komikku/database/local_storage.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/grid_view_item.dart';
+import 'package:komikku/widgets/indicator.dart';
 import 'package:provider/provider.dart';
 
 class Subscribes extends StatefulWidget {
@@ -21,6 +22,7 @@ class Subscribes extends StatefulWidget {
 }
 
 class _SubscribesState extends State<Subscribes> {
+  late final _provider = Provider.of<LocalSettingProvider>(context, listen: false);
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
   static const _pageSize = 20;
   var _markNeedRefresh = false;
@@ -60,6 +62,12 @@ class _SubscribesState extends State<Subscribes> {
               ),
               pagingController: _pagingController,
               builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+                firstPageErrorIndicatorBuilder: (context) => TryAgainExceptionIndicator(
+                  onTryAgain: () => _pagingController.retryLastFailedRequest(),
+                ),
+                newPageErrorIndicatorBuilder: (context) => TryAgainIconExceptionIndicator(
+                  onTryAgain: () => _pagingController.retryLastFailedRequest(),
+                ),
                 noItemsFoundIndicatorBuilder: (context) => const Center(
                   child: Text('没有订阅的漫画'),
                 ),
@@ -133,13 +141,12 @@ class _SubscribesState extends State<Subscribes> {
     };
 
     try {
-      final provider = Provider.of<LocalSettingProvider>(context, listen: false);
+      await _provider.get();
       final response = await FollowsApi.getUserFollowedMangaListAsync(queryParameters: queryMap);
       var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
 
       // /user/follows/manga 端点没有contentRating参数，所以需要手动过滤掉
-      provider.get();
-      newItems.removeWhere((e) => !provider.contentRating.contains(e.contentRating));
+      newItems.removeWhere((e) => !_provider.contentRating.contains(e.contentRating));
 
       if (newItems.length < _pageSize) {
         // Last
@@ -150,7 +157,6 @@ class _SubscribesState extends State<Subscribes> {
       }
     } catch (e) {
       _pagingController.error = e;
-      _pagingController.retryLastFailedRequest();
     }
   }
 }

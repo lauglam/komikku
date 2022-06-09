@@ -11,6 +11,7 @@ import 'package:komikku/utils/toast.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/chip.dart';
+import 'package:komikku/widgets/indicator.dart';
 import 'package:komikku/widgets/list_view_item.dart';
 import 'package:komikku/widgets/search_bar.dart';
 import 'package:collection/collection.dart';
@@ -27,11 +28,12 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
+  late final _provider = Provider.of<LocalSettingProvider>(context, listen: false);
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
+  late final Future<List<TagDto>> _tagFuture = _getTagList();
   final _chipValueNotifier = ValueNotifier(false);
   final _includedTags = <String, String>{};
   static const _pageSize = 20;
-  late final Future<List<TagDto>> _tagFuture = _getTagList();
   String _title = '';
 
   @override
@@ -147,6 +149,12 @@ class _SearchState extends State<Search> {
               child: PagedListView(
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+                  firstPageErrorIndicatorBuilder: (context) => TryAgainExceptionIndicator(
+                    onTryAgain: () => _pagingController.retryLastFailedRequest(),
+                  ),
+                  newPageErrorIndicatorBuilder: (context) => TryAgainIconExceptionIndicator(
+                    onTryAgain: () => _pagingController.retryLastFailedRequest(),
+                  ),
                   noItemsFoundIndicatorBuilder: (context) => const Center(
                     child: Text('没有找到符合条件的漫画'),
                   ),
@@ -174,15 +182,14 @@ class _SearchState extends State<Search> {
 
   /// 搜索漫画
   Future<void> _searchMangaList(int pageKey) async {
-    final provider = Provider.of<LocalSettingProvider>(context, listen: false);
-    await provider.get();
+    await _provider.get();
 
     final queryMap = {
       'title': _title,
       'limit': '$_pageSize',
       'offset': '$pageKey',
-      'contentRating[]': provider.contentRating,
-      'availableTranslatedLanguage[]': provider.translatedLanguage,
+      'contentRating[]': _provider.contentRating,
+      'availableTranslatedLanguage[]': _provider.translatedLanguage,
       'includes[]': ["cover_art", "author"],
       'includedTags[]': _includedTags.keys,
       'order[relevance]': 'desc',
@@ -201,7 +208,6 @@ class _SearchState extends State<Search> {
       }
     } catch (e) {
       _pagingController.error = e;
-      _pagingController.retryLastFailedRequest();
     }
   }
 

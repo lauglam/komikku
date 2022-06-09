@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:komikku/widgets/indicator.dart';
 
 typedef WidgetCallback = Widget Function();
 
@@ -28,7 +29,7 @@ class BuilderChecker<T> extends StatelessWidget {
     switch (snapshot.connectionState) {
       case ConnectionState.none:
         if (onNone != null) return onNone!;
-        return const _CenterIconWeight('无数据');
+        return const ExceptionIndicator('无数据');
       case ConnectionState.waiting:
         if (onWaiting != null) return onWaiting!;
         return Offstage(
@@ -40,31 +41,12 @@ class BuilderChecker<T> extends StatelessWidget {
           if (onError != null) return onError!;
 
           if (snapshot.error is HttpException) {
-            return _CenterIconWeight((snapshot.error as HttpException).message);
+            return ExceptionIndicator((snapshot.error as HttpException).message);
           }
 
-          return const _CenterIconWeight('未知错误');
+          return const ExceptionIndicator('网络错误');
         }
         return builder(context);
     }
-  }
-}
-
-class _CenterIconWeight extends StatelessWidget {
-  const _CenterIconWeight(this.title);
-
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Icon(Icons.android_outlined, size: 85, color: Colors.black12),
-          Text(title, style: const TextStyle(fontSize: 18, color: Colors.black12)),
-        ],
-      ),
-    );
   }
 }

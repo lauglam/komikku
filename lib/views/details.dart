@@ -2,7 +2,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
-import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/provider/chapter_read_marker_provider.dart';

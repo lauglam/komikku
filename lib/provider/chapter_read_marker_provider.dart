@@ -7,8 +7,6 @@ class ChapterReadMarkerProvider extends ChangeNotifier {
   Future<void> get(String id) async {
     final response = await ChapterReadMarkerApi.getMangaReadMarkersAsync(id);
     chapterReadMarkers = response.data;
-
-    notifyListeners();
   }
 
   Future<void> mark(String id) async {
