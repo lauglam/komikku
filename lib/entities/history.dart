@@ -1,13 +1,25 @@
 class History {
-  /// 主键id
+  /// 漫画id
+  /// 后续更新同一漫画，只更改[chapterReadMarker]和[updatedAt]
   final String id;
 
-  /// 漫画id
-  /// 后续更新同一漫画，只更改[chapterId]和[updatedAt]
-  final String mangaId;
+  /// 图片
+  final String imageUrl;
 
-  /// 章节id
-  String chapterId;
+  /// 标题
+  final String title;
+
+  /// 状态
+  String status;
+
+  /// 最新卷
+  String lastVolume;
+
+  /// 最新章
+  String lastChapter;
+
+  /// 当前阅读章节id
+  String chapterReadMarker;
 
   /// 更新时间
   /// 初次创建时[updatedAt]=[createdAt]
@@ -18,8 +30,12 @@ class History {
 
   History({
     required this.id,
-    required this.mangaId,
-    required this.chapterId,
+    required this.imageUrl,
+    required this.title,
+    required this.status,
+    required this.lastVolume,
+    required this.lastChapter,
+    required this.chapterReadMarker,
     required this.updatedAt,
     required this.createdAt,
   });

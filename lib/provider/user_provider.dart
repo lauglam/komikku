@@ -10,7 +10,7 @@ class UserProvider extends ChangeNotifier {
         ? Login(email: emailOrUsername, password: password)
         : Login(username: emailOrUsername, password: password);
 
-    var response = await AuthApi.loginAsync(login);
+    final response = await AuthApi.loginAsync(login);
     await LocalStorage.setRefresh(response.token.refresh);
     await LocalStorage.setSession(response.token.session);
 

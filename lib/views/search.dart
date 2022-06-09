@@ -189,7 +189,7 @@ class _SearchState extends State<Search> {
     };
 
     try {
-      var response = await MangaApi.getMangaListAsync(queryParameters: queryMap);
+      final response = await MangaApi.getMangaListAsync(queryParameters: queryMap);
 
       var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
       if (newItems.length < _pageSize) {
@@ -207,7 +207,7 @@ class _SearchState extends State<Search> {
 
   /// 获取标签列表
   Future<List<TagDto>> _getTagList() async {
-    var response = await MangaApi.getTagListAsync();
+    final response = await MangaApi.getTagListAsync();
     return response.data.map((e) => TagDto.fromDex(e)).toList();
   }
 }

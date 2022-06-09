@@ -10,7 +10,7 @@ class MangaApi {
   static Future<MangaListResponse> getMangaListAsync({
     Map<String, dynamic>? queryParameters,
   }) async {
-    var response = await HttpUtil().get(buildUri(
+    final response = await HttpUtil().get(buildUri(
       path: '/manga',
       queryParameters: queryParameters,
     ));
@@ -22,7 +22,7 @@ class MangaApi {
     String id, {
     Map<String, dynamic>? queryParameters,
   }) async {
-    var response = await HttpUtil().get(buildUri(
+    final response = await HttpUtil().get(buildUri(
       path: '/manga/$id/feed',
       queryParameters: queryParameters,
     ));
@@ -31,19 +31,19 @@ class MangaApi {
 
   /// 订阅漫画
   static Future<Response> followMangaAsync(String id) async {
-    var response = await HttpUtil().post('/manga/$id/follow');
+    final response = await HttpUtil().post('/manga/$id/follow');
     return Response.fromJson(response);
   }
 
   /// 退订漫画
   static Future<Response> unfollowMangaAsync(String id) async {
-    var response = await HttpUtil().delete('/manga/$id/follow');
+    final response = await HttpUtil().delete('/manga/$id/follow');
     return Response.fromJson(response);
   }
 
   /// 获取标签列表
   static Future<TagListResponse> getTagListAsync() async {
-    var response = await HttpUtil().get('/manga/tag');
+    final response = await HttpUtil().get('/manga/tag');
     return TagListResponse.fromJson(response);
   }
 }

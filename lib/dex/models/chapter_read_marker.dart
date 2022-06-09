@@ -25,6 +25,7 @@ class ChapterReadMarkerResponse extends Response {
 class GroupedChapterReadMarkerResponse extends Response {
   GroupedChapterReadMarkerResponse({required super.result, required this.data});
 
+  /// Group by manga id
   final Map<String, List<String>> data;
 
   factory GroupedChapterReadMarkerResponse.fromJson(Map<String, dynamic> json) =>

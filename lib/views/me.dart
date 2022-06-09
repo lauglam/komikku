@@ -142,7 +142,7 @@ class _MeState extends State<Me> {
   Future<String> _getUserDetails() async {
     if (!await LocalStorage.userLoginState) throw Exception('Invalid operation');
 
-    var response = await UserApi.getUserDetailsAsync();
+    final response = await UserApi.getUserDetailsAsync();
     return response.data.attributes.username;
   }
 }

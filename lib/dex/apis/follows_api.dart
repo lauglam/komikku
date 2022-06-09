@@ -8,7 +8,7 @@ class FollowsApi {
   static Future<MangaListResponse> getUserFollowedMangaListAsync({
     Map<String, dynamic>? queryParameters,
   }) async {
-    var response = await HttpUtil().get(buildUri(
+    final response = await HttpUtil().get(buildUri(
       path: '/user/follows/manga',
       queryParameters: queryParameters,
     ));
@@ -17,7 +17,7 @@ class FollowsApi {
 
   /// 检测用户是否订阅某本漫画
   static Future<Response> checkUserFollowsMangaAsync(String id) async {
-    var response = await HttpUtil().get('/user/follows/manga/$id');
+    final response = await HttpUtil().get('/user/follows/manga/$id');
     return Response.fromJson(response);
   }
 }

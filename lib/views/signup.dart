@@ -145,7 +145,7 @@ class _SignupState extends State<Signup> {
     if (!_validate()) return;
 
     try {
-      var response = await AccountApi.createAccountAsync(AccountCreate(
+      final response = await AccountApi.createAccountAsync(AccountCreate(
         username: _username!,
         password: _password!,
         email: _email!,

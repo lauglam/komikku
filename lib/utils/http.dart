@@ -41,10 +41,12 @@ class HttpUtil {
     }, onError: (DioError e, handler) async {
       // Do something with response error
       var retryCount = 0;
-      if ((e.type == DioErrorType.other || e.type == DioErrorType.connectTimeout) &&
+      if ((e.type == DioErrorType.other ||
+              e.type == DioErrorType.connectTimeout ||
+              e.type == DioErrorType.receiveTimeout) &&
           retryCount < _retries) {
         retryCount++;
-        var response = await dio?.request(
+        final response = await dio?.request(
           e.requestOptions.path,
           data: e.requestOptions.data,
           queryParameters: e.requestOptions.queryParameters,
@@ -98,7 +100,7 @@ class HttpUtil {
 
       // session 为空的情况，请求刷新session
       if (token == null) {
-        var response =
+        final response =
             await AuthApi.refreshAsync(RefreshToken(token: (await LocalStorage.refresh)!));
         token = response.token.session;
         await LocalStorage.setSession(token);
@@ -115,7 +117,7 @@ class HttpUtil {
   Future get(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? await getLocalOptions();
-      var response = await dio?.get(path,
+      final response = await dio?.get(path,
           queryParameters: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
@@ -127,7 +129,7 @@ class HttpUtil {
   Future post(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? await getLocalOptions();
-      var response =
+      final response =
           await dio?.post(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
@@ -139,7 +141,7 @@ class HttpUtil {
   Future put(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? await getLocalOptions();
-      var response =
+      final response =
           await dio?.put(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
@@ -151,7 +153,7 @@ class HttpUtil {
   Future patch(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? await getLocalOptions();
-      var response =
+      final response =
           await dio?.patch(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
@@ -163,7 +165,7 @@ class HttpUtil {
   Future delete(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? await getLocalOptions();
-      var response =
+      final response =
           await dio?.delete(path, data: params, options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {
@@ -175,7 +177,7 @@ class HttpUtil {
   Future postForm(String path, {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
       var tokenOptions = options ?? await getLocalOptions();
-      var response = await dio?.post(path,
+      final response = await dio?.post(path,
           data: FormData.fromMap(params), options: tokenOptions, cancelToken: cancelToken);
       return response?.data;
     } on DioError catch (e) {

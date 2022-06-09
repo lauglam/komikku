@@ -3,11 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis/at_home_api.dart';
 import 'package:komikku/dex/retrieving.dart';
 import 'package:komikku/dto/chapter_dto.dart';
+import 'package:komikku/provider/chapter_read_marker_provider.dart';
 import 'package:komikku/utils/extensions.dart';
 import 'package:komikku/utils/timeago.dart';
 import 'package:komikku/utils/toast.dart';
 import 'package:komikku/widgets/bottom_modal_item.dart';
 import 'package:komikku/widgets/builder_checker.dart';
+import 'package:provider/provider.dart';
 
 /// 阅读页
 class Reading extends StatefulWidget {
@@ -122,7 +124,7 @@ class _ReadingState extends State<Reading> {
 
   /// 获取章节图片
   Future<List<String>> _getChapterPages() async {
-    var atHome = await AtHomeApi.getHomeServerUrlAsync(_currentId);
+    final atHome = await AtHomeApi.getHomeServerUrlAsync(_currentId);
     return Retrieving.getChapterPages(atHome.baseUrl, atHome.chapter.hash, atHome.chapter.data);
   }
 
@@ -145,21 +147,33 @@ class _ReadingState extends State<Reading> {
     }
 
     // 阅读进度
-    var current = _scrollController.position.pixels;
-    var max = _scrollController.position.maxScrollExtent;
+    if (_scrollController.positions.isEmpty) {
+      // 在顶部，但还未滑动的状态
+      _progressNotifier.value = 0;
+      return;
+    }
+
+    final current = _scrollController.position.pixels;
+    final max = _scrollController.position.maxScrollExtent;
     _progressNotifier.value = (current / max * 100).round();
   }
 
   /// 翻页
   Future<void> _pageTurn(bool next) async {
+    final provider = Provider.of<ChapterReadMarkerProvider>(context, listen: false);
+
     // 是否是下一章
     next ? _currentIndex++ : _currentIndex--;
-    var values = widget.arrays.elementAt(_currentIndex).toList();
+    final values = widget.arrays.elementAt(_currentIndex).toList();
 
     // 只有一条内容时，不弹窗显示，而是自己显示上一章/下一章
     if (values.length == 1) {
-      setState(() => _currentId = values[0].id);
-      _progressNotifier.value = 0;
+      setState(() {
+        _currentId = values[0].id;
+      });
+
+      // 设为已读
+      await provider.mark(values[0].id);
       return;
     }
 
@@ -178,12 +192,16 @@ class _ReadingState extends State<Reading> {
               subtitle2: values[index].scanlationGroup ?? '',
               subtitle3: values[index].uploader ?? '',
               subtitle4: '共 ${values[index].pages} 页',
-              onTap: () {
+              onTap: () async {
                 // 点击事件时，再次将页数更改（相当于更改了2次，但后续在关闭时会恢复一次）
                 next ? _currentIndex++ : _currentIndex--;
                 Navigator.pop(context);
-                setState(() => _currentId = values[index].id);
-                _progressNotifier.value = 0;
+                setState(() {
+                  _currentId = values[index].id;
+                });
+
+                // 设为已读
+                await provider.mark(values[index].id);
               },
             ),
           );

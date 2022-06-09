@@ -19,7 +19,6 @@ class LatestUpdate extends StatefulWidget {
 
 class _LatestUpdateState extends State<LatestUpdate> {
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
-  late final _settingProvider = Provider.of<LocalSettingProvider>(context, listen: false);
   static const _pageSize = 20;
   var _markNeedRefresh = false;
 
@@ -102,25 +101,26 @@ class _LatestUpdateState extends State<LatestUpdate> {
 
   /// 获取漫画列表
   Future<void> _getMangaList(int pageKey) async {
-    await _settingProvider.get();
+    final provider = Provider.of<LocalSettingProvider>(context, listen: false);
+    await provider.get();
 
     final queryMap = {
       'limit': '$_pageSize',
       'offset': '$pageKey',
-      'contentRating[]': _settingProvider.contentRating,
-      'availableTranslatedLanguage[]': _settingProvider.translatedLanguage,
+      'contentRating[]': provider.contentRating,
+      'availableTranslatedLanguage[]': provider.translatedLanguage,
       'includes[]': ["cover_art", "author"],
     };
 
     try {
-      var mangaListResponse = await MangaApi.getMangaListAsync(queryParameters: queryMap);
+      final mangaListResponse = await MangaApi.getMangaListAsync(queryParameters: queryMap);
 
-      var newItems = mangaListResponse.data.map((e) => MangaDto.fromDex(e)).toList();
+      final newItems = mangaListResponse.data.map((e) => MangaDto.fromDex(e)).toList();
       if (newItems.length < _pageSize) {
         // Last
         _pagingController.appendLastPage(newItems);
       } else {
-        var nextPageKey = pageKey + newItems.length;
+        final nextPageKey = pageKey + newItems.length;
         _pagingController.appendPage(newItems, nextPageKey);
       }
     } catch (e) {

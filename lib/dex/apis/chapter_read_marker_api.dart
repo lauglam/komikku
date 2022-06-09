@@ -6,7 +6,7 @@ import 'package:komikku/utils/http.dart';
 class ChapterReadMarkerApi {
   /// 获取漫画阅读记录
   static Future<ChapterReadMarkerResponse> getMangaReadMarkersAsync(String id) async {
-    var response = await HttpUtil().get('/manga/$id/read');
+    final response = await HttpUtil().get('/manga/$id/read');
     return ChapterReadMarkerResponse.fromJson(response);
   }
 
@@ -14,7 +14,7 @@ class ChapterReadMarkerApi {
   /// grouped为true时，返回[GroupedChapterReadMarkerResponse]
   /// grouped为false，时返回[ChapterReadMarkerResponse]
   static Future<dynamic> getMangasReadMarkersAsync(List<String> ids, {bool grouped = false}) async {
-    var response = await HttpUtil().get(buildUri(
+    final response = await HttpUtil().get(buildUri(
       path: '/manga/read',
       queryParameters: {'ids[]': ids, 'grouped': grouped},
     ));
@@ -28,19 +28,19 @@ class ChapterReadMarkerApi {
     String id,
     ChapterReadMarkerBatch batch,
   ) async {
-    var response = await HttpUtil().post('/manga/$id/read', params: batch.toJson());
+    final response = await HttpUtil().post('/manga/$id/read', params: batch.toJson());
     return ChapterReadMarkerResponse.fromJson(response);
   }
 
   /// 将章节设为已阅读状态
   static Future<Response> markChapterRead(String id) async {
-    var response = await HttpUtil().post('/chapter/$id/read');
+    final response = await HttpUtil().post('/chapter/$id/read');
     return Response.fromJson(response);
   }
 
   /// 将章节设为未阅读状态
   static Future<Response> markChapterUnread(String id) async {
-    var response = await HttpUtil().delete('/chapter/$id/read');
+    final response = await HttpUtil().delete('/chapter/$id/read');
     return Response.fromJson(response);
   }
 }

@@ -7,7 +7,7 @@ class ChapterApi {
   static Future<ChapterListResponse> getChapterListAsync({
     Map<String, dynamic>? queryParameters,
   }) async {
-    var response = await HttpUtil().get(buildUri(
+    final response = await HttpUtil().get(buildUri(
       path: '/chapter',
       queryParameters: queryParameters,
     ));

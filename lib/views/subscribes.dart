@@ -22,7 +22,6 @@ class Subscribes extends StatefulWidget {
 
 class _SubscribesState extends State<Subscribes> {
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
-  late final _settingProvider = Provider.of<LocalSettingProvider>(context, listen: false);
   static const _pageSize = 20;
   var _markNeedRefresh = false;
 
@@ -92,7 +91,7 @@ class _SubscribesState extends State<Subscribes> {
                     snapshot: snapshot,
                     builder: (context) {
                       // 未登录时，此控件会遮盖住[StreamBuilder]
-                      if (!snapshot.data!){
+                      if (!snapshot.data!) {
                         _markNeedRefresh = true;
                         return child!;
                       }
@@ -134,12 +133,13 @@ class _SubscribesState extends State<Subscribes> {
     };
 
     try {
-      var response = await FollowsApi.getUserFollowedMangaListAsync(queryParameters: queryMap);
+      final provider = Provider.of<LocalSettingProvider>(context, listen: false);
+      final response = await FollowsApi.getUserFollowedMangaListAsync(queryParameters: queryMap);
       var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
 
       // /user/follows/manga 端点没有contentRating参数，所以需要手动过滤掉
-      _settingProvider.get();
-      newItems.removeWhere((e) => !_settingProvider.contentRating.contains(e.contentRating));
+      provider.get();
+      newItems.removeWhere((e) => !provider.contentRating.contains(e.contentRating));
 
       if (newItems.length < _pageSize) {
         // Last
