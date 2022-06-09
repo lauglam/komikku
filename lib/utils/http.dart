@@ -16,7 +16,7 @@ class HttpUtil {
   HttpUtil._internal() {
     BaseOptions options = BaseOptions(
       baseUrl: serverUrl,
-      connectTimeout: 10000,
+      connectTimeout: 5000,
       receiveTimeout: 5000,
       headers: {},
       contentType: 'application/json; charset=utf-8',
@@ -41,7 +41,8 @@ class HttpUtil {
     }, onError: (DioError e, handler) async {
       // Do something with response error
       var retryCount = 0;
-      if (e.type == DioErrorType.other && retryCount < _retries) {
+      if ((e.type == DioErrorType.other || e.type == DioErrorType.connectTimeout) &&
+          retryCount < _retries) {
         retryCount++;
         var response = await dio?.request(
           e.requestOptions.path,
@@ -97,7 +98,8 @@ class HttpUtil {
 
       // session 为空的情况，请求刷新session
       if (token == null) {
-        var response = await AuthApi.refreshAsync(RefreshToken(token: (await LocalStorage.refresh)!));
+        var response =
+            await AuthApi.refreshAsync(RefreshToken(token: (await LocalStorage.refresh)!));
         token = response.token.session;
         await LocalStorage.setSession(token);
       }

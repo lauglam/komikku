@@ -1,4 +1,5 @@
 import 'package:komikku/dex/models/attributes/cover_attributes.dart';
+import 'package:komikku/dex/models/enum/content_rating.dart';
 import 'package:komikku/dex/models/enum/entity_type.dart';
 import 'package:komikku/dex/models/enum/status.dart';
 import 'package:komikku/dex/models/manga.dart';
@@ -18,6 +19,7 @@ class MangaDto {
   final String imageUrl256;
   final String imageUrl512;
   final String imageUrlOriginal;
+  final String contentRating;
   final String? description;
 
   MangaDto({
@@ -29,6 +31,7 @@ class MangaDto {
     required this.imageUrl256,
     required this.imageUrl512,
     required this.imageUrlOriginal,
+    required this.contentRating,
     this.description,
   });
 
@@ -48,6 +51,7 @@ class MangaDto {
       imageUrl256: Retrieving.getCoverArtOn256(source.id, coverAttributes.fileName),
       imageUrl512: Retrieving.getCoverArtOn512(source.id, coverAttributes.fileName),
       imageUrlOriginal: Retrieving.getCoverArtOnOriginal(source.id, coverAttributes.fileName),
+      contentRating: contentRatingEnumMap[source.attributes.contentRating]!,
       description: source.attributes.description?.value(),
     );
   }
@@ -63,16 +67,30 @@ class MangaDto {
         imageUrl256: json['imageUrl256'] as String,
         imageUrl512: json['imageUrl512'] as String,
         imageUrlOriginal: json['imageUrlOriginal'] as String,
+        contentRating: json['contentRating'] as String,
+        description: json['description'] as String?,
       );
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'title': title,
-        'status': status,
-        'author': author,
-        'tags': tags,
-        'imageUrl256': imageUrl256,
-        'imageUrl512': imageUrl512,
-        'imageUrlOriginal': imageUrlOriginal,
-      };
+  Map<String, dynamic> toJson() {
+    final val = <String, dynamic>{};
+
+    void writeNotNull(String key, dynamic value) {
+      if (value != null) {
+        val[key] = value;
+      }
+    }
+
+    val['id'] = id;
+    val['title'] = title;
+    val['status'] = status;
+    val['author'] = author;
+    val['tags'] = tags.map((e) => e.toJson()).toList();
+    val['author'] = author;
+    val['imageUrl256'] = imageUrl256;
+    val['imageUrl512'] = imageUrl512;
+    val['contentRating'] = contentRating;
+    writeNotNull('description', description);
+
+    return val;
+  }
 }

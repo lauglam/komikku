@@ -21,7 +21,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
-    var userProvider = Provider.of<UserProvider>(context,listen: false);
+    var userProvider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
       body: SingleChildScrollView(
@@ -96,6 +96,7 @@ class _LoginState extends State<Login> {
                   side: MaterialStateProperty.all(const BorderSide(color: Colors.orange, width: 1)),
                   minimumSize: MaterialStateProperty.all(const Size(300, 35)),
                 ),
+
                 /// 登录
                 onPressed: () async {
                   _formKey.currentState?.save();

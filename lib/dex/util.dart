@@ -5,5 +5,5 @@ String buildUri({required String path, Map<String, dynamic>? queryParameters}) {
     queryParameters: queryParameters,
   );
 
-  return uri.toString();
+  return Uri.decodeFull(uri.toString());
 }

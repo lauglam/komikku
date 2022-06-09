@@ -31,7 +31,7 @@ class Details extends StatefulWidget {
 class _DetailsState extends State<Details> {
   final _followIconValueNotifier = ValueNotifier(false);
   final _orderValueNotifier = ValueNotifier(OrderMode.desc);
-  late final _provider = Provider.of<LocalSettingProvider>(context, listen: false);
+  late final _settingProvider = Provider.of<LocalSettingProvider>(context, listen: false);
 
   /// 因为需要排序，所以将响应内容缓存
   Future<ChapterListResponse>? _getMangaFeedFuture;
@@ -230,13 +230,13 @@ class _DetailsState extends State<Details> {
 
   /// 获取漫画章节
   Future<List<ChapterDto>> _getMangaFeed() async {
-    await _provider.get();
+    await _settingProvider.get();
 
     final queryMap = {
       'limit': '96',
       'offset': '0',
-      'contentRating[]': _provider.contentRating,
-      'availableTranslatedLanguage[]': _provider.translatedLanguage,
+      'contentRating[]': _settingProvider.contentRating,
+      'translatedLanguage[]': _settingProvider.translatedLanguage,
       'includes[]': ["scanlation_group", "user"],
 
       // 切勿 readableAt: OrderMode.desc, 否则缺少章节

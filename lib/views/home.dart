@@ -19,7 +19,7 @@ class LatestUpdate extends StatefulWidget {
 
 class _LatestUpdateState extends State<LatestUpdate> {
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
-  late final _provider = Provider.of<LocalSettingProvider>(context, listen: false);
+  late final _settingProvider = Provider.of<LocalSettingProvider>(context, listen: false);
   static const _pageSize = 20;
   var _markNeedRefresh = false;
 
@@ -102,13 +102,13 @@ class _LatestUpdateState extends State<LatestUpdate> {
 
   /// 获取漫画列表
   Future<void> _getMangaList(int pageKey) async {
-    await _provider.get();
+    await _settingProvider.get();
 
     final queryMap = {
       'limit': '$_pageSize',
       'offset': '$pageKey',
-      'contentRating[]': _provider.contentRating,
-      'availableTranslatedLanguage[]': _provider.translatedLanguage,
+      'contentRating[]': _settingProvider.contentRating,
+      'availableTranslatedLanguage[]': _settingProvider.translatedLanguage,
       'includes[]': ["cover_art", "author"],
     };
 
