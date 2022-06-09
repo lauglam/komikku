@@ -175,15 +175,21 @@ class _DetailsGrid extends StatelessWidget {
               ascArrays = itemsMap.values.toList().reversed.toList();
             }
 
-            // 阅读历史
-            var buttonColor = Theme.of(context).primaryColor;
+            // 按钮颜色
+            Color buttonColor = Colors.orange;
+            ButtonStyle? buttonStyle = ButtonStyle(
+              side: MaterialStateProperty.all(const BorderSide(color: Colors.orangeAccent)),
+            );
+
             if (values.any((e) => provider.chapterReadMarkers.contains(e.id))) {
               buttonColor = Colors.black38;
+              buttonStyle = null;
             }
 
             // 单独按钮
             if (values.length < 2) {
               return OutlinedButton(
+                style: buttonStyle,
                 onPressed: () {
                   // 不等待
                   provider.mark(values[0].id);
@@ -209,6 +215,7 @@ class _DetailsGrid extends StatelessWidget {
 
             // 弹出模态框按钮
             return OutlinedButton(
+              style: buttonStyle,
               child: Text(
                 '${values[0].chapter ?? chapterIndex}',
                 style: TextStyle(color: buttonColor),

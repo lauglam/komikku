@@ -26,7 +26,8 @@ class LocalStorage {
   static const _defaultDataSaver = false;
 
   /// 默认内容分级
-  static const _defaultContentRating = ['safe', 'suggestive', 'erotica', 'pornographic'];
+  // static const _defaultContentRating = ['safe', 'suggestive', 'erotica', 'pornographic'];
+  static const _defaultContentRating = ['safe', 'suggestive', 'erotica'];
 
   /// 默认过滤章节翻译语言
   static const _defaultTranslatedLanguage = ['zh', 'zh-hk'];
