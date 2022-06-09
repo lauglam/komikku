@@ -64,7 +64,7 @@ class _DetailsContentState extends State<_DetailsContent> {
             ]),
             builder: (context, snapshot) => BuilderChecker(
               snapshot: snapshot,
-              waiting: child,
+              onWaiting: child,
               builder: (context) => _DetailsGrid(chapters: snapshot.data![0]),
             ),
           ),

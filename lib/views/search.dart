@@ -93,7 +93,7 @@ class _SearchState extends State<Search> {
                 return BuilderChecker(
                   snapshot: snapshot,
                   // 在等待时撑满整个搜索屏幕
-                  waiting: SizedBox(
+                  onWaiting: SizedBox(
                     width: MediaQuery.of(context).size.width,
                     height: MediaQuery.of(context).size.height,
                     child: const Center(child: CircularProgressIndicator()),
