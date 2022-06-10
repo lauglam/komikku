@@ -209,41 +209,9 @@ class _DetailsGrid extends StatelessWidget {
               buttonStyle = null;
             }
 
-            // 单独按钮
-            if (values.length < 2) {
-              return OutlinedButton(
-                style: buttonStyle,
-                onPressed: () {
-                  // 不等待
-                  provider.mark(values[0].id);
-
-                  // 跳转
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => Reading(
-                        id: values[0].id,
-                        index: isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex,
-                        arrays: ascChapters.values,
-                      ),
-                    ),
-                  );
-                },
-                child: Text(
-                  '${values[0].chapter ?? chapterIndex}',
-                  style: TextStyle(color: buttonColor),
-                ),
-              );
-            }
-
-            // 弹出模态框按钮
-            return OutlinedButton(
-              style: buttonStyle,
-              child: Text(
-                '${values[0].chapter ?? chapterIndex}',
-                style: TextStyle(color: buttonColor),
-              ),
-              onPressed: () async => await showBottomModal(
+            // 内部方法
+            Future<void> _showBottomModal() async {
+              await showBottomModal(
                 context: context,
                 title: '第 ${values[0].chapter ?? chapterIndex} 章',
                 child: ListView.builder(
@@ -286,7 +254,46 @@ class _DetailsGrid extends StatelessWidget {
                     );
                   },
                 ),
+              );
+            }
+
+            // 单独按钮
+            if (values.length < 2) {
+              return OutlinedButton(
+                style: buttonStyle,
+                // 长按
+                onLongPress: () async => await _showBottomModal(),
+                onPressed: () {
+                  // 不等待
+                  provider.mark(values[0].id);
+
+                  // 跳转
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Reading(
+                        id: values[0].id,
+                        index: isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex,
+                        arrays: ascChapters.values,
+                      ),
+                    ),
+                  );
+                },
+                child: Text(
+                  '${values[0].chapter ?? chapterIndex}',
+                  style: TextStyle(color: buttonColor),
+                ),
+              );
+            }
+
+            // 弹出模态框按钮
+            return OutlinedButton(
+              style: buttonStyle,
+              child: Text(
+                '${values[0].chapter ?? chapterIndex}',
+                style: TextStyle(color: buttonColor),
               ),
+              onPressed: () async => await _showBottomModal(),
             );
           },
         );
