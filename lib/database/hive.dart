@@ -6,11 +6,17 @@ import 'package:komikku/utils/app_settings.dart';
 
 /// 初始化Hive数据库
 Future<void> hiveInit() async {
+  // 初始化(负责数据库的位置和新建等)
   await Hive.initFlutter();
+
+  // 注册适配器
   Hive.registerAdapter(TokenAdapter());
 
   // 打开数据库
-  await Hive.openBox(mainBox);
+  await Hive.openBox(mainBox, compactionStrategy: (entries, deletedEntries) {
+    // 当50个键被覆盖或删除时，compactionStrategy将压缩空间
+    return deletedEntries > 50;
+  });
 }
 
 /// 判断是否登录

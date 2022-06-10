@@ -21,6 +21,8 @@ import 'package:provider/provider.dart';
 
 part 'details.content.dart';
 
+part 'details.grid.dart';
+
 class Details extends StatefulWidget {
   const Details({Key? key, required this.dto}) : super(key: key);
   final MangaDto dto;
