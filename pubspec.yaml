@@ -32,8 +32,6 @@ dependencies:
 
   # 网络请求
   dio: ^4.0.6
-  # 简单的Key-Value缓存
-  shared_preferences: ^2.0.15
   # 配合build_runner、json_serializable一起使用，本身也提供帮助类
   json_annotation: ^4.5.0
   # 网络图片加载
@@ -52,6 +50,10 @@ dependencies:
   uuid: 3.0.6
   # 滚动分页
   infinite_scroll_pagination: ^3.2.0
+  # Hive数据库
+  hive: ^2.2.1
+  # Hive数据库拓展
+  hive_flutter: ^1.1.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -61,13 +63,15 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  # 生成类中fromJson和toJson方法
   build_runner: ^2.1.11
+  # 生成类中fromJson和toJson方法[flutter pub run build_runner build]
   json_serializable: ^6.2.0
-  # 应用图标
+  # 应用图标[flutter pub run icons_launcher:create]
   icons_launcher: ^1.1.8
-  # 应用屏幕启动时的闪屏
+  # 应用屏幕启动时的闪屏[flutter pub run flutter_native_splash:create]
   flutter_native_splash: ^2.2.1
+  # Hive数据库Adapter生成器[flutter packages pub run build_runner build]
+  hive_generator: ^1.1.3
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is

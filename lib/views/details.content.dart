@@ -97,14 +97,16 @@ class _DetailsContentState extends State<_DetailsContent> {
   /// 获取漫画章节
   /// 此方法只执行一次
   Future<void> _getMangaFeed() async {
-    final provider = Provider.of<LocalSettingProvider>(context, listen: false);
-    await provider.get();
+    final provider1 = Provider.of<ContentRatingProvider>(context, listen: false);
+    final provider2 = Provider.of<TranslatedLanguageProvider>(context, listen: false);
+    provider1.get();
+    provider2.get();
 
     final queryMap = {
       'limit': '96',
       'offset': '0',
-      'contentRating[]': provider.contentRating,
-      'translatedLanguage[]': provider.translatedLanguage,
+      'contentRating[]': provider1.contentRating,
+      'translatedLanguage[]': provider2.translatedLanguage,
       'includes[]': ["scanlation_group", "user"],
 
       // 切勿 readableAt: OrderMode.desc, 否则缺少章节
@@ -197,9 +199,9 @@ class _DetailsGrid extends StatelessWidget {
             final values = itemsMap.values.elementAt(chapterIndex);
 
             // 按钮颜色
-            Color buttonColor = Colors.orange;
+            Color buttonColor = Colors.black54;
             ButtonStyle? buttonStyle = ButtonStyle(
-              side: MaterialStateProperty.all(const BorderSide(color: Colors.orangeAccent)),
+              side: MaterialStateProperty.all(const BorderSide(color: Colors.grey)),
             );
 
             if (values.any((e) => provider.chapterReadMarkers.contains(e.id))) {

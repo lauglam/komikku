@@ -5,11 +5,10 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/provider/follow_provider.dart';
-import 'package:komikku/provider/local_setting_provider.dart';
+import 'package:komikku/provider/content_rating_provider.dart';
 import 'package:komikku/provider/user_provider.dart';
-import 'package:komikku/database/local_storage.dart';
+import 'package:komikku/database/hive.dart';
 import 'package:komikku/views/details.dart';
-import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/grid_view_item.dart';
 import 'package:komikku/widgets/indicator.dart';
 import 'package:provider/provider.dart';
@@ -22,7 +21,7 @@ class Subscribes extends StatefulWidget {
 }
 
 class _SubscribesState extends State<Subscribes> {
-  late final _provider = Provider.of<LocalSettingProvider>(context, listen: false);
+  late final _provider = Provider.of<ContentRatingProvider>(context, listen: false);
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
   static const _pageSize = 20;
   var _markNeedRefresh = false;
@@ -90,32 +89,22 @@ class _SubscribesState extends State<Subscribes> {
           ),
 
           // 遮盖的内容（处于上层）
-          Consumer3<UserProvider, FollowProvider, LocalSettingProvider>(
-            builder: (context, userProvider, followProvider, settingProvider, child) {
-              return FutureBuilder<bool>(
-                future: LocalStorage.userLoginState,
-                builder: (context, snapshot) {
-                  return BuilderChecker(
-                    snapshot: snapshot,
-                    builder: (context) {
-                      // 未登录时，此控件会遮盖住[StreamBuilder]
-                      if (!snapshot.data!) {
-                        _markNeedRefresh = true;
-                        return child!;
-                      }
+          Consumer3<UserProvider, FollowProvider, ContentRatingProvider>(
+            builder: (context, provider1, provider2, provider3, child) {
+              // 未登录时，此控件会遮盖住[StreamBuilder]
+              if (!userLoginState) {
+                _markNeedRefresh = true;
+                return child!;
+              }
 
-                      if (_markNeedRefresh) {
-                        // 延后1秒钟执行refresh()
-                        var delay = const Duration(seconds: 1);
-                        Future.delayed(delay, () => _pagingController.refresh());
-                      }
+              if (_markNeedRefresh) {
+                // 延后1秒钟执行refresh()
+                var delay = const Duration(seconds: 1);
+                Future.delayed(delay, () => _pagingController.refresh());
+              }
 
-                      _markNeedRefresh = true;
-                      return const SizedBox.shrink();
-                    },
-                  );
-                },
-              );
+              _markNeedRefresh = true;
+              return const SizedBox.shrink();
             },
             child: Container(
               color: Colors.white,
@@ -129,7 +118,7 @@ class _SubscribesState extends State<Subscribes> {
 
   /// 获取用户订阅的漫画
   Future<void> _getUserFollowedMangaList(int pageKey) async {
-    if (!await LocalStorage.userLoginState) {
+    if (!userLoginState) {
       _pagingController.appendPage(<MangaDto>[], 0);
       return;
     }
@@ -141,7 +130,7 @@ class _SubscribesState extends State<Subscribes> {
     };
 
     try {
-      await _provider.get();
+      _provider.get();
       final response = await FollowsApi.getUserFollowedMangaListAsync(queryParameters: queryMap);
       var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
 

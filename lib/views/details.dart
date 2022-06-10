@@ -6,8 +6,9 @@ import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/provider/chapter_read_marker_provider.dart';
 import 'package:komikku/provider/follow_provider.dart';
-import 'package:komikku/database/local_storage.dart';
-import 'package:komikku/provider/local_setting_provider.dart';
+import 'package:komikku/provider/content_rating_provider.dart';
+import 'package:komikku/provider/translated_language_provider.dart';
+import 'package:komikku/database/hive.dart';
 import 'package:komikku/utils/timeago.dart';
 import 'package:komikku/views/reading.dart';
 import 'package:komikku/widgets/bottom_modal_item.dart';
@@ -99,7 +100,7 @@ class _DetailsState extends State<Details> {
           ),
           onPressed: () async {
             // 未登录
-            if (!await LocalStorage.userLoginState) {
+            if (!userLoginState) {
               showText(text: '请先登录');
               return;
             }
@@ -178,7 +179,7 @@ class _DetailsState extends State<Details> {
   /// 检测漫画是否被订阅
   Future<bool> _checkUserFollow() async {
     // 未登录，直接返回false
-    if (!await LocalStorage.userLoginState) {
+    if (!userLoginState) {
       return false;
     }
 

@@ -44,7 +44,7 @@ class MangaDto {
 
     return MangaDto(
       id: source.id,
-      title: source.attributes.title.value(),
+      title: source.attributes.title.value,
       status: statusEnumChineseMap[source.attributes.status]!,
       author: authorAttributes.name,
       tags: source.attributes.tags.map((e) => TagDto.fromDex(e)).toList(),
@@ -52,7 +52,7 @@ class MangaDto {
       imageUrl512: Retrieving.getCoverArtOn512(source.id, coverAttributes.fileName),
       imageUrlOriginal: Retrieving.getCoverArtOnOriginal(source.id, coverAttributes.fileName),
       contentRating: contentRatingEnumMap[source.attributes.contentRating]!,
-      description: source.attributes.description?.value(),
+      description: source.attributes.description?.value,
     );
   }
 

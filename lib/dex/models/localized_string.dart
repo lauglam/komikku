@@ -1,7 +1,7 @@
 /// ISO 639-1 代码表
 class LocalizedString {
   /// 获取值
-  String value() {
+  String get value {
     return toJson().values.firstWhere((localize) => localize != null);
   }
 

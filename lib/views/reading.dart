@@ -4,6 +4,7 @@ import 'package:komikku/dex/apis/at_home_api.dart';
 import 'package:komikku/dex/retrieving.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/provider/chapter_read_marker_provider.dart';
+import 'package:komikku/provider/data_saver_provider.dart';
 import 'package:komikku/utils/extensions.dart';
 import 'package:komikku/utils/timeago.dart';
 import 'package:komikku/utils/toast.dart';
@@ -42,7 +43,8 @@ class _ReadingState extends State<Reading> {
   late String _currentId = widget.id;
   late int _currentIndex = widget.index;
 
-  late final _provider = Provider.of<ChapterReadMarkerProvider>(context, listen: false);
+  late final _provider1 = Provider.of<DataSaverProvider>(context, listen: false);
+  late final _provider2 = Provider.of<ChapterReadMarkerProvider>(context, listen: false);
 
   @override
   void initState() {
@@ -121,7 +123,17 @@ class _ReadingState extends State<Reading> {
 
   /// 获取章节图片
   Future<List<String>> _getChapterPages() async {
+    _provider1.get();
     final atHome = await AtHomeApi.getHomeServerUrlAsync(_currentId);
+
+    // 压缩质量的图片
+    if (_provider1.dataSaver) {
+      return Retrieving.getChapterPagesOnSaver(
+        atHome.baseUrl,
+        atHome.chapter.hash,
+        atHome.chapter.dataSaver,
+      );
+    }
     return Retrieving.getChapterPages(atHome.baseUrl, atHome.chapter.hash, atHome.chapter.data);
   }
 
@@ -165,7 +177,7 @@ class _ReadingState extends State<Reading> {
       Future.delayed(const Duration(milliseconds: 200), () => _progressNotifier.value = 0);
 
       // 设为已读
-      await _provider.mark(values[0].id);
+      await _provider2.mark(values[0].id);
       return;
     }
 
@@ -195,7 +207,7 @@ class _ReadingState extends State<Reading> {
                     const Duration(milliseconds: 200), () => _progressNotifier.value = 0);
 
                 // 设为已读
-                await _provider.mark(values[index].id);
+                await _provider2.mark(values[index].id);
               },
             ),
           );

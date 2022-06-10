@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/models/login.dart';
-import 'package:komikku/database/local_storage.dart';
+import 'package:komikku/database/hive.dart';
 
 class UserProvider extends ChangeNotifier {
   /// 登录
@@ -11,16 +11,16 @@ class UserProvider extends ChangeNotifier {
         : Login(username: emailOrUsername, password: password);
 
     final response = await AuthApi.loginAsync(login);
-    await LocalStorage.setRefresh(response.token.refresh);
-    await LocalStorage.setSession(response.token.session);
+    sessionToken = response.token.session;
+    refreshToken = response.token.refresh;
 
     notifyListeners();
   }
 
   /// 登出
   Future<void> logout() async {
-    await LocalStorage.removeSession();
-    await LocalStorage.removeRefresh();
+    removeSessionToken();
+    removeRefreshToken();
     await AuthApi.logoutAsync();
 
     notifyListeners();

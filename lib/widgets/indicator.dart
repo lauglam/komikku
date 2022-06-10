@@ -10,16 +10,18 @@ class ExceptionIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Transform.rotate(
-            angle: 0.2,
-            child: const Icon(Icons.android_rounded, size: 100, color: Colors.black12),
-          ),
-          Text(title, style: const TextStyle(fontSize: 18, color: Colors.black54)),
-        ],
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Transform.rotate(
+              angle: 0.2,
+              child: const Icon(Icons.android_rounded, size: 100, color: Colors.black12),
+            ),
+            Text(title, style: const TextStyle(fontSize: 18, color: Colors.black54)),
+          ],
+        ),
       ),
     );
   }
@@ -37,18 +39,21 @@ class TryAgainExceptionIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          IconButton(
-            color: Colors.black54,
-            iconSize: 50,
-            onPressed: onTryAgain,
-            icon: const Icon(TaoIcons.refresh),
-          ),
-          Text('再试一次', style: Theme.of(context).textTheme.titleLarge),
-        ],
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            IconButton(
+              color: Colors.black54,
+              iconSize: 50,
+              onPressed: onTryAgain,
+              icon: const Icon(TaoIcons.refresh),
+            ),
+            Text('再试一次', style: Theme.of(context).textTheme.titleLarge),
+          ],
+        ),
       ),
     );
   }
@@ -66,11 +71,14 @@ class TryAgainIconExceptionIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: IconButton(
-        color: Colors.black54,
-        iconSize: 40,
-        onPressed: onTryAgain,
-        icon: const Icon(TaoIcons.refresh),
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: IconButton(
+          color: Colors.black54,
+          iconSize: 40,
+          onPressed: onTryAgain,
+          icon: const Icon(TaoIcons.refresh),
+        ),
       ),
     );
   }

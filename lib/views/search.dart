@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dto/manga_dto.dart';
-import 'package:komikku/dto/tag_dto.dart';
-import 'package:komikku/provider/local_setting_provider.dart';
+import 'package:komikku/provider/content_rating_provider.dart';
+import 'package:komikku/provider/tag_provider.dart';
+import 'package:komikku/provider/translated_language_provider.dart';
 import 'package:komikku/utils/icons.dart';
 import 'package:komikku/utils/toast.dart';
 import 'package:komikku/views/details.dart';
@@ -14,7 +15,6 @@ import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/widgets/indicator.dart';
 import 'package:komikku/widgets/list_view_item.dart';
 import 'package:komikku/widgets/search_bar.dart';
-import 'package:collection/collection.dart';
 import 'package:provider/provider.dart';
 
 part 'search_advanced.dart';
@@ -28,11 +28,10 @@ class Search extends StatefulWidget {
 }
 
 class _SearchState extends State<Search> {
-  late final _provider = Provider.of<LocalSettingProvider>(context, listen: false);
+  late final _provider1 = Provider.of<TagProvider>(context, listen: false);
+  late final _provider2 = Provider.of<ContentRatingProvider>(context, listen: false);
+  late final _provider3 = Provider.of<TranslatedLanguageProvider>(context, listen: false);
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
-  late final Future<List<TagDto>> _tagFuture = _getTagList();
-  final _chipValueNotifier = ValueNotifier(false);
-  final _includedTags = <String, String>{};
   static const _pageSize = 20;
   String _title = '';
 
@@ -50,6 +49,7 @@ class _SearchState extends State<Search> {
 
   @override
   Widget build(BuildContext context) {
+    _provider1.clear();
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -73,52 +73,42 @@ class _SearchState extends State<Search> {
       ),
       // 底部高级搜索
       floatingActionButtonLocation: FloatingActionButtonLocation.startFloat,
-      floatingActionButton: FloatingActionButton(
-        clipBehavior: Clip.antiAlias,
-        child: const Icon(TaoIcons.filter),
-        onPressed: () async {
-          // 键盘是否是弹起状态
-          FocusScopeNode currentFocus = FocusScope.of(context);
-          if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
-            FocusManager.instance.primaryFocus?.unfocus();
-          }
+      floatingActionButton: FutureBuilder<void>(
+        future: _provider1.get(),
+        builder: (context, snapshot) => BuilderChecker(
+          snapshot: snapshot,
+          onWaiting: const SizedBox.shrink(),
+          builder: (context) {
+            return FloatingActionButton(
+              clipBehavior: Clip.antiAlias,
+              child: const Icon(TaoIcons.filter),
+              onPressed: () async {
+                // 键盘是否是弹起状态
+                FocusScopeNode currentFocus = FocusScope.of(context);
+                if (!currentFocus.hasPrimaryFocus && currentFocus.focusedChild != null) {
+                  FocusManager.instance.primaryFocus?.unfocus();
+                }
 
-          showAlertDialog(
-            title: '高级搜索',
-            insetPadding: const EdgeInsets.all(0),
-            onConfirm: () {
-              if (_includedTags.isNotEmpty) _pagingController.refresh();
-            },
-            content: FutureBuilder<List<TagDto>>(
-              future: _tagFuture,
-              builder: (context, snapshot) {
-                return BuilderChecker(
-                  snapshot: snapshot,
-                  // 在等待时撑满整个搜索屏幕
-                  onWaiting: SizedBox(
-                    width: MediaQuery.of(context).size.width,
-                    height: MediaQuery.of(context).size.height,
-                    child: const Center(child: CircularProgressIndicator()),
-                  ),
-                  builder: (context) {
-                    return SingleChildScrollView(
-                      child: AdvancedSearch(
-                        tags: snapshot.data!,
-                        selected: (value) => _includedTags.values.contains(value),
-                        onChanged: (flag, value) {
-                          flag
-                              ? _includedTags.addAll({value.id: value.name})
-                              : _includedTags.remove(value.id);
-                          _chipValueNotifier.value = !_chipValueNotifier.value;
-                        },
-                      ),
-                    );
+                showAlertDialog(
+                  title: '高级搜索',
+                  insetPadding: const EdgeInsets.all(0),
+                  onConfirm: () {
+                    if (_provider1.selectedTags.isNotEmpty) _pagingController.refresh();
                   },
+                  content: SingleChildScrollView(
+                    child: AdvancedSearch(
+                      tagsGrouped: _provider1.tagsGrouped,
+                      selected: (value) => _provider1.selectedTags.values.contains(value),
+                      onChanged: (flag, value) {
+                        flag ? _provider1.addAll(value) : _provider1.removeValue(value.value);
+                      },
+                    ),
+                  ),
                 );
               },
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
 
       // 主内容
@@ -128,17 +118,14 @@ class _SearchState extends State<Search> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // 已选标签
-            ValueListenableBuilder(
-              valueListenable: _chipValueNotifier,
-              builder: (context, value, child) => Padding(
+            Consumer<TagProvider>(
+              builder: (context, provider, child) => Padding(
                 padding: const EdgeInsets.only(bottom: 10),
                 child: CanDeleteChipWarp(
-                  values: _includedTags.values.toList(),
+                  values: provider.selectedTags.values.toList(),
                   onDeleted: (value) {
-                    if (_includedTags.values.contains(value)) {
-                      _includedTags.removeWhere((k, v) => v == value);
-                      _chipValueNotifier.value = !_chipValueNotifier.value;
-                    }
+                    provider.removeValue(value);
+                    _pagingController.refresh();
                   },
                 ),
               ),
@@ -182,16 +169,17 @@ class _SearchState extends State<Search> {
 
   /// 搜索漫画
   Future<void> _searchMangaList(int pageKey) async {
-    await _provider.get();
+    _provider2.get();
+    _provider3.get();
 
     final queryMap = {
       'title': _title,
       'limit': '$_pageSize',
       'offset': '$pageKey',
-      'contentRating[]': _provider.contentRating,
-      'availableTranslatedLanguage[]': _provider.translatedLanguage,
+      'contentRating[]': _provider2.contentRating,
+      'availableTranslatedLanguage[]': _provider3.translatedLanguage,
       'includes[]': ["cover_art", "author"],
-      'includedTags[]': _includedTags.keys,
+      'includedTags[]': _provider1.selectedTags.keys,
       'order[relevance]': 'desc',
     };
 
@@ -209,11 +197,5 @@ class _SearchState extends State<Search> {
     } catch (e) {
       _pagingController.error = e;
     }
-  }
-
-  /// 获取标签列表
-  Future<List<TagDto>> _getTagList() async {
-    final response = await MangaApi.getTagListAsync();
-    return response.data.map((e) => TagDto.fromDex(e)).toList();
   }
 }

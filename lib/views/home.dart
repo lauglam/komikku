@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dto/manga_dto.dart';
-import 'package:komikku/provider/local_setting_provider.dart';
+import 'package:komikku/provider/content_rating_provider.dart';
+import 'package:komikku/provider/translated_language_provider.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/grid_view_item.dart';
 import 'package:komikku/widgets/indicator.dart';
@@ -20,7 +21,8 @@ class LatestUpdate extends StatefulWidget {
 
 class _LatestUpdateState extends State<LatestUpdate> {
   final _pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
-  late final _provider = Provider.of<LocalSettingProvider>(context, listen: false);
+  late final _provider1 = Provider.of<ContentRatingProvider>(context, listen: false);
+  late final _provider2 = Provider.of<TranslatedLanguageProvider>(context, listen: false);
   static const _pageSize = 20;
   var _markNeedRefresh = false;
 
@@ -54,8 +56,8 @@ class _LatestUpdateState extends State<LatestUpdate> {
         child: Stack(
           fit: StackFit.expand,
           children: [
-            Consumer<LocalSettingProvider>(
-              builder: (context, provider, child) {
+            Consumer2<ContentRatingProvider, TranslatedLanguageProvider>(
+              builder: (context, provider1, provider2, child) {
                 if (_markNeedRefresh) {
                   // 延后1秒钟执行refresh()
                   var delay = const Duration(seconds: 1);
@@ -109,13 +111,14 @@ class _LatestUpdateState extends State<LatestUpdate> {
 
   /// 获取漫画列表
   Future<void> _getMangaList(int pageKey) async {
-    await _provider.get();
+    _provider1.get();
+    _provider2.get();
 
     final queryMap = {
       'limit': '$_pageSize',
       'offset': '$pageKey',
-      'contentRating[]': _provider.contentRating,
-      'availableTranslatedLanguage[]': _provider.translatedLanguage,
+      'contentRating[]': _provider1.contentRating,
+      'availableTranslatedLanguage[]': _provider2.translatedLanguage,
       'includes[]': ["cover_art", "author"],
     };
 
