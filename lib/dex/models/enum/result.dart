@@ -5,8 +5,3 @@ enum Result {
   /// 错误
   error,
 }
-
-const resultEnumMap = {
-  Result.ok: 'ok',
-  Result.error: 'error',
-};

@@ -5,7 +5,10 @@ import 'package:komikku/dex/models/enum/response_type.dart';
 import 'package:komikku/dex/models/relationship.dart';
 import 'package:komikku/dex/models/response.dart';
 
+part 'tag.g.dart';
+
 /// 标签列表 响应
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class TagListResponse extends PageResponse<Tag> {
   TagListResponse({
     required super.response,
@@ -15,45 +18,34 @@ class TagListResponse extends PageResponse<Tag> {
     required super.total,
   });
 
-  factory TagListResponse.fromJson(Map<String, dynamic> json) => TagListResponse(
-        response: $enumDecode(responseTypeEnumMap, json['response']),
-        data: (json['data'] as List<dynamic>)
-            .map((e) => Tag.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        limit: json['limit'] as int,
-        offset: json['offset'] as int,
-        total: json['total'] as int,
-      );
+  factory TagListResponse.fromJson(Map<String, dynamic> json) => _$TagListResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'response': responseTypeEnumMap[response],
-        'data': data,
-        'limit': limit,
-        'offset': offset,
-        'total': total,
-      };
+  Map<String, dynamic> toJson() => _$TagListResponseToJson(this);
 }
 
 /// 标签 响应
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class TagResponse extends OkResponse<Tag> {
   TagResponse({required super.response, required super.data});
 
-  factory TagResponse.fromJson(Map<String, dynamic> json) => TagResponse(
-        response: $enumDecode(responseTypeEnumMap, json['response']),
-        data: Tag.fromJson(json['data']),
-      );
+  factory TagResponse.fromJson(Map<String, dynamic> json) => _$TagResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'response': entityTypeEnumMap[response],
-        'data': data.toJson(),
-      };
+  Map<String, dynamic> toJson() => _$TagResponseToJson(this);
 }
 
 /// 标签
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Tag {
+  /// 标签id
   final String id;
+
+  /// 类型
   final EntityType type;
+
+  /// 标签属性
   final TagAttributes attributes;
+
+  /// 关系
   final List<Relationship> relationships;
 
   Tag({
@@ -63,19 +55,7 @@ class Tag {
     required this.relationships,
   });
 
-  factory Tag.fromJson(Map<String, dynamic> json) => Tag(
-        id: json['id'] as String,
-        type: $enumDecode(entityTypeEnumMap, json['type']),
-        attributes: TagAttributes.fromJson(json['attributes'] as Map<String, dynamic>),
-        relationships: (json['relationships'] as List<dynamic>)
-            .map((e) => Relationship.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+  factory Tag.fromJson(Map<String, dynamic> json) => _$TagFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'type': entityTypeEnumMap[type],
-        'attributes': attributes.toJson(),
-        'relationships': relationships.map((e) => e.toJson()).toList(),
-      };
+  Map<String, dynamic> toJson() => _$TagToJson(this);
 }

@@ -1,3 +1,4 @@
+import 'package:komikku/database/hive.dart';
 import 'package:komikku/dex/models/attributes/cover_attributes.dart';
 import 'package:komikku/dex/models/enum/content_rating.dart';
 import 'package:komikku/dex/models/enum/entity_type.dart';
@@ -5,7 +6,6 @@ import 'package:komikku/dex/models/enum/status.dart';
 import 'package:komikku/dex/models/manga.dart';
 import 'package:komikku/dex/models/relationship.dart';
 import 'package:komikku/dex/retrieving.dart';
-import 'package:komikku/dto/tag_dto.dart';
 
 import '../dex/models/attributes/author_attributes.dart';
 
@@ -15,7 +15,7 @@ class MangaDto {
   final String title;
   final String status;
   final String author;
-  final List<TagDto> tags;
+  final List<String> tags;
   final String imageUrl256;
   final String imageUrl512;
   final String imageUrlOriginal;
@@ -37,22 +37,56 @@ class MangaDto {
 
   factory MangaDto.fromDex(Manga source) {
     /// NOTE: 必须含有 CoverAttributes AuthorAttributes
-    var coverAttributes =
+    final coverAttributes =
         CoverAttributes.fromJson(source.relationships.firstType(EntityType.coverArt).attributes);
-    var authorAttributes =
+    final authorAttributes =
         AuthorAttributes.fromJson(source.relationships.firstType(EntityType.author).attributes);
+
+    var titleMap = source.attributes.title.toJson();
+    var title = titleMap.values.first;
+    var altTitleMapList = source.attributes.altTitles?.map((e) => e.toJson());
+    if (altTitleMapList != null) {
+      for (var map in altTitleMapList) {
+        titleMap.addAll(map);
+      }
+    }
+
+    for (var entry in titleMap.entries) {
+      if (!translatedLanguage.contains(entry.key)) continue;
+      title = entry.value;
+    }
+
+    String? description;
+    if (source.attributes.description != null) {
+      for (var entry in source.attributes.description!.toJson().entries) {
+        if (!translatedLanguage.contains(entry.key)) continue;
+        description = entry.value;
+      }
+    }
+
+    var tags = <String>[];
+    for (var tag in source.attributes.tags) {
+      var nameMap = tag.attributes.name.toJson();
+      var name = nameMap.values.first;
+      for (var entry in nameMap.entries) {
+        if (!translatedLanguage.contains(entry.key)) continue;
+        name = entry.value;
+      }
+
+      tags.add(name);
+    }
 
     return MangaDto(
       id: source.id,
-      title: source.attributes.title.value,
+      title: title,
       status: statusEnumChineseMap[source.attributes.status]!,
       author: authorAttributes.name,
-      tags: source.attributes.tags.map((e) => TagDto.fromDex(e)).toList(),
+      tags: tags,
       imageUrl256: Retrieving.getCoverArtOn256(source.id, coverAttributes.fileName),
       imageUrl512: Retrieving.getCoverArtOn512(source.id, coverAttributes.fileName),
       imageUrlOriginal: Retrieving.getCoverArtOnOriginal(source.id, coverAttributes.fileName),
       contentRating: contentRatingEnumMap[source.attributes.contentRating]!,
-      description: source.attributes.description?.value,
+      description: description,
     );
   }
 
@@ -61,9 +95,7 @@ class MangaDto {
         title: json['title'] as String,
         status: json['status'] as String,
         author: json['author'] as String,
-        tags: (json['tags'] as List<dynamic>)
-            .map((e) => TagDto.fromJson(e as Map<String, dynamic>))
-            .toList(),
+        tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
         imageUrl256: json['imageUrl256'] as String,
         imageUrl512: json['imageUrl512'] as String,
         imageUrlOriginal: json['imageUrlOriginal'] as String,
@@ -84,7 +116,7 @@ class MangaDto {
     val['title'] = title;
     val['status'] = status;
     val['author'] = author;
-    val['tags'] = tags.map((e) => e.toJson()).toList();
+    val['tags'] = tags;
     val['author'] = author;
     val['imageUrl256'] = imageUrl256;
     val['imageUrl512'] = imageUrl512;

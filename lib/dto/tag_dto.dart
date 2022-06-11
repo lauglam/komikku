@@ -1,3 +1,4 @@
+import 'package:komikku/database/hive.dart';
 import 'package:komikku/dex/models/tag.dart';
 
 class TagDto {
@@ -12,9 +13,16 @@ class TagDto {
   });
 
   factory TagDto.fromDex(Tag source) {
+    final nameMap = source.attributes.name.toJson();
+    var name = nameMap.values.first;
+    for (var entry in nameMap.entries) {
+      if (!translatedLanguage.contains(entry.key)) continue;
+      name = entry.value;
+    }
+
     return TagDto(
       id: source.id,
-      name: source.attributes.name.value,
+      name: name,
       group: source.attributes.group,
     );
   }

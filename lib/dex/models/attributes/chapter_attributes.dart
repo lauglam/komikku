@@ -1,16 +1,44 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'chapter_attributes.g.dart';
+
+/// 章节属性
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ChapterAttributes {
+  /// 发布时间
   final String publishAt;
+
+  /// 可阅读时间
   final String readableAt;
+
+  /// 翻译语言
   final String translatedLanguage;
+
+  /// 页数
   final int pages;
+
+  /// 标题
   final String? title;
+
+  /// 上传者
   final String? uploader;
+
+  /// 所属卷
   final String? volume;
+
+  /// 章节
   final String? chapter;
+
+  /// 额外链接
   final String? externalUrl;
 
+  /// 创建时间
   final String createdAt;
+
+  /// 更新时间
   final String updatedAt;
+
+  /// 版本
   final int version;
 
   ChapterAttributes({
@@ -28,42 +56,8 @@ class ChapterAttributes {
     this.externalUrl,
   });
 
-  factory ChapterAttributes.fromJson(Map<String, dynamic> json) => ChapterAttributes(
-        publishAt: json['publishAt'] as String,
-        readableAt: json['readableAt'] as String,
-        translatedLanguage: json['translatedLanguage'] as String,
-        pages: json['pages'] as int,
-        createdAt: json['createdAt'] as String,
-        updatedAt: json['updatedAt'] as String,
-        version: json['version'] as int,
-        title: json['title'] as String?,
-        uploader: json['uploader'] as String?,
-        volume: json['volume'] as String?,
-        chapter: json['chapter'] as String?,
-        externalUrl: json['externalUrl'] as String?,
-      );
+  factory ChapterAttributes.fromJson(Map<String, dynamic> json) =>
+      _$ChapterAttributesFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final val = <String, dynamic>{};
-
-    void writeNotNull(final String key, dynamic value) {
-      if (value != null) {
-        val[key] = value;
-      }
-    }
-
-    val['publishAt'] = publishAt;
-    val['readableAt'] = readableAt;
-    val['translatedLanguage'] = translatedLanguage;
-    val['createdAt'] = createdAt;
-    val['updatedAt'] = updatedAt;
-    val['version'] = version;
-    val['pages'] = pages;
-    writeNotNull('title', title);
-    writeNotNull('uploader', uploader);
-    writeNotNull('volume', volume);
-    writeNotNull('chapter', chapter);
-    writeNotNull('externalUrl', externalUrl);
-    return val;
-  }
+  Map<String, dynamic> toJson() => _$ChapterAttributesToJson(this);
 }

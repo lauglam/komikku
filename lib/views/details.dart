@@ -155,7 +155,7 @@ class _DetailsState extends State<Details> {
                     Text(widget.dto.title, style: const TextStyle(fontSize: 20)),
 
                     // 标签
-                    ChipWarp(widget.dto.tags.map((e) => e.name).toList()),
+                    ChipWarp(widget.dto.tags),
 
                     // 状态
                     const Padding(padding: EdgeInsets.only(bottom: 5)),

@@ -3,10 +3,21 @@ import 'package:komikku/dex/models/enum/entity_type.dart';
 import 'package:komikku/dex/models/enum/related.dart';
 import 'package:collection/collection.dart';
 
+part 'relationship.g.dart';
+
+/// 关系
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Relationship {
+  /// 关系id
   final String id;
+
+  /// 类型
   final EntityType type;
+
+  /// 关系
   final Related? related;
+
+  /// 属性
   final dynamic attributes;
 
   Relationship({
@@ -16,19 +27,9 @@ class Relationship {
     this.attributes,
   });
 
-  factory Relationship.fromJson(Map<String, dynamic> json) => Relationship(
-        id: json['id'] as String,
-        type: $enumDecode(entityTypeEnumMap, json['type']),
-        related: $enumDecodeNullable(relatedEnumMap, json['related']),
-        attributes: json['attributes'],
-      );
+  factory Relationship.fromJson(Map<String, dynamic> json) => _$RelationshipFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'type': entityTypeEnumMap[type],
-        'related': relatedEnumMap[related],
-        'attributes': attributes,
-      };
+  Map<String, dynamic> toJson() => _$RelationshipToJson(this);
 }
 
 extension RelationshipsExtensions on List<Relationship> {

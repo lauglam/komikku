@@ -1,27 +1,31 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/attributes/user_attributes.dart';
-import 'package:komikku/dex/models/enum/entity_type.dart';
 import 'package:komikku/dex/models/enum/response_type.dart';
 import 'package:komikku/dex/models/relationship.dart';
 import 'package:komikku/dex/models/response.dart';
 
+part 'user.g.dart';
+
+/// 用户令牌
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class UserResponse extends OkResponse<User> {
   UserResponse({required super.response, required super.data});
 
-  factory UserResponse.fromJson(Map<String, dynamic> json) => UserResponse(
-        response: $enumDecode(responseTypeEnumMap, json['response']),
-        data: User.fromJson(json['data']),
-      );
+  factory UserResponse.fromJson(Map<String, dynamic> json) => _$UserResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'response': entityTypeEnumMap[response],
-        'data': data.toJson(),
-      };
+  Map<String, dynamic> toJson() => _$UserResponseToJson(this);
 }
 
+/// 用户
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class User {
+  /// 用户id
   final String id;
+
+  /// 用户属性
   final UserAttributes attributes;
+
+  /// 关系
   final List<Relationship> relationships;
 
   User({
@@ -30,17 +34,7 @@ class User {
     required this.relationships,
   });
 
-  factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json['id'] as String,
-        attributes: UserAttributes.fromJson(json['attributes'] as Map<String, dynamic>),
-        relationships: (json['relationships'] as List<dynamic>)
-            .map((e) => Relationship.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'attributes': attributes.toJson(),
-        'relationships': relationships.map((e) => e.toJson()).toList(),
-      };
+  Map<String, dynamic> toJson() => _$UserToJson(this);
 }

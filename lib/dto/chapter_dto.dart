@@ -26,11 +26,11 @@ class ChapterDto {
   factory ChapterDto.fromDex(Chapter source) {
     /// NOTE: 必须含有 ScanlationAttributes UserAttributes
     /// NOTE: 此处可能出出现没有返回的情况
-    var groupMap = source.relationships.firstTypeOrDefault(EntityType.scanlationGroup)?.attributes;
-    var userMap = source.relationships.firstTypeOrDefault(EntityType.user)?.attributes;
+    final groupMap = source.relationships.firstTypeOrDefault(EntityType.scanlationGroup)?.attributes;
+    final userMap = source.relationships.firstTypeOrDefault(EntityType.user)?.attributes;
 
-    var groupAttributes = groupMap == null ? null : ScanlationGroupAttributes.fromJson(groupMap);
-    var userAttributes = userMap == null ? null : UserAttributes.fromJson(userMap);
+    final groupAttributes = groupMap == null ? null : ScanlationGroupAttributes.fromJson(groupMap);
+    final userAttributes = userMap == null ? null : UserAttributes.fromJson(userMap);
 
     return ChapterDto(
       id: source.id,

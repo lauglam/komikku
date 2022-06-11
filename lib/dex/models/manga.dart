@@ -3,10 +3,21 @@ import 'package:komikku/dex/models/attributes/manga_attributes.dart';
 import 'package:komikku/dex/models/enum/entity_type.dart';
 import 'package:komikku/dex/models/relationship.dart';
 
+part 'manga.g.dart';
+
+/// 漫画
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Manga {
+  /// 漫画id
   final String id;
+
+  /// 类型
   final EntityType type;
+
+  /// 漫画属性
   final MangaAttributes attributes;
+
+  /// 关系
   final List<Relationship> relationships;
 
   Manga({
@@ -16,20 +27,7 @@ class Manga {
     required this.relationships,
   });
 
-  factory Manga.fromJson(Map<String, dynamic> json) => Manga(
-        id: json['id'] as String,
-        type: $enumDecode(entityTypeEnumMap, json['type']),
-        attributes: MangaAttributes.fromJson(
-            json['attributes'] as Map<String, dynamic>),
-        relationships: (json['relationships'] as List<dynamic>)
-            .map((e) => Relationship.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+  factory Manga.fromJson(Map<String, dynamic> json) => _$MangaFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'type': entityTypeEnumMap[type],
-        'attributes': attributes.toJson(),
-        'relationships': relationships.map((e) => e.toJson()).toList(),
-      };
+  Map<String, dynamic> toJson() => _$MangaToJson(this);
 }

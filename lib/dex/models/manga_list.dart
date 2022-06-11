@@ -3,6 +3,10 @@ import 'package:komikku/dex/models/enum/response_type.dart';
 import 'package:komikku/dex/models/manga.dart';
 import 'package:komikku/dex/models/response.dart';
 
+part 'manga_list.g.dart';
+
+/// 漫画列表
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MangaListResponse extends PageResponse<Manga> {
   MangaListResponse({
     required super.response,
@@ -13,21 +17,7 @@ class MangaListResponse extends PageResponse<Manga> {
   });
 
   factory MangaListResponse.fromJson(Map<String, dynamic> json) =>
-      MangaListResponse(
-        response: $enumDecode(responseTypeEnumMap, json['response']),
-        data: (json['data'] as List<dynamic>)
-            .map((e) => Manga.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        limit: json['limit'] as int,
-        offset: json['offset'] as int,
-        total: json['total'] as int,
-      );
+      _$MangaListResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'response': responseTypeEnumMap[response],
-        'data': data.map((e) => e.toJson()).toList(),
-        'limit': limit,
-        'offset': offset,
-        'total': total,
-      };
+  Map<String, dynamic> toJson() => _$MangaListResponseToJson(this);
 }

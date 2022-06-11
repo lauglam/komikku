@@ -6,8 +6,3 @@ enum OrderMode {
   /// 正序
   asc,
 }
-
-const orderModeEnumMap = {
-  OrderMode.desc: 'desc',
-  OrderMode.asc: 'asc',
-};

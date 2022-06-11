@@ -20,6 +20,7 @@ class _DetailsGrid extends StatelessWidget {
     return Consumer<ChapterReadMarkerProvider>(
       builder: (context, provider, child) {
         return GridView.builder(
+          cacheExtent: 500,
           padding: const EdgeInsets.fromLTRB(15, 0, 15, 15),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
             crossAxisCount: 4,

@@ -1,7 +1,20 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'cover_attributes.g.dart';
+
+/// 封面属性
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class CoverAttributes {
+  /// 文件名
   final String fileName;
+
+  /// 所属卷
   final String? volume;
+
+  /// 描述
   final String? description;
+
+  /// 语言环境
   final String? locale;
 
   CoverAttributes({
@@ -11,27 +24,7 @@ class CoverAttributes {
     this.locale,
   });
 
-  factory CoverAttributes.fromJson(Map<String, dynamic> json) =>
-      CoverAttributes(
-        fileName: json['fileName'] as String,
-        volume: json['volume'] as String?,
-        description: json['description'] as String?,
-        locale: json['locale'] as String?,
-      );
+  factory CoverAttributes.fromJson(Map<String, dynamic> json) => _$CoverAttributesFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final val = <String, dynamic>{};
-
-    void writeNotNull(String key, dynamic value) {
-      if (value != null) {
-        val[key] = value;
-      }
-    }
-
-    val['fileName'] = fileName;
-    writeNotNull('volume', volume);
-    writeNotNull('biography', description);
-    writeNotNull('locale', locale);
-    return val;
-  }
+  Map<String, dynamic> toJson() => _$CoverAttributesToJson(this);
 }

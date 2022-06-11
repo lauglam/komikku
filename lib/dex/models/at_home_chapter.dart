@@ -1,6 +1,16 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'at_home_chapter.g.dart';
+
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class AtHomeChapter {
+  /// 哈希值
   final String hash;
+
+  /// 图片名称列表
   final List<String> data;
+
+  /// 压缩质量图片名称列表
   final List<String> dataSaver;
 
   AtHomeChapter({
@@ -9,17 +19,7 @@ class AtHomeChapter {
     required this.dataSaver,
   });
 
-  factory AtHomeChapter.fromJson(Map<String, dynamic> json) => AtHomeChapter(
-        hash: json['hash'] as String,
-        data: (json['data'] as List<dynamic>).map((e) => e as String).toList(),
-        dataSaver: (json['dataSaver'] as List<dynamic>)
-            .map((e) => e as String)
-            .toList(),
-      );
+  factory AtHomeChapter.fromJson(Map<String, dynamic> json) => _$AtHomeChapterFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'hash': hash,
-        'data': data,
-        'dataSaver': dataSaver,
-      };
+  Map<String, dynamic> toJson() => _$AtHomeChapterToJson(this);
 }

@@ -11,11 +11,3 @@ enum State {
   /// 已拒绝
   rejected
 }
-
-
-const stateEnumMap = {
-  State.draft: 'draft',
-  State.submitted: 'submitted',
-  State.published: 'published',
-  State.rejected: 'rejected',
-};

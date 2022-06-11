@@ -50,6 +50,7 @@ class _SubscribesState extends State<Subscribes> {
           RefreshIndicator(
             onRefresh: () async => _pagingController.refresh(),
             child: PagedGridView(
+              cacheExtent: 500,
               // 永远滚动，即使在不满屏幕的情况下
               physics: const AlwaysScrollableScrollPhysics(),
               padding: const EdgeInsets.all(15),

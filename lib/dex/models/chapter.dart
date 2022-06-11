@@ -5,22 +5,20 @@ import 'package:komikku/dex/models/enum/response_type.dart';
 import 'package:komikku/dex/models/relationship.dart';
 import 'package:komikku/dex/models/response.dart';
 
+part 'chapter.g.dart';
+
 /// 章节响应
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ChapterResponse extends OkResponse<Chapter> {
   ChapterResponse({required super.response, required super.data});
 
-  factory ChapterResponse.fromJson(Map<String, dynamic> json) => ChapterResponse(
-        response: $enumDecode(responseTypeEnumMap, json['response']),
-        data: Chapter.fromJson(json['data']),
-      );
+  factory ChapterResponse.fromJson(Map<String, dynamic> json) => _$ChapterResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'response': entityTypeEnumMap[response],
-        'data': data.toJson(),
-      };
+  Map<String, dynamic> toJson() => _$ChapterResponseToJson(this);
 }
 
 /// 章节
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Chapter {
   final String id;
   final EntityType type;
@@ -34,19 +32,7 @@ class Chapter {
     required this.relationships,
   });
 
-  factory Chapter.fromJson(Map<String, dynamic> json) => Chapter(
-        id: json['id'] as String,
-        type: $enumDecode(entityTypeEnumMap, json['type']),
-        attributes: ChapterAttributes.fromJson(json['attributes'] as Map<String, dynamic>),
-        relationships: (json['relationships'] as List<dynamic>)
-            .map((e) => Relationship.fromJson(e as Map<String, dynamic>))
-            .toList(),
-      );
+  factory Chapter.fromJson(Map<String, dynamic> json) => _$ChapterFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'id': id,
-        'type': entityTypeEnumMap[type],
-        'attributes': attributes.toJson(),
-        'relationships': relationships.map((e) => e.toJson()).toList(),
-      };
+  Map<String, dynamic> toJson() => _$ChapterToJson(this);
 }

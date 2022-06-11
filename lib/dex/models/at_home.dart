@@ -1,7 +1,14 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/at_home_chapter.dart';
 
+part 'at_home.g.dart';
+
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class AtHome {
+  /// 服务器地址
   final String baseUrl;
+
+  /// 章节数据
   final AtHomeChapter chapter;
 
   AtHome({
@@ -9,14 +16,7 @@ class AtHome {
     required this.chapter,
   });
 
-  factory AtHome.fromJson(Map<String, dynamic> json) => AtHome(
-        baseUrl: json['baseUrl'] as String,
-        chapter:
-            AtHomeChapter.fromJson(json['chapter'] as Map<String, dynamic>),
-      );
+  factory AtHome.fromJson(Map<String, dynamic> json) => _$AtHomeFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'baseUrl': baseUrl,
-        'chapter': chapter.toJson(),
-      };
+  Map<String, dynamic> toJson() => _$AtHomeToJson(this);
 }

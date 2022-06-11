@@ -14,6 +14,7 @@ import 'package:komikku/widgets/builder_checker.dart';
 import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/widgets/indicator.dart';
 import 'package:komikku/widgets/list_view_item.dart';
+import 'package:komikku/widgets/paged_view/paged_list_view_extent.dart';
 import 'package:komikku/widgets/search_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -133,7 +134,10 @@ class _SearchState extends State<Search> {
 
             // 列表内容
             Expanded(
-              child: PagedListView(
+              child: PagedListViewExtent(
+                cacheExtent: 500,
+                prototypeItem: const ListViewItem(imageUrl: '', title: '', subtitle: ''),
+                physics: const AlwaysScrollableScrollPhysics(),
                 pagingController: _pagingController,
                 builderDelegate: PagedChildBuilderDelegate<MangaDto>(
                   firstPageErrorIndicatorBuilder: (context) => TryAgainExceptionIndicator(

@@ -1,9 +1,12 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/chapter.dart';
+import 'package:komikku/dex/models/enum/response_type.dart';
 import 'package:komikku/dex/models/response.dart';
 
-import 'enum/response_type.dart';
+part 'chapter_list.g.dart';
 
+/// 章节列表响应
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ChapterListResponse extends PageResponse<Chapter> {
   ChapterListResponse({
     required super.response,
@@ -13,21 +16,8 @@ class ChapterListResponse extends PageResponse<Chapter> {
     required super.total,
   });
 
-  factory ChapterListResponse.fromJson(Map<String, dynamic> json) => ChapterListResponse(
-        response: $enumDecode(responseTypeEnumMap, json['response']),
-        data: (json['data'] as List<dynamic>)
-            .map((e) => Chapter.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        limit: json['limit'] as int,
-        offset: json['offset'] as int,
-        total: json['total'] as int,
-      );
+  factory ChapterListResponse.fromJson(Map<String, dynamic> json) =>
+      _$ChapterListResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'response': responseTypeEnumMap[response],
-        'data': data.map((e) => e.toJson()).toList(),
-        'limit': limit,
-        'offset': offset,
-        'total': total,
-      };
+  Map<String, dynamic> toJson() => _$ChapterListResponseToJson(this);
 }

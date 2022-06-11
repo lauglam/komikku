@@ -13,13 +13,6 @@ enum Status {
   cancelled,
 }
 
-const statusEnumMap = {
-  Status.ongoing: 'ongoing',
-  Status.completed: 'completed',
-  Status.hiatus: 'hiatus',
-  Status.cancelled: 'cancelled',
-};
-
 const statusEnumChineseMap = {
   Status.ongoing: '正在连载',
   Status.completed: '已完结',

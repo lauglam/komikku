@@ -1,24 +1,63 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/localized_string.dart';
 
+part 'scanlation_group_attributes.g.dart';
+
+/// 扫描组属性
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ScanlationGroupAttributes {
+  /// 扫描组名称
   final String name;
+
+  /// 是否锁定
   final bool locked;
+
+  /// 是否是官方
   final bool official;
+
+  /// 是否活跃
   final bool inactive;
+
+  /// 发布延迟
   final String? publishDelay;
+
+  /// 备用名称
   final List<LocalizedString>? altNames;
+
+  /// 网站
   final String? website;
+
+  /// 群里服务器
   final String? ircServer;
+
+  /// 群聊频道
   final String? ircChannel;
+
+  /// discord
   final String? discord;
+
+  /// 联系邮箱
   final String? contactEmail;
+
+  /// 描述
   final String? description;
+
+  /// twitter
   final String? twitter;
+
+  /// 上传的漫画
   final String? mangaUpdates;
+
+  /// 专注翻译语言
   List<String>? focusedLanguage;
 
+  /// 创建时间
   String createdAt;
+
+  /// 更新时间
   String updatedAt;
+
+  /// 版本
   int version;
 
   ScanlationGroupAttributes({
@@ -43,57 +82,7 @@ class ScanlationGroupAttributes {
   });
 
   factory ScanlationGroupAttributes.fromJson(Map<String, dynamic> json) =>
-      ScanlationGroupAttributes(
-        name: json['name'] as String,
-        locked: json['locked'] as bool,
-        official: json['official'] as bool,
-        inactive: json['inactive'] as bool,
-        publishDelay: json['publishDelay'] as String?,
-        createdAt: json['createdAt'] as String,
-        updatedAt: json['updatedAt'] as String,
-        version: json['version'] as int,
-        altNames: (json['altNames'] as List<dynamic>?)
-            ?.map((e) => LocalizedString.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        website: json['website'] as String?,
-        ircServer: json['ircServer'] as String?,
-        ircChannel: json['ircChannel'] as String?,
-        discord: json['discord'] as String?,
-        contactEmail: json['contactEmail'] as String?,
-        description: json['description'] as String?,
-        twitter: json['twitter'] as String?,
-        mangaUpdates: json['mangaUpdates'] as String?,
-        focusedLanguage:
-            (json['focusedLanguage'] as List<dynamic>?)?.map((e) => e as String).toList(),
-      );
+      _$ScanlationGroupAttributesFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final val = <String, dynamic>{};
-
-    void writeNotNull(String key, dynamic value) {
-      if (value != null) {
-        val[key] = value;
-      }
-    }
-
-    val['name'] = name;
-    val['locked'] = locked;
-    val['official'] = official;
-    val['inactive'] = inactive;
-    val['createdAt'] = createdAt;
-    val['updatedAt'] = updatedAt;
-    val['version'] = version;
-    writeNotNull('publishDelay', publishDelay);
-    writeNotNull('altNames', altNames);
-    writeNotNull('website', website);
-    writeNotNull('ircServer', ircServer);
-    writeNotNull('ircChannel', ircChannel);
-    writeNotNull('discord', discord);
-    writeNotNull('contactEmail', contactEmail);
-    writeNotNull('description', description);
-    writeNotNull('twitter', twitter);
-    writeNotNull('mangaUpdates', mangaUpdates);
-    writeNotNull('focusedLanguage', focusedLanguage);
-    return val;
-  }
+  Map<String, dynamic> toJson() => _$ScanlationGroupAttributesToJson(this);
 }

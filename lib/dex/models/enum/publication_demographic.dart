@@ -1,4 +1,4 @@
-/// 出版物人口统计
+/// 漫画类型
 enum PublicationDemographic {
   /// 少年
   shounen,
@@ -12,10 +12,3 @@ enum PublicationDemographic {
   /// 青年
   seinen,
 }
-
-const publicationDemographicEnumMap = {
-  PublicationDemographic.shounen: 'shounen',
-  PublicationDemographic.shoujo: 'shoujo',
-  PublicationDemographic.josei: 'josei',
-  PublicationDemographic.seinen: 'seinen',
-};

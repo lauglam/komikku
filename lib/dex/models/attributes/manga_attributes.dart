@@ -1,31 +1,72 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:komikku/dex/models/localized_string.dart';
 import 'package:komikku/dex/models/enum/state.dart';
 import 'package:komikku/dex/models/enum/status.dart';
-import 'package:komikku/dex/models/localized_string.dart';
 import 'package:komikku/dex/models/enum/content_rating.dart';
 import 'package:komikku/dex/models/enum/publication_demographic.dart';
 import 'package:komikku/dex/models/tag.dart';
 
+part 'manga_attributes.g.dart';
+
+/// 漫画属性
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MangaAttributes {
+  /// 标题
   final LocalizedString title;
+
+  /// 是否锁定
   final bool isLocked;
+
+  /// 原始语言
   final String originalLanguage;
+
+  /// 内容分级
   final ContentRating contentRating;
+
+  /// 新的一卷卷时章节编号是否i重置
   final bool chapterNumbersResetOnNewVolume;
-  final List<String?> availableTranslatedLanguages;
+
+  /// 可用的章节翻译语言
+  final List<String>? availableTranslatedLanguages;
+
+  /// 标签
   final List<Tag> tags;
+
+  /// 漫画更新状态
   final Status status;
+
+  /// 漫画状态
   final State state;
-  final List<LocalizedString>? altTitle;
+
+  /// 备用标题
+  final List<LocalizedString>? altTitles;
+
+  /// 描述
+  @JsonKey(readValue: readSingleOrArray)
   final LocalizedString? description;
+
+  /// 最新卷
   final String? lastVolume;
+
+  /// 最新章
   final String? lastChapter;
+
+  /// 漫画类型
   final PublicationDemographic? publicationDemographic;
+
+  /// 年份
   final int? year;
+
+  /// 链接
   final dynamic links;
 
+  /// 创建时间
   final String createdAt;
+
+  /// 更新时间
   final String updatedAt;
+
+  /// 版本
   final int version;
 
   MangaAttributes({
@@ -41,7 +82,7 @@ class MangaAttributes {
     required this.createdAt,
     required this.updatedAt,
     required this.version,
-    this.altTitle,
+    this.altTitles,
     this.description,
     this.lastVolume,
     this.lastChapter,
@@ -50,74 +91,7 @@ class MangaAttributes {
     this.links,
   });
 
-  factory MangaAttributes.fromJson(Map<String, dynamic> json) =>
-      MangaAttributes(
-        title: LocalizedString.fromJson(json['title'] as Map<String, dynamic>),
-        isLocked: json['isLocked'] as bool,
-        originalLanguage: json['originalLanguage'] as String,
-        contentRating: $enumDecode(contentRatingEnumMap, json['contentRating']),
-        chapterNumbersResetOnNewVolume:
-            json['chapterNumbersResetOnNewVolume'] as bool,
-        availableTranslatedLanguages:
-            (json['availableTranslatedLanguages'] as List<dynamic>)
-                .map((e) => e as String?)
-                .toList(),
-        tags: (json['tags'] as List<dynamic>)
-            .map((e) => Tag.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        status: $enumDecode(statusEnumMap, json['status']),
-        state: $enumDecode(stateEnumMap, json['state']),
-        createdAt: json['createdAt'] as String,
-        updatedAt: json['updatedAt'] as String,
-        version: json['version'] as int,
-        altTitle: json['altTitle'] == null
-            ? null
-            : (json['altTitle'] as List<dynamic>)
-                .map((e) => LocalizedString.fromJson(e as Map<String, dynamic>))
-                .toList(),
-        description: json['description'] == null
-            ? null
-            : json['description'] is Iterable
-                ? null
-                : LocalizedString.fromJson(
-                    json['description'] as Map<String, dynamic>),
-        lastVolume: json['lastVolume'] as String?,
-        lastChapter: json['lastChapter'] as String?,
-        publicationDemographic: $enumDecodeNullable(
-            publicationDemographicEnumMap, json['publicationDemographic']),
-        year: json['year'] as int?,
-        links: json['links'],
-      );
+  factory MangaAttributes.fromJson(Map<String, dynamic> json) => _$MangaAttributesFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final val = <String, dynamic>{};
-
-    void writeNotNull(String key, dynamic value) {
-      if (value != null) {
-        val[key] = value;
-      }
-    }
-
-    val['title'] = title.toJson();
-    val['isLocked'] = isLocked;
-    val['originalLanguage'] = originalLanguage;
-    val['contentRating'] = contentRatingEnumMap[contentRating];
-    val['chapterNumbersResetOnNewVolume'] = chapterNumbersResetOnNewVolume;
-    val['availableTranslatedLanguages'] = availableTranslatedLanguages;
-    val['tags'] = tags.map((e) => e.toJson()).toList();
-    val['status'] = statusEnumMap[status];
-    val['state'] = stateEnumMap[state];
-    writeNotNull('altTitle', altTitle?.map((e) => e.toJson()).toList());
-    writeNotNull('description', description?.toJson());
-    writeNotNull('lastVolume', lastVolume);
-    writeNotNull('lastChapter', lastChapter);
-    writeNotNull('publicationDemographic',
-        publicationDemographicEnumMap[publicationDemographic]);
-    writeNotNull('year', year);
-    writeNotNull('links', links);
-    writeNotNull('createdAt', createdAt);
-    writeNotNull('updatedAt', updatedAt);
-    writeNotNull('version', version);
-    return val;
-  }
+  Map<String, dynamic> toJson() => _$MangaAttributesToJson(this);
 }

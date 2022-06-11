@@ -1,9 +1,16 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'token.g.dart';
+
 /// 用户令牌
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Token {
-  // 有效期15分钟
+  /// 会话令牌
+  /// 有效期15分钟
   final String session;
 
-  // 有效期30天
+  /// 刷新令牌
+  /// 有效期30天
   final String refresh;
 
   Token({
@@ -11,13 +18,7 @@ class Token {
     required this.refresh,
   });
 
-  factory Token.fromJson(Map<String, dynamic> json) => Token(
-        session: json['session'] as String,
-        refresh: json['refresh'] as String,
-      );
+  factory Token.fromJson(Map<String, dynamic> json) => _$TokenFromJson(json);
 
-  Map<String, dynamic> toJson() => {
-        'session': session,
-        'refresh': refresh,
-      };
+  Map<String, dynamic> toJson() => _$TokenToJson(this);
 }

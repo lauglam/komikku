@@ -1,25 +1,67 @@
+import 'package:json_annotation/json_annotation.dart';
 import 'package:komikku/dex/models/localized_string.dart';
 
+part 'author_attributes.g.dart';
+
+/// 作者属性
+@JsonSerializable(explicitToJson: true, includeIfNull: false)
 class AuthorAttributes {
+  /// 作者名
   final String name;
+
+  /// 图片地址
   final String? imageUrl;
+
+  /// 传记
+  @JsonKey(readValue: readSingleOrArray)
   final LocalizedString? biography;
+
+  /// twitter
   final String? twitter;
+
+  /// pixiv
   final String? pixiv;
+
+  /// melonBook
   final String? melonBook;
+
+  /// fanBox
   final String? fanBox;
+
+  /// booth
   final String? booth;
+
+  /// nicoVideo
   final String? nicoVideo;
+
+  /// skeb
   final String? skeb;
+
+  /// fantia
   final String? fantia;
+
+  /// tumber
   final String? tumber;
+
+  /// youtube
   final String? youtube;
+
+  /// weibo
   final String? weibo;
+
+  /// naver
   final String? naver;
+
+  /// website
   final String? website;
 
+  /// 创建时间
   final String createdAt;
+
+  /// 更新时间
   final String updatedAt;
+
+  /// 版本
   final int version;
 
   AuthorAttributes({
@@ -44,60 +86,7 @@ class AuthorAttributes {
     this.website,
   });
 
-  factory AuthorAttributes.fromJson(Map<String, dynamic> json) => AuthorAttributes(
-        name: json['name'] as String,
-        imageUrl: json['imageUrl'] as String?,
-        createdAt: json['createdAt'] as String,
-        updatedAt: json['updatedAt'] as String,
-        version: json['version'] as int,
-        biography: json['biography'] == null
-            ? null
-            : json['biography'] is Iterable
-                ? null
-                : LocalizedString.fromJson(json['biography'] as Map<String, dynamic>),
-        twitter: json['twitter'] as String?,
-        pixiv: json['pixiv'] as String?,
-        melonBook: json['melonBook'] as String?,
-        fanBox: json['fanBox'] as String?,
-        booth: json['booth'] as String?,
-        nicoVideo: json['nicoVideo'] as String?,
-        skeb: json['skeb'] as String?,
-        fantia: json['fantia'] as String?,
-        tumber: json['tumber'] as String?,
-        youtube: json['youtube'] as String?,
-        weibo: json['weibo'] as String?,
-        naver: json['naver'] as String?,
-        website: json['website'] as String?,
-      );
+  factory AuthorAttributes.fromJson(Map<String, dynamic> json) => _$AuthorAttributesFromJson(json);
 
-  Map<String, dynamic> toJson() {
-    final val = <String, dynamic>{};
-
-    void writeNotNull(String key, dynamic value) {
-      if (value != null) {
-        val[key] = value;
-      }
-    }
-
-    val['name'] = name;
-    val['createdAt'] = createdAt;
-    val['updatedAt'] = updatedAt;
-    val['version'] = version;
-    writeNotNull('imageUrl', imageUrl);
-    writeNotNull('biography', biography?.toJson());
-    writeNotNull('twitter', twitter);
-    writeNotNull('pixiv', pixiv);
-    writeNotNull('melonBook', melonBook);
-    writeNotNull('fanBox', fanBox);
-    writeNotNull('booth', booth);
-    writeNotNull('nicoVideo', nicoVideo);
-    writeNotNull('skeb', skeb);
-    writeNotNull('fantia', fantia);
-    writeNotNull('tumber', tumber);
-    writeNotNull('youtube', youtube);
-    writeNotNull('weibo', weibo);
-    writeNotNull('naver', naver);
-    writeNotNull('website', website);
-    return val;
-  }
+  Map<String, dynamic> toJson() => _$AuthorAttributesToJson(this);
 }

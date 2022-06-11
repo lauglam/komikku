@@ -5,8 +5,3 @@ enum ResponseType {
   /// 集合
   collection,
 }
-
-const responseTypeEnumMap = {
-  ResponseType.entity: 'entity',
-  ResponseType.collection: 'collection',
-};
