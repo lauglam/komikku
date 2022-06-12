@@ -79,13 +79,13 @@ class MangaDto {
     return MangaDto(
       id: source.id,
       title: title,
-      status: statusEnumChineseMap[source.attributes.status]!,
+      status: _statusEnumChineseMap[source.attributes.status]!,
       author: authorAttributes.name,
       tags: tags,
       imageUrl256: Retrieving.getCoverArtOn256(source.id, coverAttributes.fileName),
       imageUrl512: Retrieving.getCoverArtOn512(source.id, coverAttributes.fileName),
       imageUrlOriginal: Retrieving.getCoverArtOnOriginal(source.id, coverAttributes.fileName),
-      contentRating: contentRatingEnumMap[source.attributes.contentRating]!,
+      contentRating: _contentRatingEnumMap[source.attributes.contentRating]!,
       description: description,
     );
   }
@@ -125,4 +125,18 @@ class MangaDto {
 
     return val;
   }
+
+  static const _contentRatingEnumMap = {
+    ContentRating.safe: 'safe',
+    ContentRating.suggestive: 'suggestive',
+    ContentRating.erotica: 'erotica',
+    ContentRating.pornographic: 'pornographic',
+  };
+
+  static const _statusEnumChineseMap = {
+    Status.ongoing: '正在连载',
+    Status.completed: '已完结',
+    Status.hiatus: '暂停连载',
+    Status.cancelled: '取消连载',
+  };
 }

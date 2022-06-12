@@ -12,10 +12,3 @@ enum ContentRating {
   /// 色情
   pornographic,
 }
-
-const contentRatingEnumMap = {
-  ContentRating.safe: 'safe',
-  ContentRating.suggestive: 'suggestive',
-  ContentRating.erotica: 'erotica',
-  ContentRating.pornographic: 'pornographic',
-};
