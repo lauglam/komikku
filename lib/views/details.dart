@@ -104,7 +104,7 @@ class _DetailsState extends State<Details> {
           ),
           onPressed: () async {
             // 未登录
-            if (!userLoginState) {
+            if (!HiveDatabase.userLoginState) {
               showText(text: '请先登录');
               return;
             }
@@ -183,7 +183,7 @@ class _DetailsState extends State<Details> {
   /// 检测漫画是否被订阅
   Future<bool> _checkUserFollow() async {
     // 未登录，直接返回false
-    if (!userLoginState) {
+    if (!HiveDatabase.userLoginState) {
       return false;
     }
 

@@ -95,7 +95,7 @@ class _SubscribesState extends State<Subscribes> {
           Consumer3<UserProvider, FollowProvider, ContentRatingProvider>(
             builder: (context, provider1, provider2, provider3, child) {
               // 未登录时，此控件会遮盖住[StreamBuilder]
-              if (!userLoginState) {
+              if (!HiveDatabase.userLoginState) {
                 _markNeedRefresh = true;
                 return child!;
               }
@@ -119,7 +119,7 @@ class _SubscribesState extends State<Subscribes> {
 
   /// 获取用户订阅的漫画
   Future<void> _getUserFollowedMangaList(int pageKey) async {
-    if (!userLoginState) {
+    if (!HiveDatabase.userLoginState) {
       _pagingController.appendPage(<MangaDto>[], 0);
       return;
     }

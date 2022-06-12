@@ -10,9 +10,9 @@ class _SettingPanel extends StatelessWidget {
 
     return Consumer3<DataSaverProvider, ContentRatingProvider, TranslatedLanguageProvider>(
       builder: (context, provider1, provider2, provider3, child) {
-        var dataSaver = provider1.dataSaver;
-        var contentRating = List<String>.from(provider2.contentRating);
-        var translatedLanguage = List<String>.from(provider3.translatedLanguage);
+        var selectedDataSaver = false;
+        var selectedContentRating = <String>[];
+        var selectedTranslatedLanguage = <String>[];
         return Card(
           margin: const EdgeInsets.all(15),
           child: Padding(
@@ -27,12 +27,12 @@ class _SettingPanel extends StatelessWidget {
                   onPressed: () => showAlertDialog(
                     title: '内容分级',
                     content: _ContentRating(
-                      contentRating: contentRating,
-                      onChanged: (value) => contentRating = value,
+                      selectedContentRating: provider2.contentRating,
+                      onChanged: (value) => selectedContentRating = value,
                     ),
                     onConfirm: () async {
-                      if (contentRating.isNotEmpty) {
-                        provider2.set(contentRating);
+                      if (selectedContentRating.isNotEmpty) {
+                        provider2.set(selectedContentRating);
                       }
                     },
                   ),
@@ -42,10 +42,15 @@ class _SettingPanel extends StatelessWidget {
                 IconTextButton(
                   text: '章节语言',
                   icon: TaoIcons.comment,
-                  onPressed: () {
-                    // TODO: 章节语言
-                    showText(text: '功能暂未上线，敬请期待');
-                  },
+                  onPressed: () => showAlertDialog(
+                    title: '章节语言',
+                    content: _TranslatedLanguage(
+                      selectedLanguage: provider3.translatedLanguage,
+                      onChanged: (value) => selectedTranslatedLanguage = value,
+                    ),
+                    // translatedLanguage can be empty
+                    onConfirm: () async => provider3.set(selectedTranslatedLanguage),
+                  ),
                 ),
 
                 // 本地化
@@ -55,13 +60,13 @@ class _SettingPanel extends StatelessWidget {
                   onPressed: () => showAlertDialog(
                     title: '图片质量',
                     content: _DataSaver(
-                      dataSaver: provider1.dataSaver,
-                      onChanged: (value) => dataSaver = value,
+                      selectedDataSaver: provider1.dataSaver,
+                      onChanged: (value) => selectedDataSaver = value,
                     ),
                     onConfirm: () {
                       // 提示信息
-                      if (dataSaver) showText(text: '阅读漫画时更快加载，但图片质量有所下降');
-                      provider1.set(dataSaver);
+                      if (selectedDataSaver) showText(text: '阅读漫画时更快加载，但图片质量有所下降');
+                      provider1.set(selectedDataSaver);
                     },
                   ),
                 ),

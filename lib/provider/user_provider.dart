@@ -11,16 +11,16 @@ class UserProvider extends ChangeNotifier {
         : Login(username: emailOrUsername, password: password);
 
     final response = await AuthApi.loginAsync(login);
-    sessionToken = response.token.session;
-    refreshToken = response.token.refresh;
+    HiveDatabase.sessionToken = response.token.session;
+    HiveDatabase.refreshToken = response.token.refresh;
 
     notifyListeners();
   }
 
   /// 登出
   Future<void> logout() async {
-    removeSessionToken();
-    removeRefreshToken();
+    HiveDatabase.removeSessionToken();
+    HiveDatabase.removeRefreshToken();
     await AuthApi.logoutAsync();
 
     notifyListeners();

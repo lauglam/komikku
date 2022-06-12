@@ -16,7 +16,7 @@ class TagDto {
     final nameMap = source.attributes.name.toJson();
     var name = nameMap.values.first;
     for (var entry in nameMap.entries) {
-      if (!translatedLanguage.contains(entry.key)) continue;
+      if (!HiveDatabase.translatedLanguage.contains(entry.key)) continue;
       name = entry.value;
     }
 

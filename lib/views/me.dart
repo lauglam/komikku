@@ -66,12 +66,12 @@ class _MeState extends State<Me> {
                                 minimumSize: MaterialStateProperty.all(const Size(200, 35)),
                               ),
                               child: Text(
-                                userLoginState ? '退出登录' : '登录',
+                                HiveDatabase.userLoginState ? '退出登录' : '登录',
                                 style: const TextStyle(fontSize: 15),
                               ),
                               onPressed: () {
                                 // 未登录
-                                if (!userLoginState) {
+                                if (!HiveDatabase.userLoginState) {
                                   Navigator.pushNamed(context, '/login');
                                   return;
                                 }
@@ -99,7 +99,7 @@ class _MeState extends State<Me> {
                       child: Consumer<UserProvider>(
                         builder: (context, userProvider, child) {
                           // 未登录
-                          if (!userLoginState) {
+                          if (!HiveDatabase.userLoginState) {
                             return const Text('未登录', style: TextStyle(fontSize: 16));
                           }
 
@@ -134,7 +134,7 @@ class _MeState extends State<Me> {
 
   /// 获取用户信息
   Future<String> _getUserDetails() async {
-    if (!userLoginState) throw Exception('Invalid operation');
+    if (!HiveDatabase.userLoginState) throw Exception('Invalid operation');
 
     final response = await UserApi.getUserDetailsAsync();
     return response.data.attributes.username;

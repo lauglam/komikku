@@ -60,14 +60,14 @@ class HttpUtil {
     Options options = Options();
 
     // 查看是否登录
-    if (userLoginState) {
-      if (sessionToken == null) {
-        final response = await AuthApi.refreshAsync(RefreshToken(token: refreshToken!));
-        sessionToken = response.token.session;
+    if (HiveDatabase.userLoginState) {
+      if (HiveDatabase.sessionToken == null) {
+        final response = await AuthApi.refreshAsync(RefreshToken(token: HiveDatabase.refreshToken!));
+        HiveDatabase.sessionToken = response.token.session;
       }
 
       options = Options(headers: {
-        'Authorization': 'Bearer $sessionToken',
+        'Authorization': 'Bearer ${HiveDatabase.sessionToken}',
       });
     }
     return options;

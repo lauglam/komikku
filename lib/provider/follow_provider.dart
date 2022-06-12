@@ -6,7 +6,7 @@ class FollowProvider extends ChangeNotifier {
   /// 订阅漫画
   Future<void> followManga(String id) async {
     // 未登录，直接返回
-    if (!userLoginState) return;
+    if (!HiveDatabase.userLoginState) return;
     await MangaApi.followMangaAsync(id);
 
     notifyListeners();
@@ -15,7 +15,7 @@ class FollowProvider extends ChangeNotifier {
   /// 退订漫画
   Future<void> unfollowManga(String id) async {
     // 未登录，直接返回
-    if (!userLoginState) return;
+    if (!HiveDatabase.userLoginState) return;
     await MangaApi.unfollowMangaAsync(id);
 
     notifyListeners();

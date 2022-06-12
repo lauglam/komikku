@@ -14,7 +14,7 @@ import 'package:komikku/views/shell.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  await hiveInit();
+  await HiveDatabase.initial();
   runApp(const MyApp());
 }
 

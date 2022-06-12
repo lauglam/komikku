@@ -52,14 +52,14 @@ class MangaDto {
     }
 
     for (var entry in titleMap.entries) {
-      if (!translatedLanguage.contains(entry.key)) continue;
+      if (!HiveDatabase.translatedLanguage.contains(entry.key)) continue;
       title = entry.value;
     }
 
     String? description;
     if (source.attributes.description != null) {
       for (var entry in source.attributes.description!.toJson().entries) {
-        if (!translatedLanguage.contains(entry.key)) continue;
+        if (!HiveDatabase.translatedLanguage.contains(entry.key)) continue;
         description = entry.value;
       }
     }
@@ -69,7 +69,7 @@ class MangaDto {
       var nameMap = tag.attributes.name.toJson();
       var name = nameMap.values.first;
       for (var entry in nameMap.entries) {
-        if (!translatedLanguage.contains(entry.key)) continue;
+        if (!HiveDatabase.translatedLanguage.contains(entry.key)) continue;
         name = entry.value;
       }
 

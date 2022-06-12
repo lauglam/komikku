@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:komikku/database/hive.dart' as hive;
+import 'package:komikku/database/hive.dart';
 
 class DataSaverProvider extends ChangeNotifier {
   var dataSaver = false;
 
-  void get() => dataSaver = hive.dataSaver;
+  void get() => dataSaver = HiveDatabase.dataSaver;
 
   void set(bool value) {
-    hive.dataSaver = value;
+    HiveDatabase.dataSaver = value;
     dataSaver = value;
 
     notifyListeners();

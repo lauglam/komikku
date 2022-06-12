@@ -1,13 +1,13 @@
 import 'package:flutter/cupertino.dart';
-import 'package:komikku/database/hive.dart' as hive;
+import 'package:komikku/database/hive.dart';
 
 class TranslatedLanguageProvider extends ChangeNotifier {
   var translatedLanguage = <String>[];
 
-  void get() => translatedLanguage = hive.translatedLanguage;
+  void get() => translatedLanguage = HiveDatabase.translatedLanguage;
 
   void set(List<String> value) {
-    hive.translatedLanguage = translatedLanguage;
+    HiveDatabase.translatedLanguage = value;
     translatedLanguage = value;
 
     notifyListeners();
