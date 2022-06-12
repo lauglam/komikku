@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:komikku/dex/apis/follows_api.dart';
+import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/database/hive.dart';
 import 'package:komikku/provider/provider.dart';
