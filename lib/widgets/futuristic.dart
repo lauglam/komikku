@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:komikku/widgets/set_state_complain.dart';
+import 'package:komikku/utils/set_state_complain.dart';
 
 /// A widget that makes it easy to execute a [Future] from a [StatelessWidget].
 class Futuristic<T> extends StatefulWidget {

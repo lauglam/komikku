@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis/account_api.dart';
 import 'package:komikku/dex/models.dart';
-import 'package:komikku/utils/toast.dart';
+import 'package:komikku/utils/utils.dart';
 
 @Deprecated('官方不允许App进行注册，注册需要移步官网')
 class Signup extends StatefulWidget {

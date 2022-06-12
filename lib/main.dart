@@ -1,17 +1,11 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:komikku/database/hive.dart';
-import 'package:komikku/provider/chapter_read_marker_provider.dart';
-import 'package:komikku/provider/data_saver_provider.dart';
-import 'package:komikku/provider/follow_provider.dart';
-import 'package:komikku/provider/content_rating_provider.dart';
-import 'package:komikku/provider/tag_provider.dart';
-import 'package:komikku/provider/translated_language_provider.dart';
-import 'package:komikku/provider/user_provider.dart';
 import 'package:komikku/views/login.dart';
 import 'package:komikku/views/search.dart';
 import 'package:komikku/views/shell.dart';
-import 'package:provider/provider.dart';
+
+import 'provider/provider.dart';
 
 void main() async {
   await HiveDatabase.initial();
@@ -38,9 +32,7 @@ class MyApp extends StatelessWidget {
         builder: BotToastInit(),
         navigatorObservers: [BotToastNavigatorObserver()],
         title: 'Komikku',
-        theme: ThemeData(
-          primarySwatch: Colors.orange,
-        ),
+        theme: _themeData,
         routes: {
           '/search': (context) => const Search(),
           '/login': (context) => const Login(),
@@ -50,3 +42,10 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+final _themeData = ThemeData(
+  primarySwatch: Colors.orange,
+  elevatedButtonTheme: ElevatedButtonThemeData(
+    style: ElevatedButton.styleFrom(onPrimary: Colors.white),
+  ),
+);

@@ -8,11 +8,11 @@ import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/provider/content_rating_provider.dart';
 import 'package:komikku/provider/translated_language_provider.dart';
 import 'package:komikku/views/details.dart';
-import 'package:komikku/widgets/grid_view_item.dart';
+import 'package:komikku/widgets/view_item.dart';
 import 'package:komikku/widgets/indicator.dart';
 import 'package:komikku/widgets/search_bar.dart';
-import 'package:komikku/widgets/set_state_complain.dart';
 import 'package:provider/provider.dart';
+import 'package:komikku/utils/utils.dart';
 
 class LatestUpdate extends StatefulWidget {
   const LatestUpdate({Key? key}) : super(key: key);

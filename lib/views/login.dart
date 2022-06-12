@@ -1,8 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:komikku/provider/user_provider.dart';
-import 'package:komikku/utils/toast.dart';
-import 'package:provider/provider.dart';
+import 'package:komikku/provider/provider.dart';
+import 'package:komikku/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatefulWidget {

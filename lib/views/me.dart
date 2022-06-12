@@ -2,16 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis/user_api.dart';
-import 'package:komikku/provider/content_rating_provider.dart';
-import 'package:komikku/provider/data_saver_provider.dart';
-import 'package:komikku/provider/translated_language_provider.dart';
-import 'package:komikku/provider/user_provider.dart';
 import 'package:komikku/database/hive.dart';
-import 'package:komikku/utils/icons.dart';
-import 'package:komikku/utils/toast.dart';
-import 'package:komikku/widgets/builder_checker.dart';
-import 'package:komikku/widgets/icon_text_button.dart';
-import 'package:provider/provider.dart';
+import 'package:komikku/provider/provider.dart';
+import 'package:komikku/widgets/widgets.dart';
+import 'package:komikku/utils/utils.dart';
 
 part 'me.setting.dart';
 

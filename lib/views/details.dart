@@ -1,25 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/dto/manga_dto.dart';
-import 'package:komikku/provider/chapter_read_marker_provider.dart';
-import 'package:komikku/provider/follow_provider.dart';
-import 'package:komikku/provider/content_rating_provider.dart';
-import 'package:komikku/provider/translated_language_provider.dart';
 import 'package:komikku/database/hive.dart';
-import 'package:komikku/utils/timeago.dart';
+import 'package:komikku/provider/provider.dart';
+import 'package:komikku/utils/utils.dart';
 import 'package:komikku/views/reading.dart';
-import 'package:komikku/widgets/bottom_modal_item.dart';
-import 'package:komikku/widgets/builder_checker.dart';
-import 'package:komikku/widgets/delay_pop.dart';
-import 'package:komikku/widgets/chip.dart';
-import 'package:komikku/utils/toast.dart';
 import 'package:collection/collection.dart';
-import 'package:komikku/widgets/futuristic.dart';
-import 'package:komikku/widgets/indicator.dart';
-import 'package:provider/provider.dart';
+import 'package:komikku/widgets/widgets.dart';
 
 part 'details.content.dart';
 
@@ -36,12 +27,12 @@ class Details extends StatefulWidget {
 class _DetailsState extends State<Details> {
   final _followIconValueNotifier = ValueNotifier(false);
 
-  /// 是否正在执行关键任务
+  late final _followProvider = Provider.of<FollowProvider>(context, listen: false);
+
   bool _isBusy = false;
 
   @override
   Widget build(BuildContext context) {
-    final followProvider = Provider.of<FollowProvider>(context, listen: false);
     return DelayPop(
       flag: () => _isBusy,
       duration: const Duration(seconds: 1),
@@ -76,102 +67,95 @@ class _DetailsState extends State<Details> {
             }),
           ],
         ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        floatingActionButton: FloatingActionButton(
-          clipBehavior: Clip.antiAlias,
-          child: FutureBuilder<bool>(
-            future: _checkUserFollow(),
-            builder: (context, snapshot) {
-              return BuilderChecker(
-                snapshot: snapshot,
-                indicator: false,
-                builder: (context) {
-                  _followIconValueNotifier.value = snapshot.data!;
-                  return ValueListenableBuilder(
-                    valueListenable: _followIconValueNotifier,
-                    builder: (context, value, child) {
-                      if (_followIconValueNotifier.value) {
-                        // 已订阅
-                        return const Icon(Icons.star_rounded, size: 25);
-                      }
-                      // 未登录/未订阅
-                      return const Icon(Icons.star_outline_rounded, size: 25);
-                    },
-                  );
-                },
-              );
-            },
-          ),
-          onPressed: () async {
-            // 未登录
-            if (!HiveDatabase.userLoginState) {
-              showText(text: '请先登录');
-              return;
-            }
-
-            // 已登录
-            if (_followIconValueNotifier.value) {
-              // 取消订阅确认
-              showAlertDialog(
-                title: '是否取消订阅',
-                cancelText: '再想想',
-                onConfirm: () async {
-                  _isBusy = true;
-                  showText(text: '已取消订阅');
-                  _followIconValueNotifier.value = !_followIconValueNotifier.value;
-                  await followProvider.unfollowManga(widget.dto.id);
-                  _isBusy = false;
-                },
-              );
-            } else {
-              // 订阅
-              _isBusy = true;
-              showText(text: '已订阅');
-              _followIconValueNotifier.value = !_followIconValueNotifier.value;
-              await followProvider.followManga(widget.dto.id);
-              _isBusy = false;
-            }
-          },
-        ),
         body: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 上方大图
-              CachedNetworkImage(
-                imageUrl: widget.dto.imageUrlOriginal,
-                fit: BoxFit.fitWidth,
-                width: double.infinity,
-                height: 220,
-                errorWidget: (context, url, progress) =>
-                    Image.asset('assets/images/image-failed.png'),
+              // 上半部分-大图、漫画信息和追漫按钮
+              Stack(
+                children: [
+                  // 下层-大图和漫画信息
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 上方大图
+                      CachedNetworkImage(
+                        imageUrl: widget.dto.imageUrlOriginal,
+                        fit: BoxFit.fitWidth,
+                        width: double.infinity,
+                        height: 220,
+                        errorWidget: (context, url, progress) =>
+                            Image.asset('assets/images/image-failed.png'),
+                      ),
+
+                      // 漫画信息
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // 漫画名
+                            Text(widget.dto.title, style: const TextStyle(fontSize: 20)),
+
+                            // 标签
+                            ChipWarp(widget.dto.tags),
+
+                            // 状态
+                            const Padding(padding: EdgeInsets.only(bottom: 5)),
+                            Text(widget.dto.status, style: const TextStyle(fontSize: 12)),
+
+                            // 作者
+                            const Padding(padding: EdgeInsets.only(bottom: 5)),
+                            Text(widget.dto.author, style: const TextStyle(fontSize: 12)),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  // 上层-追漫按钮
+                  Positioned(
+                    top: 185,
+                    right: 10,
+                    child: Futuristic<bool>(
+                      futureBuilder: () => _checkUserFollow(),
+                      autoStart: true,
+                      // 占位
+                      busyBuilder: (context) =>
+                          BeveledButton('', icon: const SizedBox.shrink(), onPressed: () {}),
+                      dataBuilder: (context, value) {
+                        _followIconValueNotifier.value = value;
+                        return ValueListenableBuilder(
+                          valueListenable: _followIconValueNotifier,
+                          builder: (context, value, child) {
+                            if (_followIconValueNotifier.value) {
+                              // 已订阅
+                              return BeveledButton(
+                                '已追',
+                                icon: const Icon(TaoIcons.favoriteAlreadyAdd),
+                                backgroundColor: MaterialStateProperty.all(Colors.grey),
+                                onPressed: () async => _handleOnPress(),
+                              );
+                            }
+
+                            // 未登录/未订阅
+                            return BeveledButton(
+                              '追漫',
+                              icon: const Icon(TaoIcons.favoriteAdd),
+                              onPressed: () async => _handleOnPress(),
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
 
-              // 漫画信息
-              Padding(
-                padding: const EdgeInsets.all(15),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // 漫画名
-                    Text(widget.dto.title, style: const TextStyle(fontSize: 20)),
-
-                    // 标签
-                    ChipWarp(widget.dto.tags),
-
-                    // 状态
-                    const Padding(padding: EdgeInsets.only(bottom: 5)),
-                    Text(widget.dto.status, style: const TextStyle(fontSize: 12)),
-
-                    // 作者
-                    const Padding(padding: EdgeInsets.only(bottom: 5)),
-                    Text(widget.dto.author, style: const TextStyle(fontSize: 12)),
-                  ],
-                ),
-              ),
+              // 分界线
               const Divider(thickness: 0.5, height: 1),
 
-              // 主内容
+              // 主内容-章节栅格列表
               _DetailsContent(widget.dto.id),
             ],
           ),
@@ -193,6 +177,37 @@ class _DetailsState extends State<Details> {
     } catch (e) {
       // 返回404，为未订阅
       return false;
+    }
+  }
+
+  Future<void> _handleOnPress() async {
+    // 未登录
+    if (!HiveDatabase.userLoginState) {
+      showText(text: '请先登录');
+      return;
+    }
+
+    // 已登录
+    if (_followIconValueNotifier.value) {
+      // 取消订阅确认
+      showAlertDialog(
+        title: '是否取消订阅',
+        cancelText: '再想想',
+        onConfirm: () async {
+          _isBusy = true;
+          showText(text: '已取消订阅');
+          _followIconValueNotifier.value = !_followIconValueNotifier.value;
+          await _followProvider.unfollowManga(widget.dto.id);
+          _isBusy = false;
+        },
+      );
+    } else {
+      // 订阅
+      _isBusy = true;
+      showText(text: '已订阅');
+      _followIconValueNotifier.value = !_followIconValueNotifier.value;
+      await _followProvider.followManga(widget.dto.id);
+      _isBusy = false;
     }
   }
 }

@@ -5,15 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dto/manga_dto.dart';
-import 'package:komikku/provider/follow_provider.dart';
-import 'package:komikku/provider/content_rating_provider.dart';
-import 'package:komikku/provider/user_provider.dart';
 import 'package:komikku/database/hive.dart';
+import 'package:komikku/provider/provider.dart';
 import 'package:komikku/views/details.dart';
-import 'package:komikku/widgets/grid_view_item.dart';
+import 'package:komikku/widgets/view_item.dart';
 import 'package:komikku/widgets/indicator.dart';
-import 'package:komikku/widgets/set_state_complain.dart';
-import 'package:provider/provider.dart';
+import 'package:komikku/utils/set_state_complain.dart';
 
 class Subscribes extends StatefulWidget {
   const Subscribes({Key? key}) : super(key: key);

@@ -72,12 +72,13 @@ class _DetailsContentState extends State<_DetailsContent> {
               _getMangaReadMarkersFuture ??=
                   Provider.of<ChapterReadMarkerProvider>(context, listen: false).get(widget.id)
             ]),
-            initialBuilder: (context, execute) {
-              execute();
-              return const SizedBox.shrink();
+            autoStart: true,
+            errorBuilder: (context, error, execute) {
+              if (kDebugMode) {
+                throw error;
+              }
+              return TryAgainExceptionIndicator(onTryAgain: execute);
             },
-            errorBuilder: (context, error, execute) =>
-                TryAgainExceptionIndicator(onTryAgain: execute),
             dataBuilder: (context, data) => _DetailsGrid(
               ascChapters: _ascChapters,
               descChapters: _descChapters,

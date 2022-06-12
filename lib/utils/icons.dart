@@ -93,7 +93,7 @@ class TaoIcons {
   static const IconData creditCard = IconData(0xe903, fontFamily: 'TaoIcons');
   static const IconData eye = IconData(0xe904, fontFamily: 'TaoIcons');
   static const IconData vipCard = IconData(0xe905, fontFamily: 'TaoIcons');
-  static const IconData favoriteRight = IconData(0xe906, fontFamily: 'TaoIcons');
+  static const IconData favoriteAlreadyAdd = IconData(0xe906, fontFamily: 'TaoIcons');
   static const IconData wastePaper = IconData(0xe907, fontFamily: 'TaoIcons');
   static const IconData music = IconData(0xe908, fontFamily: 'TaoIcons');
   static const IconData listen = IconData(0xe909, fontFamily: 'TaoIcons');

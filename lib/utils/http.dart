@@ -15,8 +15,8 @@ class HttpUtil {
   HttpUtil._internal() {
     BaseOptions options = BaseOptions(
       baseUrl: serverUrl,
-      connectTimeout: 5000,
-      receiveTimeout: 5000,
+      connectTimeout: 8000,
+      receiveTimeout: 8000,
       headers: {},
       contentType: 'application/json; charset=utf-8',
       responseType: ResponseType.json,

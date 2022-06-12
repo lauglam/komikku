@@ -5,19 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dto/manga_dto.dart';
-import 'package:komikku/provider/content_rating_provider.dart';
-import 'package:komikku/provider/tag_provider.dart';
-import 'package:komikku/provider/translated_language_provider.dart';
-import 'package:komikku/utils/icons.dart';
-import 'package:komikku/utils/toast.dart';
+import 'package:komikku/provider/provider.dart';
 import 'package:komikku/views/details.dart';
-import 'package:komikku/widgets/builder_checker.dart';
-import 'package:komikku/widgets/chip.dart';
-import 'package:komikku/widgets/indicator.dart';
-import 'package:komikku/widgets/list_view_item.dart';
-import 'package:komikku/widgets/paged_view/paged_list_view_extent.dart';
-import 'package:komikku/widgets/search_bar.dart';
-import 'package:provider/provider.dart';
+import 'package:komikku/utils/utils.dart';
+
+import 'package:komikku/widgets/widgets.dart';
 
 part 'search_advanced.dart';
 
