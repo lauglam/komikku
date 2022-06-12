@@ -17,6 +17,8 @@ import 'package:komikku/widgets/delay_pop.dart';
 import 'package:komikku/widgets/chip.dart';
 import 'package:komikku/utils/toast.dart';
 import 'package:collection/collection.dart';
+import 'package:komikku/widgets/futuristic.dart';
+import 'package:komikku/widgets/indicator.dart';
 import 'package:provider/provider.dart';
 
 part 'details.content.dart';

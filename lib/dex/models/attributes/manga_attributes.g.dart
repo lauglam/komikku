@@ -15,8 +15,8 @@ MangaAttributes _$MangaAttributesFromJson(Map<String, dynamic> json) =>
       chapterNumbersResetOnNewVolume:
           json['chapterNumbersResetOnNewVolume'] as bool,
       availableTranslatedLanguages:
-          (json['availableTranslatedLanguages'] as List<dynamic>?)
-              ?.map((e) => e as String)
+          (json['availableTranslatedLanguages'] as List<dynamic>)
+              .map((e) => e as String?)
               .toList(),
       tags: (json['tags'] as List<dynamic>)
           .map((e) => Tag.fromJson(e as Map<String, dynamic>))
@@ -48,6 +48,10 @@ Map<String, dynamic> _$MangaAttributesToJson(MangaAttributes instance) {
     'originalLanguage': instance.originalLanguage,
     'contentRating': _$ContentRatingEnumMap[instance.contentRating],
     'chapterNumbersResetOnNewVolume': instance.chapterNumbersResetOnNewVolume,
+    'availableTranslatedLanguages': instance.availableTranslatedLanguages,
+    'tags': instance.tags.map((e) => e.toJson()).toList(),
+    'status': _$StatusEnumMap[instance.status],
+    'state': _$StateEnumMap[instance.state],
   };
 
   void writeNotNull(String key, dynamic value) {
@@ -57,11 +61,7 @@ Map<String, dynamic> _$MangaAttributesToJson(MangaAttributes instance) {
   }
 
   writeNotNull(
-      'availableTranslatedLanguages', instance.availableTranslatedLanguages);
-  val['tags'] = instance.tags.map((e) => e.toJson()).toList();
-  val['status'] = _$StatusEnumMap[instance.status];
-  val['state'] = _$StateEnumMap[instance.state];
-  writeNotNull('altTitles', instance.altTitles?.map((e) => e.toJson()).toList());
+      'altTitles', instance.altTitles?.map((e) => e.toJson()).toList());
   writeNotNull('description', instance.description?.toJson());
   writeNotNull('lastVolume', instance.lastVolume);
   writeNotNull('lastChapter', instance.lastChapter);

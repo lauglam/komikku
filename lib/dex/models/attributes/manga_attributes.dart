@@ -27,7 +27,7 @@ class MangaAttributes {
   final bool chapterNumbersResetOnNewVolume;
 
   /// 可用的章节翻译语言
-  final List<String>? availableTranslatedLanguages;
+  final List<String?> availableTranslatedLanguages;
 
   /// 标签
   final List<Tag> tags;

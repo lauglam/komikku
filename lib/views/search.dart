@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis.dart';
@@ -200,6 +201,7 @@ class _SearchState extends State<Search> {
       }
     } catch (e) {
       _pagingController.error = e;
+      if (kDebugMode) rethrow;
     }
   }
 }

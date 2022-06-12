@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
@@ -11,6 +12,7 @@ import 'package:komikku/database/hive.dart';
 import 'package:komikku/views/details.dart';
 import 'package:komikku/widgets/grid_view_item.dart';
 import 'package:komikku/widgets/indicator.dart';
+import 'package:komikku/widgets/set_state_complain.dart';
 import 'package:provider/provider.dart';
 
 class Subscribes extends StatefulWidget {
@@ -99,9 +101,7 @@ class _SubscribesState extends State<Subscribes> {
               }
 
               if (_markNeedRefresh) {
-                // 延后1秒钟执行refresh()
-                var delay = const Duration(seconds: 1);
-                Future.delayed(delay, () => _pagingController.refresh());
+                noComplain(() => _pagingController.refresh());
               }
 
               _markNeedRefresh = true;
@@ -147,6 +147,7 @@ class _SubscribesState extends State<Subscribes> {
       }
     } catch (e) {
       _pagingController.error = e;
+      if (kDebugMode) rethrow;
     }
   }
 }

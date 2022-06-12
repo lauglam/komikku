@@ -39,11 +39,11 @@ class _DetailsContentState extends State<_DetailsContent> {
           padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           child: Align(
             alignment: Alignment.centerRight,
-            child: Directionality(
-              textDirection: TextDirection.rtl,
-              child: ValueListenableBuilder(
-                valueListenable: _orderByDescValueNotifier,
-                builder: (context, value, child) => TextButton.icon(
+            child: ValueListenableBuilder(
+              valueListenable: _orderByDescValueNotifier,
+              builder: (context, value, child) => Directionality(
+                textDirection: TextDirection.rtl,
+                child: TextButton.icon(
                   style: ButtonStyle(
                     padding: MaterialStateProperty.all(const EdgeInsets.all(0)),
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -65,21 +65,23 @@ class _DetailsContentState extends State<_DetailsContent> {
         // 内容
         ValueListenableBuilder(
           valueListenable: _orderByDescValueNotifier,
-          builder: (context, value, child) => FutureBuilder<dynamic>(
-            future: Future.wait([
+          builder: (context, value, child) => Futuristic<void>(
+            futureBuilder: () => Future.wait([
               // 只执行一次请求
               _getMangaFeedFuture ??= _getMangaFeed(),
               _getMangaReadMarkersFuture ??=
                   Provider.of<ChapterReadMarkerProvider>(context, listen: false).get(widget.id)
             ]),
-            builder: (context, snapshot) => BuilderChecker(
-              snapshot: snapshot,
-              onWaiting: child,
-              builder: (context) => _DetailsGrid(
-                ascChapters: _ascChapters,
-                descChapters: _descChapters,
-                isDesc: _orderByDescValueNotifier.value,
-              ),
+            initialBuilder: (context, execute) {
+              execute();
+              return const SizedBox.shrink();
+            },
+            errorBuilder: (context, error, execute) =>
+                TryAgainExceptionIndicator(onTryAgain: execute),
+            dataBuilder: (context, data) => _DetailsGrid(
+              ascChapters: _ascChapters,
+              descChapters: _descChapters,
+              isDesc: _orderByDescValueNotifier.value,
             ),
           ),
           child: const Center(
