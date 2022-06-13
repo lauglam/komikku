@@ -91,18 +91,18 @@ class _DetailsState extends State<Details> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             // 漫画名
-                            Text(widget.dto.title, style: const TextStyle(fontSize: 20)),
+                            Text(widget.dto.title, style: Theme.of(context).textTheme.titleLarge),
 
                             // 标签
                             ChipWarp(widget.dto.tags),
 
                             // 状态
                             const Padding(padding: EdgeInsets.only(bottom: 5)),
-                            Text(widget.dto.status, style: const TextStyle(fontSize: 12)),
+                            Text(widget.dto.status, style: Theme.of(context).textTheme.bodySmall),
 
                             // 作者
                             const Padding(padding: EdgeInsets.only(bottom: 5)),
-                            Text(widget.dto.author, style: const TextStyle(fontSize: 12)),
+                            Text(widget.dto.author, style: Theme.of(context).textTheme.bodySmall),
                           ],
                         ),
                       ),

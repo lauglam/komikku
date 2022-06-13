@@ -43,10 +43,10 @@ class ListViewItem extends StatelessWidget {
                       title,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(fontSize: 15),
+                      style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ),
-                  Text(subtitle, style: const TextStyle(fontSize: 13, color: Colors.black45)),
+                  Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
                 ],
               ),
             ),
@@ -212,9 +212,7 @@ class _TitleText extends StatelessWidget {
       text,
       maxLines: 1,
       overflow: TextOverflow.ellipsis,
-      style: const TextStyle(
-        fontSize: 12,
-      ),
+      style:Theme.of(context).textTheme.labelMedium,
     );
   }
 }

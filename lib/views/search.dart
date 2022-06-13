@@ -60,7 +60,7 @@ class _SearchState extends State<Search> {
         ),
         actions: [
           TextButton(
-            child: const Text('取消', style: TextStyle(fontSize: 15, color: Colors.black)),
+            child: Text('取消', style: Theme.of(context).textTheme.labelLarge),
             onPressed: () => Navigator.pop(context),
           ),
         ],

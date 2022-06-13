@@ -60,10 +60,7 @@ class IconTextButton extends StatelessWidget {
         children: [
           Icon(icon),
           const Padding(padding: EdgeInsets.only(bottom: 8)),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 12),
-          ),
+          Text(text, style: Theme.of(context).textTheme.labelMedium),
         ],
       ),
     );

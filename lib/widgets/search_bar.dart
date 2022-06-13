@@ -26,7 +26,6 @@ class SearchAppBar extends StatelessWidget {
       ),
       child: TextField(
         maxLines: 1,
-        style: const TextStyle(fontSize: 15, color: Colors.white),
         decoration: InputDecoration(
           icon: const Icon(
             TaoIcons.search,
@@ -35,7 +34,11 @@ class SearchAppBar extends StatelessWidget {
           ),
           border: InputBorder.none,
           hintText: hintText,
-          hintStyle: const TextStyle(color: Colors.white, fontSize: 15, height: 1.12),
+          hintStyle: TextStyle(
+            color: Colors.white,
+            fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
+            height: 1.22,
+          ),
         ),
         onSubmitted: (value) => onSubmitted(value),
       ),
@@ -68,11 +71,17 @@ class SearchAppBarButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
         ),
         child: Row(
-          children: const [
-            Icon(Icons.search, color: Colors.white, size: 20),
+          children: [
+            const Icon(Icons.search, color: Colors.white, size: 20),
             Padding(
-              padding: EdgeInsets.only(left: 8),
-              child: Text('点击搜索', style: TextStyle(color: Colors.white, fontSize: 15)),
+              padding: const EdgeInsets.only(left: 8),
+              child: Text(
+                '点击搜索',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: Theme.of(context).textTheme.labelLarge?.fontSize,
+                ),
+              ),
             ),
           ],
         ),

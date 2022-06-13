@@ -74,8 +74,8 @@ class _ReadingState extends State<Reading> {
                       fit: BoxFit.fitWidth,
                       fadeOutDuration: const Duration(milliseconds: 1),
                       progressIndicatorBuilder: (context, url, progress) {
-                        return _ProgressIndicator(
-                          index: '${index + 1}',
+                        return CircularTitleProgressIndicator(
+                          title: '${index + 1}',
                           progress: progress.progress,
                         );
                       },
@@ -210,29 +210,4 @@ class _ReadingState extends State<Reading> {
   }
 }
 
-/// 图片加载进度
-class _ProgressIndicator extends StatelessWidget {
-  const _ProgressIndicator({required this.index, required this.progress});
 
-  final String index;
-  final double? progress;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height * 0.5,
-      width: MediaQuery.of(context).size.width,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(index, style: const TextStyle(fontSize: 50, color: Colors.black54)),
-            const Padding(padding: EdgeInsets.only(bottom: 10)),
-            CircularProgressIndicator(value: progress),
-          ],
-        ),
-      ),
-    );
-  }
-}

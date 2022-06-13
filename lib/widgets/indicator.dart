@@ -19,7 +19,7 @@ class ExceptionIndicator extends StatelessWidget {
               angle: 0.2,
               child: const Icon(Icons.android_rounded, size: 100, color: Colors.black12),
             ),
-            Text(title, style: const TextStyle(fontSize: 18, color: Colors.black54)),
+            Text(title, style: Theme.of(context).textTheme.titleLarge),
           ],
         ),
       ),
@@ -78,6 +78,40 @@ class TryAgainIconExceptionIndicator extends StatelessWidget {
           iconSize: 40,
           onPressed: onTryAgain,
           icon: const Icon(TaoIcons.refresh),
+        ),
+      ),
+    );
+  }
+}
+
+/// 图片加载进度
+class CircularTitleProgressIndicator extends StatelessWidget {
+  /// 处于指示器上方的标题
+  final String title;
+
+  /// 指示器的进度
+  final double? progress;
+
+  const CircularTitleProgressIndicator({
+    Key? key,
+    required this.title,
+    required this.progress,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.5,
+      width: MediaQuery.of(context).size.width,
+      child: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.headlineLarge),
+            const Padding(padding: EdgeInsets.only(bottom: 10)),
+            CircularProgressIndicator(value: progress),
+          ],
         ),
       ),
     );

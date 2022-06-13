@@ -59,10 +59,7 @@ class _MeState extends State<Me> {
                                 ),
                                 minimumSize: MaterialStateProperty.all(const Size(200, 35)),
                               ),
-                              child: Text(
-                                HiveDatabase.userLoginState ? '退出登录' : '登录',
-                                style: const TextStyle(fontSize: 15),
-                              ),
+                              child: Text(HiveDatabase.userLoginState ? '退出登录' : '登录'),
                               onPressed: () {
                                 // 未登录
                                 if (!HiveDatabase.userLoginState) {
@@ -94,7 +91,7 @@ class _MeState extends State<Me> {
                         builder: (context, userProvider, child) {
                           // 未登录
                           if (!HiveDatabase.userLoginState) {
-                            return const Text('未登录', style: TextStyle(fontSize: 16));
+                            return Text('未登录', style: Theme.of(context).textTheme.titleMedium);
                           }
 
                           // 已登录
@@ -105,7 +102,7 @@ class _MeState extends State<Me> {
                               builder: (context) {
                                 return Text(
                                   snapshot.data!,
-                                  style: const TextStyle(fontSize: 16),
+                                  style: Theme.of(context).textTheme.titleMedium,
                                 );
                               },
                             ),

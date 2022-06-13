@@ -45,7 +45,7 @@ class _SignupState extends State<Signup> {
                         maxLines: 1,
                         keyboardType: TextInputType.name,
                         autofocus: false,
-                        style: const TextStyle(fontSize: 15),
+                        style: Theme.of(context).textTheme.bodyMedium,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: '请输入用户名',
@@ -67,7 +67,7 @@ class _SignupState extends State<Signup> {
                         maxLines: 1,
                         obscureText: true,
                         autofocus: false,
-                        style: const TextStyle(fontSize: 15),
+                        style: Theme.of(context).textTheme.bodyMedium,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: '请输入密码',
@@ -86,7 +86,7 @@ class _SignupState extends State<Signup> {
                         maxLines: 1,
                         keyboardType: TextInputType.emailAddress,
                         autofocus: false,
-                        style: const TextStyle(fontSize: 15),
+                        style: Theme.of(context).textTheme.bodyMedium,
                         decoration: const InputDecoration(
                           border: InputBorder.none,
                           hintText: '请输入邮箱地址',

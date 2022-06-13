@@ -15,7 +15,7 @@ class ChipWarp extends StatelessWidget {
         padding: const EdgeInsets.all(0),
         labelPadding: const EdgeInsets.fromLTRB(8, -2, 8, -2),
         visualDensity: VisualDensity.compact,
-        label: Text(value, style: const TextStyle(fontSize: 10)),
+        label: Text(value, style: Theme.of(context).textTheme.labelSmall),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       );
       children.add(child);
@@ -49,7 +49,7 @@ class _CanDeleteChipWarpState extends State<CanDeleteChipWarp> {
         padding: const EdgeInsets.all(0),
         labelPadding: const EdgeInsets.fromLTRB(8, -2, 8, -2),
         visualDensity: VisualDensity.compact,
-        label: Text(widget.values[index], style: const TextStyle(fontSize: 10)),
+        label: Text(widget.values[index], style: Theme.of(context).textTheme.labelSmall),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
         deleteIcon: Transform.scale(
           scale: 0.7,
@@ -96,7 +96,7 @@ class _SingleChoiceChipWarpState extends State<SingleChoiceChipWarp> {
         padding: const EdgeInsets.all(0),
         labelPadding: const EdgeInsets.fromLTRB(8, -2, 8, -2),
         visualDensity: VisualDensity.compact,
-        label: Text(widget.values[index], style: const TextStyle(fontSize: 10)),
+        label: Text(widget.values[index], style: Theme.of(context).textTheme.labelSmall),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
     );
@@ -134,7 +134,7 @@ class _ManyChoiceChipWrapState extends State<ManyChoiceChipWarp> {
         padding: const EdgeInsets.all(0),
         labelPadding: const EdgeInsets.fromLTRB(8, -2, 8, -2),
         visualDensity: VisualDensity.compact,
-        label: Text(widget.values[index], style: const TextStyle(fontSize: 10)),
+        label: Text(widget.values[index], style: Theme.of(context).textTheme.labelSmall),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       ),
     );

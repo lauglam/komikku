@@ -35,6 +35,9 @@ class ExtendedNetworkImage extends StatefulWidget {
   /// Widget displayed while the target [imageUrl] is loading.
   final ProgressIndicatorBuilder? progressIndicatorBuilder;
 
+  /// Widget displayed while the target [imageUrl] failed loading.
+  final LoadingErrorWidgetBuilder? errorWidget;
+
   const ExtendedNetworkImage({
     Key? key,
     required this.imageUrl,
@@ -43,6 +46,7 @@ class ExtendedNetworkImage extends StatefulWidget {
     this.height,
     this.fadeOutDuration,
     this.progressIndicatorBuilder,
+    this.errorWidget,
   }) : super(key: key);
 
   @override

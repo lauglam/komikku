@@ -48,7 +48,7 @@ class _LoginState extends State<Login> {
                           maxLines: 1,
                           keyboardType: TextInputType.emailAddress,
                           autofocus: false,
-                          style: const TextStyle(fontSize: 15),
+                          style: Theme.of(context).textTheme.bodyMedium,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: '请输入账号',
@@ -69,7 +69,7 @@ class _LoginState extends State<Login> {
                           maxLines: 1,
                           obscureText: true,
                           autofocus: false,
-                          style: const TextStyle(fontSize: 15),
+                          style: Theme.of(context).textTheme.bodyMedium,
                           decoration: const InputDecoration(
                             border: InputBorder.none,
                             hintText: '请输入密码',
