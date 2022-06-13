@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis/at_home_api.dart';
 import 'package:komikku/dex/retrieving.dart';
@@ -70,7 +69,7 @@ class _ReadingState extends State<Reading> {
                   controller: _scrollController,
                   itemCount: snapshot.data!.length,
                   itemBuilder: (context, index) {
-                    return CachedNetworkImage(
+                    return ExtendedNetworkImage(
                       imageUrl: snapshot.data![index],
                       fit: BoxFit.fitWidth,
                       fadeOutDuration: const Duration(milliseconds: 1),
@@ -80,8 +79,6 @@ class _ReadingState extends State<Reading> {
                           progress: progress.progress,
                         );
                       },
-                      errorWidget: (context, url, progress) =>
-                          Image.asset('assets/images/image-failed.png'),
                     );
                   },
                 ),

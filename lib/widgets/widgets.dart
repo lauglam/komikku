@@ -9,3 +9,4 @@ export 'package:komikku/widgets/futuristic.dart';
 export 'package:komikku/widgets/view_item.dart';
 export 'package:komikku/widgets/indicator.dart';
 export 'package:komikku/widgets/search_bar.dart';
+export 'package:komikku/widgets/image.dart';

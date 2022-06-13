@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:komikku/dex/apis.dart';
@@ -78,13 +77,11 @@ class _DetailsState extends State<Details> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       // 上方大图
-                      CachedNetworkImage(
+                      ExtendedNetworkImage(
                         imageUrl: widget.dto.imageUrlOriginal,
                         fit: BoxFit.fitWidth,
                         width: double.infinity,
                         height: 220,
-                        errorWidget: (context, url, progress) =>
-                            Image.asset('assets/images/image-failed.png'),
                       ),
 
                       // 漫画信息

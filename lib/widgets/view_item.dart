@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'package:komikku/widgets/image.dart';
 
 /// 漫画搜索子项布局
 class ListViewItem extends StatelessWidget {
@@ -25,13 +25,11 @@ class ListViewItem extends StatelessWidget {
           ClipRRect(
             clipBehavior: Clip.antiAlias,
             borderRadius: BorderRadius.circular(4),
-            child: CachedNetworkImage(
+            child: ExtendedNetworkImage(
               imageUrl: imageUrl,
               fit: BoxFit.fill,
               width: 75,
               height: 120,
-              errorWidget: (context, url, progress) =>
-                  Image.asset('assets/images/image-failed.png'),
             ),
           ),
           Expanded(
@@ -79,10 +77,9 @@ class GridViewItem extends StatelessWidget {
     final Widget image = Material(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
       clipBehavior: Clip.antiAlias,
-      child: CachedNetworkImage(
+      child: ExtendedNetworkImage(
         imageUrl: imageUrl,
         fit: BoxFit.cover,
-        errorWidget: (context, url, error) => Image.asset('assets/images/image-failed.png'),
       ),
     );
 
