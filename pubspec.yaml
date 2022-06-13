@@ -32,6 +32,8 @@ dependencies:
 
   # 网络请求
   dio: ^4.0.6
+  # 重试
+  dio_smart_retry: ^1.2.0
   # 配合build_runner、json_serializable一起使用，本身也提供帮助类
   json_annotation: ^4.5.0
   # 网络图片加载
