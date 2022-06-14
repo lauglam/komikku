@@ -4,7 +4,7 @@ import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/apis/user_api.dart';
 import 'package:komikku/dex/models.dart';
 
-class UserController extends GetxController {
+class LoginController extends GetxController {
   /// 用户名
   var username = '';
 
@@ -13,8 +13,8 @@ class UserController extends GetxController {
 
   get loginState => _loginState.value;
 
-  /// [UserController] 单列
-  static UserController get to => Get.find();
+  /// [LoginController] 单列
+  static LoginController get to => Get.find();
 
   @override
   void onInit() {

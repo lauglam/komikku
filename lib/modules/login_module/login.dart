@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:komikku/core/utils/toast.dart';
-import 'package:komikku/modules/me_module/user_controller.dart';
+import 'package:komikku/modules/login_module/login_controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatelessWidget {
@@ -94,7 +94,7 @@ class Login extends StatelessWidget {
                   if (!_validate()) return;
 
                   try {
-                    await UserController.to.login(_emailOrUsername!, _password!);
+                    await LoginController.to.login(_emailOrUsername!, _password!);
 
                     // 登录成功，退出本页面
                     showText(text: '登录成功');

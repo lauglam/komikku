@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/global_widgets/widgets.dart';
 import 'package:komikku/modules/subscribes_module/subscribes_controller.dart';
-import 'package:komikku/modules/me_module/user_controller.dart';
+import 'package:komikku/modules/login_module/login_controller.dart';
 import 'package:komikku/dto/manga_dto.dart';
 
 class Subscribes extends StatelessWidget {
@@ -16,7 +16,7 @@ class Subscribes extends StatelessWidget {
       // 否则SubscribesController将不会被创建
       child: GetBuilder<SubscribesController>(
         builder: (controller) => Obx(() {
-          if (!UserController.to.loginState) {
+          if (!LoginController.to.loginState) {
             return const Center(
               child: Text('请先登录'),
             );

@@ -38,17 +38,6 @@ class ChapterGridWidget extends StatelessWidget {
       itemBuilder: (context, chapterIndex) {
         final values = itemsMap.values.elementAt(chapterIndex);
 
-        // 按钮颜色
-        Color buttonColor = Colors.black54;
-        ButtonStyle? buttonStyle = ButtonStyle(
-          side: MaterialStateProperty.all(const BorderSide(color: Colors.grey)),
-        );
-
-        if (values.any((e) => DetailsController.to.chapterReadMarkers.contains(e.id))) {
-          buttonColor = Colors.black38;
-          buttonStyle = null;
-        }
-
         // 内部方法
         Future<void> _showBottomModal() async {
           await showBottomModal(
@@ -93,36 +82,66 @@ class ChapterGridWidget extends StatelessWidget {
 
         // 单独按钮
         if (values.length < 2) {
-          return OutlinedButton(
-            style: buttonStyle,
-            // 长按
-            onLongPress: () async => await _showBottomModal(),
-            onPressed: () {
-              // 不等待
-              DetailsController.to.markMangaRead(values[0].id);
+          return Obx(
+            () {
+              // 按钮颜色
+              Color buttonColor = Colors.black54;
+              ButtonStyle? buttonStyle = ButtonStyle(
+                side: MaterialStateProperty.all(const BorderSide(color: Colors.grey)),
+              );
 
-              // 跳转
-              Get.toNamed('/details/reading', arguments: [
-                values[0].id,
-                isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex,
-                ascChapters.values,
-              ]);
+              if (values.any((e) => DetailsController.to.chapterReadMarkers.contains(e.id))) {
+                buttonColor = Colors.black38;
+                buttonStyle = null;
+              }
+
+              return OutlinedButton(
+                style: buttonStyle,
+                // 长按
+                onLongPress: () async => await _showBottomModal(),
+                onPressed: () {
+                  // 不等待
+                  DetailsController.to.markMangaRead(values[0].id);
+
+                  // 跳转
+                  Get.toNamed('/details/reading', arguments: [
+                    values[0].id,
+                    isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex,
+                    ascChapters.values,
+                  ]);
+                },
+                child: Text(
+                  '${values[0].chapter ?? (isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex)}',
+                  style: TextStyle(color: buttonColor),
+                ),
+              );
             },
-            child: Text(
-              '${values[0].chapter ?? chapterIndex}',
-              style: TextStyle(color: buttonColor),
-            ),
           );
         }
 
         // 弹出模态框按钮
-        return OutlinedButton(
-          style: buttonStyle,
-          child: Text(
-            '${values[0].chapter ?? chapterIndex}',
-            style: TextStyle(color: buttonColor),
-          ),
-          onPressed: () async => await _showBottomModal(),
+        return Obx(
+          () {
+            // 按钮颜色
+            Color buttonColor = Colors.black54;
+            ButtonStyle? buttonStyle = ButtonStyle(
+              side: MaterialStateProperty.all(const BorderSide(color: Colors.grey)),
+            );
+
+            if (values.any((e) => DetailsController.to.chapterReadMarkers.contains(e.id))) {
+              buttonColor = Colors.black38;
+              buttonStyle = null;
+            }
+
+            return OutlinedButton(
+              style: buttonStyle,
+              child: Text(
+                '${values[0].chapter ?? (isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex)}',
+                style: TextStyle(color: buttonColor),
+              ),
+              onPressed: () async => await _showBottomModal(),
+            );
+          },
         );
       },
     );

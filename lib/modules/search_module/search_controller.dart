@@ -8,9 +8,22 @@ import 'package:komikku/dex/models.dart';
 import 'package:komikku/dto/manga_dto.dart';
 
 class SearchController extends GetxController {
-  final pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
+  /// 页面中[PagedGridView]的控制器
+  /// 控制[PagedGridView]的刷新、附加数据、错误处理与重试
+  final pagingController = PagingController<int, MangaDto>(
+    firstPageKey: 0,
+    invisibleItemsThreshold: 6,
+  );
+
+  /// 标签组
+  /// 标签所属组名、标签id、标签名
   final tagsGrouped = <String, Map<String, String>>{};
+
+  /// 已选的标签
+  /// 标签id、标签名
   final selectedTags = <String, String>{}.obs;
+
+  /// 搜索漫画标题
   var searchTitle = '';
 
   /// [SearchController]的单例
@@ -32,6 +45,7 @@ class SearchController extends GetxController {
   /// 移除标签
   void removeValue(String value) => selectedTags.removeWhere((k, v) => v == value);
 
+  /// 每页数据的数据量
   static const _pageSize = 20;
 
   /// 搜索漫画

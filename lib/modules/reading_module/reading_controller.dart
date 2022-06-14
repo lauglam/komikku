@@ -86,6 +86,8 @@ class ReadingController extends GetxController {
           atHome.chapter.data,
         );
       }
+
+      DetailsController.to.markMangaRead(_currentChapterId.value);
     } finally {
       _loading.value = false;
     }
@@ -130,9 +132,6 @@ class ReadingController extends GetxController {
       // 延迟200毫秒
       await Future.delayed(const Duration(milliseconds: 200), () => _readingProgress.value = 0);
 
-      // 设为已读
-      DetailsController.to.markMangaRead(values[0].id);
-
       // 更新
       getChapterPages();
       return;
@@ -161,9 +160,6 @@ class ReadingController extends GetxController {
                 // 延迟200毫秒
                 await Future.delayed(
                     const Duration(milliseconds: 200), () => _readingProgress.value = 0);
-
-                // 设为已读
-                DetailsController.to.markMangaRead(values[index].id);
 
                 // 更新
                 getChapterPages();

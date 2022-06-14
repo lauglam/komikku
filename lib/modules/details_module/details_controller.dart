@@ -1,24 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:get/get.dart';
-import 'package:komikku/core/utils/toast.dart';
-import 'package:komikku/modules/subscribes_module/subscribes_controller.dart';
 import 'package:komikku/data/hive.dart';
 import 'package:komikku/dex/apis/chapter_read_marker_api.dart';
-import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dex/apis/manga_api.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 
 class DetailsController extends GetxController {
-  /// 是否订阅漫画
-  /// 更改[_followed]的值，会重建[Obx]中使用了[_followed]的对象
-  final _followed = false.obs;
-
-  /// 获取是否订阅漫画
-  get followed => _followed.value;
-
-  /// 是否在忙
-  var busy = false;
-
   /// 章节排序是否是倒序通知
   /// 默认为true
   final _chapterGridIsDesc = true.obs;
@@ -40,60 +27,6 @@ class DetailsController extends GetxController {
 
   /// [DetailsController]的单例
   static DetailsController get to => Get.find();
-
-  /// 检测漫画是否被订阅
-  Future<void> checkUserFollow(String id) async {
-    // 未登录，直接返回false
-    if (!HiveDatabase.userLoginState) {
-      _followed.value = false;
-    }
-
-    try {
-      await FollowsApi.checkUserFollowsMangaAsync(id);
-      _followed.value = true;
-    } catch (e) {
-      // 返回404，为未订阅
-      _followed.value = false;
-    }
-  }
-
-  /// 处理按钮点击事件
-  Future<void> handleOnPress(String id) async {
-    // 未登录
-    if (!HiveDatabase.userLoginState) {
-      showText(text: '请先登录');
-      return;
-    }
-
-    // 已登录
-    if (_followed.value) {
-      // 取消订阅确认
-      showAlertDialog(
-        title: '是否取消订阅',
-        cancelText: '再想想',
-        onConfirm: () async {
-          busy = true;
-          showText(text: '已取消订阅');
-          _followed.value = !_followed.value;
-          await MangaApi.unfollowMangaAsync(id);
-          busy = false;
-
-          // 刷新订阅页
-          SubscribesController.to.pagingController.refresh();
-        },
-      );
-    } else {
-      // 订阅
-      busy = true;
-      showText(text: '已订阅');
-      await MangaApi.followMangaAsync(id);
-      _followed.value = !_followed.value;
-      busy = false;
-
-      // 刷新订阅页
-      SubscribesController.to.pagingController.refresh();
-    }
-  }
 
   /// 获取漫画章节
   Future<void> getMangaFeed(String id) async {
@@ -153,9 +86,6 @@ class DetailsController extends GetxController {
             (e) => '${e.readableAt}',
           ));
     }
-
-    // 此处通知GetX已经加载好了数据
-    update();
   }
 
   /// 获取漫画阅读记录
@@ -163,9 +93,6 @@ class DetailsController extends GetxController {
     if (!HiveDatabase.userLoginState) return;
     final response = await ChapterReadMarkerApi.getMangaReadMarkersAsync(id);
     chapterReadMarkers.addAll(response.data);
-
-    // 此处通知GetX已经加载好了数据
-    update();
   }
 
   /// 设置漫画已经阅读

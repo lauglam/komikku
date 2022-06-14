@@ -7,8 +7,12 @@ import 'package:komikku/dto/manga_dto.dart';
 
 /// [Home]页面的控制器
 class HomeController extends GetxController {
-  /// [HomeController]中控制[PagedGridView]的控制器
-  final pagingController = PagingController<int, MangaDto>(firstPageKey: 0);
+  /// 页面中[PagedGridView]的控制器
+  /// 控制[PagedGridView]的刷新、附加数据、错误处理与重试
+  final pagingController = PagingController<int, MangaDto>(
+    firstPageKey: 0,
+    invisibleItemsThreshold: 6,
+  );
 
   /// [HomeController]的单例
   static HomeController get to => Get.find();
@@ -19,6 +23,7 @@ class HomeController extends GetxController {
     super.onInit();
   }
 
+  /// 每页数据的数据量
   static const _pageSize = 20;
 
   /// 获取漫画列表

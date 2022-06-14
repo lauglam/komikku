@@ -6,7 +6,7 @@ import 'package:komikku/core/utils/icons.dart';
 import 'package:komikku/core/utils/toast.dart';
 import 'package:komikku/modules/home_module/home_controller.dart';
 import 'package:komikku/modules/subscribes_module/subscribes_controller.dart';
-import 'package:komikku/modules/me_module/user_controller.dart';
+import 'package:komikku/modules/login_module/login_controller.dart';
 import 'package:komikku/data/hive.dart';
 import 'package:komikku/global_widgets/widgets.dart';
 
@@ -50,23 +50,22 @@ class Me extends StatelessWidget {
                             radius: 40,
                             backgroundImage: ExactAssetImage('assets/images/avatar.png'),
                           ),
-                          GetX<UserController>(
-                            init: UserController(),
-                            builder: (controller) => OutlinedButton(
+                          Obx(
+                            () => OutlinedButton(
                               style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all(const Size(200, 35)),
                               ),
-                              child: Text(controller.loginState ? '退出登录' : '登录'),
+                              child: Text(LoginController.to.loginState ? '退出登录' : '登录'),
                               onPressed: () {
                                 // 未登录
-                                if (!controller.loginState) {
+                                if (!LoginController.to.loginState) {
                                   Get.toNamed('/login');
                                   return;
                                 }
 
                                 showAlertDialog(
                                   title: '是否退出登录',
-                                  onConfirm: () async => await controller.logout(),
+                                  onConfirm: () async => await LoginController.to.logout(),
                                 );
                               },
                             ),
@@ -86,13 +85,13 @@ class Me extends StatelessWidget {
                         child: Obx(
                           () {
                             // 未登录
-                            if (!UserController.to.loginState) {
+                            if (!LoginController.to.loginState) {
                               return Text('  未登录', style: Theme.of(context).textTheme.titleMedium);
                             }
 
                             // 已登录
                             return Text(
-                              UserController.to.username,
+                              LoginController.to.username,
                               style: Theme.of(context).textTheme.titleMedium,
                             );
                           },

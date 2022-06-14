@@ -1,7 +1,7 @@
 import 'package:get/get.dart';
 import 'package:komikku/modules/details_module/binding.dart';
 import 'package:komikku/modules/home_module/binding.dart';
-import 'package:komikku/modules/me_module/binding.dart';
+import 'package:komikku/modules/login_module/binding.dart';
 import 'package:komikku/modules/reading_module/binding.dart';
 import 'package:komikku/modules/search_module/binding.dart';
 import 'package:komikku/modules/shell_module/binding.dart';
@@ -26,7 +26,7 @@ class AppPages {
         ShellBindings(),
         HomeBindings(),
         SubscribesBindings(),
-        UserBindings(),
+        LoginBindings(),
       ],
     ),
 
@@ -35,7 +35,7 @@ class AppPages {
       name: AppRoutes.login,
       page: () => const Login(),
       bindings: [
-        UserBindings(),
+        LoginBindings(),
       ],
     ),
 
