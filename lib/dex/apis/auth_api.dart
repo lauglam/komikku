@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:komikku/dex/models/login.dart';
 import 'package:komikku/dex/models/logout.dart';
 import 'package:komikku/dex/models/refresh_token.dart';
-import 'package:komikku/utils/http.dart';
+import 'package:komikku/core/utils/http.dart';
 
 class AuthApi {
   /// 登录

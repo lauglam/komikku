@@ -1,5 +1,5 @@
 import 'package:komikku/dex/models/at_home.dart';
-import 'package:komikku/utils/http.dart';
+import 'package:komikku/core/utils/http.dart';
 
 class AtHomeApi {
   static Future<AtHome> getHomeServerUrlAsync(String chapterId) async {

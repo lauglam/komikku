@@ -1,7 +1,7 @@
 import 'package:komikku/dex/models/chapter_read_marker.dart';
 import 'package:komikku/dex/models/response.dart';
 import 'package:komikku/dex/util.dart';
-import 'package:komikku/utils/http.dart';
+import 'package:komikku/core/utils/http.dart';
 
 class ChapterReadMarkerApi {
   /// 获取漫画阅读记录

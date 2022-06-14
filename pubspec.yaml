@@ -46,8 +46,6 @@ dependencies:
   timeago: ^3.2.2
   # 跳转Url
   url_launcher: ^6.1.2
-  # 对象传递相关[InheritedWidget]
-  provider: ^6.0.3
   # 唯一键
   uuid: 3.0.6
   # 滚动分页
@@ -56,6 +54,8 @@ dependencies:
   hive: ^2.2.2
   # Hive数据库拓展
   hive_flutter: ^1.1.0
+  # GetX
+  get: ^4.6.5
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.

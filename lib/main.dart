@@ -1,14 +1,23 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
-import 'package:komikku/database/hive.dart';
-import 'package:komikku/views/login.dart';
-import 'package:komikku/views/search.dart';
-import 'package:komikku/views/shell.dart';
+import 'package:get/get.dart';
+import 'package:komikku/core/theme/global.dart';
+import 'package:komikku/data/hive.dart';
+import 'package:komikku/routes/pages.dart';
 
-import 'provider/provider.dart';
+import 'core/theme/theme.dart';
 
 void main() async {
+  // 注册Hive数据库
   await HiveDatabase.initial();
+
+  // 确保能够调用调用本机代码
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // 注册GetX
+  Get.put<GlobalService>(GlobalService());
+
+  // 启动App
   runApp(const MyApp());
 }
 
@@ -18,34 +27,13 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (context) => TagProvider()),
-        ChangeNotifierProvider(create: (context) => UserProvider()),
-        ChangeNotifierProvider(create: (context) => FollowProvider()),
-        ChangeNotifierProvider(create: (context) => DataSaverProvider()),
-        ChangeNotifierProvider(create: (context) => ContentRatingProvider()),
-        ChangeNotifierProvider(create: (context) => ChapterReadMarkerProvider()),
-        ChangeNotifierProvider(create: (context) => TranslatedLanguageProvider()),
-      ],
-      builder: (context, child) => MaterialApp(
-        builder: BotToastInit(),
-        navigatorObservers: [BotToastNavigatorObserver()],
-        title: 'Komikku',
-        theme: _themeData,
-        routes: {
-          '/search': (context) => const Search(),
-          '/login': (context) => const Login(),
-        },
-        home: const Shell(),
-      ),
+    return GetMaterialApp(
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
+      title: 'Komikku',
+      theme: GlobalService.to.isDarkModel ? AppTheme.dark : AppTheme.light,
+      initialRoute: AppPages.initial,
+      getPages: AppPages.pages,
     );
   }
 }
-
-final _themeData = ThemeData(
-  primarySwatch: Colors.orange,
-  elevatedButtonTheme: ElevatedButtonThemeData(
-    style: ElevatedButton.styleFrom(onPrimary: Colors.white),
-  ),
-);

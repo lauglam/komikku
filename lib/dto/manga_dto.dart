@@ -1,4 +1,4 @@
-import 'package:komikku/database/hive.dart';
+import 'package:komikku/data/hive.dart';
 import 'package:komikku/dex/models/attributes/cover_attributes.dart';
 import 'package:komikku/dex/models/enum/content_rating.dart';
 import 'package:komikku/dex/models/enum/entity_type.dart';
@@ -88,42 +88,6 @@ class MangaDto {
       contentRating: _contentRatingEnumMap[source.attributes.contentRating]!,
       description: description,
     );
-  }
-
-  factory MangaDto.fromJson(Map<String, dynamic> json) => MangaDto(
-        id: json['id'] as String,
-        title: json['title'] as String,
-        status: json['status'] as String,
-        author: json['author'] as String,
-        tags: (json['tags'] as List<dynamic>).map((e) => e as String).toList(),
-        imageUrl256: json['imageUrl256'] as String,
-        imageUrl512: json['imageUrl512'] as String,
-        imageUrlOriginal: json['imageUrlOriginal'] as String,
-        contentRating: json['contentRating'] as String,
-        description: json['description'] as String?,
-      );
-
-  Map<String, dynamic> toJson() {
-    final val = <String, dynamic>{};
-
-    void writeNotNull(String key, dynamic value) {
-      if (value != null) {
-        val[key] = value;
-      }
-    }
-
-    val['id'] = id;
-    val['title'] = title;
-    val['status'] = status;
-    val['author'] = author;
-    val['tags'] = tags;
-    val['author'] = author;
-    val['imageUrl256'] = imageUrl256;
-    val['imageUrl512'] = imageUrl512;
-    val['contentRating'] = contentRating;
-    writeNotNull('description', description);
-
-    return val;
   }
 
   static const _contentRatingEnumMap = {

@@ -1,5 +1,5 @@
 import 'package:komikku/dex/models/user.dart';
-import 'package:komikku/utils/http.dart';
+import 'package:komikku/core/utils/http.dart';
 
 class UserApi {
   /// 获取用户信息

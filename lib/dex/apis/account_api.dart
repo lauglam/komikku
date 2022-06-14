@@ -1,6 +1,6 @@
 import 'package:komikku/dex/models/account.dart';
 import 'package:komikku/dex/models/user.dart';
-import 'package:komikku/utils/http.dart';
+import 'package:komikku/core/utils/http.dart';
 
 class AccountApi {
   /// 创建账号
