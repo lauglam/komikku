@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:komikku/core/utils/timeago.dart';
 import 'package:komikku/core/utils/toast.dart';
 import 'package:komikku/dto/chapter_dto.dart';
-import 'package:komikku/modules/details_module/details_controller.dart';
+import 'package:komikku/modules/details_module/controller.dart';
 import 'package:komikku/global_widgets/widgets.dart';
 
 class ChapterGridWidget extends StatelessWidget {

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'reading_controller.dart';
+import 'controller.dart';
 
 class ReadingBindings extends Bindings {
   @override

@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:komikku/core/utils/icons.dart';
+import 'package:komikku/core/utils/toast.dart';
+import 'package:komikku/data/hive.dart';
+import 'package:komikku/modules/home_module/controller.dart';
+
+import 'icon_button_widget.dart';
 
 /// 章节翻译
 class TranslatedLanguageWidget extends StatelessWidget {
-  final List<String> selectedLanguage;
-  final void Function(List<String>) onChanged;
-
-  const TranslatedLanguageWidget({
-    Key? key,
-    required this.selectedLanguage,
-    required this.onChanged,
-  }) : super(key: key);
+  const TranslatedLanguageWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final selectedLanguageRx = RxList<String>(selectedLanguage);
-    return SizedBox(
+    final selected = RxList<String>(HiveDatabase.translatedLanguage);
+    final content = SizedBox(
       width: 280,
       height: 500,
       child: Scrollbar(
         child: ListView.builder(
           shrinkWrap: true,
-          prototypeItem:
-              CheckboxListTile(title: const Text(''), value: true, onChanged: (value) {}),
+          prototypeItem: _placeholder,
           itemCount: _localizedStringMap.length,
           itemBuilder: (context, index) {
             final currentKey = _localizedStringMap.keys.elementAt(index);
@@ -30,13 +28,10 @@ class TranslatedLanguageWidget extends StatelessWidget {
             return Obx(
               () => CheckboxListTile(
                 title: Text(currentValue),
-                value: selectedLanguageRx.contains(currentKey),
+                value: selected.contains(currentKey),
                 onChanged: (value) {
                   if (value == null) return;
-                  value
-                      ? selectedLanguageRx.add(currentKey)
-                      : selectedLanguageRx.remove(currentKey);
-                  onChanged(selectedLanguageRx);
+                  value ? selected.add(currentKey) : selected.remove(currentKey);
                 },
               ),
             );
@@ -44,7 +39,24 @@ class TranslatedLanguageWidget extends StatelessWidget {
         ),
       ),
     );
+
+    return IconTextButtonWidget(
+      text: '章节语言',
+      icon: TaoIcons.comment,
+      onPressed: () => showAlertDialog(
+        title: '章节语言',
+        content: content,
+        // translatedLanguage can be empty
+        onConfirm: () {
+          HiveDatabase.translatedLanguage = selected;
+          // 刷新首页
+          HomeController.to.pagingController.refresh();
+        },
+      ),
+    );
   }
+
+  static const _placeholder = CheckboxListTile(title: Text(''), value: true, onChanged: null);
 
   static const _localizedStringMap = {
     'en': 'English',

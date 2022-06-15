@@ -6,11 +6,11 @@ import 'package:komikku/modules/reading_module/binding.dart';
 import 'package:komikku/modules/search_module/binding.dart';
 import 'package:komikku/modules/shell_module/binding.dart';
 import 'package:komikku/modules/subscribes_module/binding.dart';
-import 'package:komikku/modules/details_module/details.dart';
-import 'package:komikku/modules/login_module/login.dart';
-import 'package:komikku/modules/reading_module/reading.dart';
-import 'package:komikku/modules/search_module/search.dart';
-import 'package:komikku/modules/shell_module/shell.dart';
+import 'package:komikku/modules/details_module/page.dart';
+import 'package:komikku/modules/login_module/page.dart';
+import 'package:komikku/modules/reading_module/page.dart';
+import 'package:komikku/modules/search_module/page.dart';
+import 'package:komikku/modules/shell_module/page.dart';
 
 part 'routes.dart';
 

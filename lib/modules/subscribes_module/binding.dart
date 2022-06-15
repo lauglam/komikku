@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'subscribes_controller.dart';
+import 'controller.dart';
 
 class SubscribesBindings extends Bindings {
   @override

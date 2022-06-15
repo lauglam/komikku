@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'search_controller.dart';
+import 'controller.dart';
 
 class SearchBindings extends Bindings {
   @override

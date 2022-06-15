@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/core/utils/icons.dart';
 import 'package:komikku/core/utils/toast.dart';
-import 'package:komikku/modules/search_module/search_controller.dart';
 import 'package:komikku/dto/manga_dto.dart';
-import 'package:komikku/modules/search_module/widgets/search_filter_widget.dart';
 
 import 'package:komikku/global_widgets/widgets.dart';
+
+import 'controller.dart';
+import 'widgets/list_view_item_widget.dart';
+import 'widgets/search_filter_widget.dart';
 
 /// 搜索页面
 class Search extends StatelessWidget {
@@ -95,7 +97,7 @@ class Search extends StatelessWidget {
             Expanded(
               child: PagedListViewExtent(
                 cacheExtent: 500,
-                prototypeItem: const ListViewItem(imageUrl: '', title: '', subtitle: ''),
+                prototypeItem: const ListViewItemWidget(imageUrl: '', title: '', subtitle: ''),
                 physics: const AlwaysScrollableScrollPhysics(),
                 pagingController: SearchController.to.pagingController,
                 builderDelegate: PagedChildBuilderDelegate<MangaDto>(
@@ -111,7 +113,7 @@ class Search extends StatelessWidget {
                   itemBuilder: (context, item, index) {
                     return InkWell(
                       onTap: () => Get.toNamed('/details', arguments: item),
-                      child: ListViewItem(
+                      child: ListViewItemWidget(
                         imageUrl: item.imageUrl256,
                         title: item.title,
                         subtitle: item.status,

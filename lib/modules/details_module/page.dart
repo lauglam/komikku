@@ -5,10 +5,10 @@ import 'package:komikku/core/utils/icons.dart';
 import 'package:komikku/core/utils/toast.dart';
 import 'package:komikku/dto/manga_dto.dart';
 import 'package:komikku/global_widgets/widgets.dart';
-import 'package:komikku/modules/login_module/login_controller.dart';
-import 'package:komikku/modules/subscribes_module/subscribes_controller.dart';
+import 'package:komikku/modules/login_module/controller.dart';
+import 'package:komikku/modules/subscribes_module/controller.dart';
 
-import 'details_controller.dart';
+import 'controller.dart';
 import 'widgets/chapter_grid_widget.dart';
 
 class Details extends StatelessWidget {

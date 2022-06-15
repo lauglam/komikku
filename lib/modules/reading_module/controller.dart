@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:komikku/core/utils/extensions.dart';
 import 'package:komikku/core/utils/timeago.dart';
 import 'package:komikku/core/utils/toast.dart';
-import 'package:komikku/modules/details_module/details_controller.dart';
+import 'package:komikku/modules/details_module/controller.dart';
 import 'package:komikku/data/hive.dart';
 import 'package:komikku/dex/apis/at_home_api.dart';
 import 'package:komikku/dex/retrieving.dart';

@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import 'shell_controller.dart';
+import 'controller.dart';
 
 class ShellBindings extends Bindings {
   @override

@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/global_widgets/widgets.dart';
-import 'package:komikku/modules/subscribes_module/subscribes_controller.dart';
-import 'package:komikku/modules/login_module/login_controller.dart';
+import 'package:komikku/modules/subscribes_module/controller.dart';
+import 'package:komikku/modules/login_module/controller.dart';
 import 'package:komikku/dto/manga_dto.dart';
+
+import 'widgets/grid_view_item_widget.dart';
 
 class Subscribes extends StatelessWidget {
   const Subscribes({Key? key}) : super(key: key);
@@ -48,7 +50,7 @@ class Subscribes extends StatelessWidget {
                 itemBuilder: (context, item, index) {
                   return InkWell(
                     onTap: () => Get.toNamed('/details', arguments: item),
-                    child: GridViewItem(
+                    child: GridViewItemWidget(
                       imageUrl: item.imageUrl256,
                       title: item.title,
                       subtitle: item.status,

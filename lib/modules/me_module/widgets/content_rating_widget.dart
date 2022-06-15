@@ -1,27 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:komikku/core/utils/icons.dart';
+import 'package:komikku/core/utils/toast.dart';
+import 'package:komikku/data/hive.dart';
+import 'package:komikku/modules/home_module/controller.dart';
+import 'package:komikku/modules/subscribes_module/controller.dart';
+
+import 'icon_button_widget.dart';
 
 /// 内容分级
 class ContentRatingWidget extends StatelessWidget {
-  final List<String> selectedContentRating;
-  final void Function(List<String> value) onChanged;
-
-  const ContentRatingWidget({
-    Key? key,
-    required this.selectedContentRating,
-    required this.onChanged,
-  }) : super(key: key);
+  const ContentRatingWidget({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final selectedContentRatingRx = RxList<String>(selectedContentRating);
-    return SizedBox(
+    final selected = RxList<String>(HiveDatabase.contentRating);
+    final content = SizedBox(
       width: 250,
       child: Scrollbar(
         child: ListView.builder(
           shrinkWrap: true,
-          prototypeItem:
-              CheckboxListTile(title: const Text(''), value: true, onChanged: (value) {}),
+          prototypeItem: _placeholder,
           itemCount: _contentRatingMap.length,
           itemBuilder: (context, index) {
             final currentKey = _contentRatingMap.keys.elementAt(index);
@@ -29,13 +28,10 @@ class ContentRatingWidget extends StatelessWidget {
             return Obx(
               () => CheckboxListTile(
                 title: Text(currentValue),
-                value: selectedContentRatingRx.contains(currentKey),
+                value: selected.contains(currentKey),
                 onChanged: (value) {
                   if (value == null) return;
-                  value
-                      ? selectedContentRatingRx.add(currentKey)
-                      : selectedContentRatingRx.remove(currentKey);
-                  onChanged(selectedContentRatingRx);
+                  value ? selected.add(currentKey) : selected.remove(currentKey);
                 },
               ),
             );
@@ -43,7 +39,25 @@ class ContentRatingWidget extends StatelessWidget {
         ),
       ),
     );
+
+    return IconTextButtonWidget(
+      text: '内容分级',
+      icon: TaoIcons.film,
+      onPressed: () => showAlertDialog(
+        title: '内容分级',
+        content: content,
+        onConfirm: () {
+          HiveDatabase.contentRating = selected;
+
+          // 刷新首页和订阅页
+          HomeController.to.pagingController.refresh();
+          SubscribesController.to.pagingController.refresh();
+        },
+      ),
+    );
   }
+
+  static const _placeholder = CheckboxListTile(title: Text(''), value: true, onChanged: null);
 
   static const _contentRatingMap = {
     'safe': '安全的',

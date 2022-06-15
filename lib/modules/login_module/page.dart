@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:komikku/core/utils/toast.dart';
-import 'package:komikku/modules/login_module/login_controller.dart';
+import 'package:komikku/modules/login_module/controller.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Login extends StatelessWidget {

@@ -5,7 +5,6 @@ export 'builder_checker.dart';
 export 'button.dart';
 export 'chip.dart';
 export 'futuristic.dart';
-export 'view_item.dart';
 export 'indicator.dart';
 export 'search_bar.dart';
 export 'image.dart';

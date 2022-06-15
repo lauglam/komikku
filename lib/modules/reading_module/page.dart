@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:komikku/modules/reading_module/reading_controller.dart';
+import 'package:komikku/modules/reading_module/controller.dart';
 import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/global_widgets/widgets.dart';
 
@@ -69,10 +69,12 @@ class Reading extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                 child: Obx(
-                  () => Text(
-                    '${ReadingController.to.readingProgress} %    '
-                    '第 ${ReadingController.to.chapters.elementAt(ReadingController.to.currentIndex).first.chapter ?? ReadingController.to.currentIndex} 章',
-                  ),
+                  () {
+                    final currentIndex = ReadingController.to.currentIndex;
+                    final chapters = ReadingController.to.chapters;
+                    final name = chapters.elementAt(currentIndex).first.chapter ?? currentIndex;
+                    return Text('${ReadingController.to.readingProgress} %    第 $name 章');
+                  },
                 ),
               ),
             ),
