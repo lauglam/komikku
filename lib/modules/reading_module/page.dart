@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:komikku/modules/reading_module/controller.dart';
-import 'package:komikku/dto/chapter_dto.dart';
 import 'package:komikku/global_widgets/widgets.dart';
+
+import 'controller.dart';
+import 'widgets/bidirectional_list_view.dart';
 
 /// 阅读页
 class Reading extends StatelessWidget {
@@ -12,74 +13,35 @@ class Reading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       extendBodyBehindAppBar: true,
-      body: Stack(
-        fit: StackFit.expand,
-        children: [
-          // 主内容
-          GetX<ReadingController>(
-            initState: (state) {
-              /// 当前的章节id
-              /// 因为每个章节可能存在多个扫描组的内容，所以必须明确章节id
-              ReadingController.to.currentChapterId = Get.arguments[0] as String;
-
-              /// 当前所处在[chapters]中的位置
-              ReadingController.to.currentIndex = Get.arguments[1] as int;
-
-              /// 二维数组
-              /// 章节与章节内多个扫描组的内容
-              /// 当章节内只有一个扫描组内容时，List.length = 1
-              ReadingController.to.chapters = List<Iterable<ChapterDto>>.from(Get.arguments[2]);
-
-              /// 载入本章节图片
-              ReadingController.to.getChapterPages();
-            },
-            builder: (controller) {
-              if (controller.loading) {
-                return const Center(child: CircularProgressIndicator());
-              }
-              return ListView.builder(
-                controller: controller.scrollController,
-                itemCount: controller.pages.length,
-                itemBuilder: (context, index) => ExtendedNetworkImage(
-                  imageUrl: controller.pages[index],
-                  fit: BoxFit.fitWidth,
-                  fadeOutDuration: const Duration(milliseconds: 1),
-                  progressIndicatorBuilder: (context, url, progress) {
-                    return CircularTitleProgressIndicator(
-                      title: '${index + 1}',
-                      progress: progress.progress,
-                    );
-                  },
-                ),
-              );
-            },
-          ),
-
-          // 右下角显示（阅读进度、章节）
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Material(
-              clipBehavior: Clip.antiAlias,
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(2),
-                topRight: Radius.circular(2),
-              ),
-              textStyle: const TextStyle(color: Colors.white),
-              color: Colors.black54,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                child: Obx(
-                  () {
-                    final currentIndex = ReadingController.to.currentIndex;
-                    final chapters = ReadingController.to.chapters;
-                    final name = chapters.elementAt(currentIndex).first.chapter ?? currentIndex;
-                    return Text('${ReadingController.to.readingProgress} %    第 $name 章');
-                  },
-                ),
+      body: BidirectionalListView<String>(
+        enableReplayUp: ReadingController.to.current > 0,
+        firstReplyUpPageKey:
+            ReadingController.to.current - 1 < 0 ? 0 : ReadingController.to.current - 1,
+        firstReplyDownPageKey: ReadingController.to.current,
+        onReplyUp: (pageKey, append) async {
+          var newItems = await ReadingController.to.getChapterPages(pageKey);
+          newItems = newItems.reversed.toList();
+          append(pageKey - 1, newItems, pageKey == 0);
+        },
+        onReplyDown: (pageKey, append) async {
+          final newItems = await ReadingController.to.getChapterPages(pageKey);
+          final isLastPage = pageKey == ReadingController.to.data.length - 1;
+          append(pageKey + 1, newItems, isLastPage);
+        },
+        itemBuilder: (context, item, index) => ExtendedNetworkImage(
+          imageUrl: item,
+          fit: BoxFit.fitWidth,
+          fadeOutDuration: const Duration(milliseconds: 1),
+          progressIndicatorBuilder: (context, url, progress) => SizedBox(
+            width: Get.width,
+            height: Get.height * 0.5,
+            child: Center(
+              child: CircularProgressIndicator(
+                value: progress.progress,
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

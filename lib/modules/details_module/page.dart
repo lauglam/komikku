@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:komikku/core/utils/icons.dart';
 import 'package:komikku/core/utils/toast.dart';
-import 'package:komikku/dto/manga_dto.dart';
+import 'package:komikku/modules/dto/manga_dto.dart';
 import 'package:komikku/global_widgets/widgets.dart';
 import 'package:komikku/modules/login_module/controller.dart';
 import 'package:komikku/modules/subscribes_module/controller.dart';

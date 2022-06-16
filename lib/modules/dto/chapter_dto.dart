@@ -1,6 +1,4 @@
 import 'package:komikku/dex/models.dart';
-import 'package:komikku/dex/models/attributes/scanlation_group_attributes.dart';
-import 'package:komikku/dex/models/attributes/user_attributes.dart';
 
 class ChapterDto {
   final String id;

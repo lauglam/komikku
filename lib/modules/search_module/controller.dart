@@ -5,13 +5,21 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/data/hive.dart';
 import 'package:komikku/dex/apis/manga_api.dart';
 import 'package:komikku/dex/models.dart';
-import 'package:komikku/dto/manga_dto.dart';
+import 'package:komikku/modules/dto/manga_dto.dart';
 
 class SearchController extends GetxController {
+  /// 第一页的[PageKeyType]
+  static const _firstPageKey = 0;
+
+  /// 是否正在加载数据
+  /// true: 数据正在加载，别的加载请求应该拒绝
+  /// false: 没有数据正在加载，可以接受加载请求
+  static var _loading = false;
+
   /// 页面中[PagedGridView]的控制器
   /// 控制[PagedGridView]的刷新、附加数据、错误处理与重试
   final pagingController = PagingController<int, MangaDto>(
-    firstPageKey: 0,
+    firstPageKey: _firstPageKey,
     invisibleItemsThreshold: 6,
   );
 
@@ -50,18 +58,20 @@ class SearchController extends GetxController {
 
   /// 搜索漫画
   Future<void> _searchMangaList(int pageKey) async {
-    final queryMap = {
-      'title': searchTitle,
-      'limit': '$_pageSize',
-      'offset': '$pageKey',
-      'contentRating[]': HiveDatabase.contentRating,
-      'availableTranslatedLanguage[]': HiveDatabase.translatedLanguage,
-      'includes[]': ["cover_art", "author"],
-      'includedTags[]': selectedTags.keys,
-      'order[relevance]': 'desc',
-    };
-
     try {
+      if (_loading) return;
+      _loading = true;
+
+      final queryMap = {
+        'title': searchTitle,
+        'limit': '$_pageSize',
+        'offset': '$pageKey',
+        'contentRating[]': HiveDatabase.contentRating,
+        'availableTranslatedLanguage[]': HiveDatabase.translatedLanguage,
+        'includes[]': ["cover_art", "author"],
+        'includedTags[]': selectedTags.keys,
+        'order[relevance]': 'desc',
+      };
       final response = await MangaApi.getMangaListAsync(queryParameters: queryMap);
 
       var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
@@ -75,6 +85,8 @@ class SearchController extends GetxController {
     } catch (e) {
       pagingController.error = e;
       if (kDebugMode) rethrow;
+    } finally {
+      _loading = false;
     }
   }
 

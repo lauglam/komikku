@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:komikku/core/utils/timeago.dart';
 import 'package:komikku/core/utils/toast.dart';
-import 'package:komikku/dto/chapter_dto.dart';
+import 'package:komikku/global_widgets/bottom_modal_item.dart';
+import 'package:komikku/modules/dto/chapter_dto.dart';
 import 'package:komikku/modules/details_module/controller.dart';
-import 'package:komikku/global_widgets/widgets.dart';
 
 class ChapterGridWidget extends StatelessWidget {
   const ChapterGridWidget({
@@ -21,6 +21,7 @@ class ChapterGridWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final itemsMap = isDesc ? descChapters : ascChapters;
+    final ids = ascChapters.values.map((e) => e.first.id).toList();
 
     return GridView.builder(
       cacheExtent: 500,
@@ -37,6 +38,7 @@ class ChapterGridWidget extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       itemBuilder: (context, chapterIndex) {
         final values = itemsMap.values.elementAt(chapterIndex);
+        final current = isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex;
 
         // 内部方法
         Future<void> _showBottomModal() async {
@@ -65,11 +67,13 @@ class ChapterGridWidget extends StatelessWidget {
                         // 不等待
                         DetailsController.to.markMangaRead(values[index].id);
 
+                        // 替换
+                        ids[current] = values[index].id;
+
                         // 跳转到阅读页面
                         Get.toNamed('/details/reading', arguments: [
-                          values[index].id,
-                          isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex,
-                          ascChapters.values,
+                          ids,
+                          current,
                         ]);
                       },
                     ),
@@ -105,9 +109,8 @@ class ChapterGridWidget extends StatelessWidget {
 
                   // 跳转
                   Get.toNamed('/details/reading', arguments: [
-                    values[0].id,
+                    ids,
                     isDesc ? itemsMap.length - chapterIndex - 1 : chapterIndex,
-                    ascChapters.values,
                   ]);
                 },
                 child: Text(

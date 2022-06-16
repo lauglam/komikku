@@ -32,7 +32,7 @@ class Me extends StatelessWidget {
             Card(
               clipBehavior: Clip.antiAlias,
               child: SizedBox(
-                height: 140,
+                height: 150,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(8, 8, 0, 8),
                   child: Column(

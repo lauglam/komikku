@@ -1,4 +1,5 @@
 import 'package:komikku/data/hive.dart';
+import 'package:komikku/dex/models/attributes/author_attributes.dart';
 import 'package:komikku/dex/models/attributes/cover_attributes.dart';
 import 'package:komikku/dex/models/enum/content_rating.dart';
 import 'package:komikku/dex/models/enum/entity_type.dart';
@@ -6,8 +7,6 @@ import 'package:komikku/dex/models/enum/status.dart';
 import 'package:komikku/dex/models/manga.dart';
 import 'package:komikku/dex/models/relationship.dart';
 import 'package:komikku/dex/retrieving.dart';
-
-import '../dex/models/attributes/author_attributes.dart';
 
 /// 漫画
 class MangaDto {

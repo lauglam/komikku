@@ -3,7 +3,8 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/global_widgets/widgets.dart';
 import 'package:komikku/modules/home_module/controller.dart';
-import 'package:komikku/dto/manga_dto.dart';
+import 'package:komikku/modules/dto/manga_dto.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'widgets/grid_view_item_widget.dart';
 
@@ -23,8 +24,11 @@ class Home extends StatelessWidget {
           onTap: () => Get.toNamed('/search'),
         ),
       ),
-      body: RefreshIndicator(
-        onRefresh: () async => HomeController.to.pagingController.refresh(),
+      body: SmartRefresher(
+        enablePullUp: true,
+        controller: HomeController.to.refreshController,
+        onRefresh: () =>
+            Future.sync(() => HomeController.to.pagingController.refresh(background: true)),
         child: PagedGridView(
           cacheExtent: 500,
           // 永远滚动，即使在不满屏幕的情况下
@@ -38,6 +42,7 @@ class Home extends StatelessWidget {
           ),
           pagingController: HomeController.to.pagingController,
           builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+            newPageProgressIndicatorBuilder: (context) => const SizedBox.shrink(),
             firstPageErrorIndicatorBuilder: (context) => TryAgainExceptionIndicator(
               onTryAgain: () => HomeController.to.pagingController.retryLastFailedRequest(),
             ),

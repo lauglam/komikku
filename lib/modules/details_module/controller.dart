@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:komikku/data/hive.dart';
 import 'package:komikku/dex/apis/chapter_read_marker_api.dart';
 import 'package:komikku/dex/apis/manga_api.dart';
-import 'package:komikku/dto/chapter_dto.dart';
+import 'package:komikku/modules/dto/chapter_dto.dart';
 
 class DetailsController extends GetxController {
   /// 章节排序是否是倒序通知

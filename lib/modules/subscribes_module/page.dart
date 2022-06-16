@@ -4,7 +4,8 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/global_widgets/widgets.dart';
 import 'package:komikku/modules/subscribes_module/controller.dart';
 import 'package:komikku/modules/login_module/controller.dart';
-import 'package:komikku/dto/manga_dto.dart';
+import 'package:komikku/modules/dto/manga_dto.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'widgets/grid_view_item_widget.dart';
 
@@ -23,8 +24,11 @@ class Subscribes extends StatelessWidget {
               child: Text('请先登录'),
             );
           }
-          return RefreshIndicator(
-            onRefresh: () async => controller.pagingController.refresh(),
+          return SmartRefresher(
+            enablePullUp: true,
+            controller: controller.refreshController,
+            onRefresh: () =>
+                Future.sync(() => controller.pagingController.refresh(background: true)),
             child: PagedGridView(
               cacheExtent: 500,
               // 永远滚动，即使在不满屏幕的情况下
@@ -38,6 +42,7 @@ class Subscribes extends StatelessWidget {
               ),
               pagingController: controller.pagingController,
               builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+                newPageProgressIndicatorBuilder: (context) => const SizedBox.shrink(),
                 firstPageErrorIndicatorBuilder: (context) => TryAgainExceptionIndicator(
                   onTryAgain: () => controller.pagingController.retryLastFailedRequest(),
                 ),

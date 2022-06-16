@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/core/utils/icons.dart';
 import 'package:komikku/core/utils/toast.dart';
-import 'package:komikku/dto/manga_dto.dart';
+import 'package:komikku/modules/dto/manga_dto.dart';
 
 import 'package:komikku/global_widgets/widgets.dart';
 
@@ -34,7 +34,7 @@ class Search extends StatelessWidget {
         actions: [
           TextButton(
             child: Text('取消', style: Theme.of(context).textTheme.labelLarge),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => Get.back(),
           ),
         ],
       ),

@@ -50,8 +50,8 @@ class ContentRatingWidget extends StatelessWidget {
           HiveDatabase.contentRating = selected;
 
           // 刷新首页和订阅页
-          HomeController.to.pagingController.refresh();
-          SubscribesController.to.pagingController.refresh();
+          HomeController.to.refreshController.requestRefresh(needMove:true);
+          SubscribesController.to.refreshController.requestRefresh(needMove:true);
         },
       ),
     );

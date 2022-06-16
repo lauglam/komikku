@@ -50,7 +50,7 @@ class TranslatedLanguageWidget extends StatelessWidget {
         onConfirm: () {
           HiveDatabase.translatedLanguage = selected;
           // 刷新首页
-          HomeController.to.pagingController.refresh();
+          HomeController.to.refreshController.requestRefresh(needMove: true);
         },
       ),
     );

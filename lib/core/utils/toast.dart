@@ -8,10 +8,12 @@ import 'icons.dart';
 Future<void> showBottomModal({
   required String title,
   required Widget child,
+  RouteSettings? settings,
 }) async {
   await Get.bottomSheet(
     backgroundColor: Colors.transparent,
     isScrollControlled: true,
+    settings: settings,
     Container(
       clipBehavior: Clip.antiAlias,
       decoration: const BoxDecoration(
