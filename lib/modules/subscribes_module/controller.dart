@@ -5,7 +5,7 @@ import 'package:komikku/data/hive.dart';
 import 'package:komikku/dex/apis/follows_api.dart';
 import 'package:komikku/dex/apis/manga_api.dart';
 import 'package:komikku/global_widgets/paging_controller_extent.dart';
-import 'package:komikku/modules/dto/manga_dto.dart';
+import 'package:komikku/data/dto/manga_dto.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class SubscribesController extends GetxController {

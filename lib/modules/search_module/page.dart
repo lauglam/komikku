@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/core/utils/icons.dart';
 import 'package:komikku/core/utils/toast.dart';
-import 'package:komikku/modules/dto/manga_dto.dart';
+import 'package:komikku/data/dto/manga_dto.dart';
 
 import 'package:komikku/global_widgets/widgets.dart';
 

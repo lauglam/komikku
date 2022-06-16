@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:komikku/data/hive.dart';
 import 'package:komikku/dex/apis/chapter_read_marker_api.dart';
 import 'package:komikku/dex/apis/manga_api.dart';
-import 'package:komikku/modules/dto/chapter_dto.dart';
-import 'package:komikku/modules/dto/manga_dto.dart';
+import 'package:komikku/data/dto/chapter_dto.dart';
+import 'package:komikku/data/dto/manga_dto.dart';
 
 class DetailsController extends GetxController {
   /// Argument from other page - home, search, subscribes

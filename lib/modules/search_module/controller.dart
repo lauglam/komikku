@@ -5,7 +5,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:komikku/data/hive.dart';
 import 'package:komikku/dex/apis/manga_api.dart';
 import 'package:komikku/dex/models.dart';
-import 'package:komikku/modules/dto/manga_dto.dart';
+import 'package:komikku/data/dto/manga_dto.dart';
 
 class SearchController extends GetxController {
   /// 第一页的[PageKeyType]

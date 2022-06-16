@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:komikku/global_widgets/paged_grid_view_widget.dart';
 import 'package:komikku/modules/login_module/controller.dart';
-import 'package:komikku/modules/dto/manga_dto.dart';
+import 'package:komikku/data/dto/manga_dto.dart';
 
 import 'controller.dart';
 import 'widgets/grid_view_item_widget.dart';
