@@ -13,8 +13,12 @@ class TranslatedLanguageWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(HomeController());
+
     final selected = RxList<String>(HiveDatabase.translatedLanguage);
-    final content = SizedBox(
+
+    /// Content of alert dialog
+    final alertContent = SizedBox(
       width: 280,
       height: 500,
       child: Scrollbar(
@@ -45,12 +49,12 @@ class TranslatedLanguageWidget extends StatelessWidget {
       icon: TaoIcons.comment,
       onPressed: () => showAlertDialog(
         title: '章节语言',
-        content: content,
+        content: alertContent,
         // translatedLanguage can be empty
         onConfirm: () {
           HiveDatabase.translatedLanguage = selected;
           // 刷新首页
-          HomeController.to.refreshController.requestRefresh(needMove: true);
+          controller.refreshController.requestRefresh();
         },
       ),
     );

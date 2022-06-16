@@ -39,11 +39,13 @@ class SearchController extends GetxController {
 
   @override
   void onInit() async {
-    pagingController.addPageRequestListener((pageKey) async => await _searchMangaList(pageKey));
+    pagingController.addPageRequestListener((pageKey) async {
+      await _searchMangaList(pageKey);
+    });
 
     final response = await MangaApi.getTagListAsync();
     tagsGrouped.addAll(groupBy<Tag, String>(response.data, (p0) => p0.attributes.group)
-        .map((key, value) => MapEntry(key, _toMap(value))));
+        .map((key, value) => MapEntry(key, _to(value))));
     super.onInit();
   }
 
@@ -90,7 +92,7 @@ class SearchController extends GetxController {
     }
   }
 
-  Map<String, String> _toMap(List<Tag> tags) {
+  Map<String, String> _to(List<Tag> tags) {
     var value = <String, String>{};
     for (var tag in tags) {
       final nameMap = tag.attributes.name.toJson();

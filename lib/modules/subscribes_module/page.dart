@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
-import 'package:komikku/global_widgets/widgets.dart';
-import 'package:komikku/modules/subscribes_module/controller.dart';
+import 'package:komikku/global_widgets/paged_grid_view_widget.dart';
 import 'package:komikku/modules/login_module/controller.dart';
 import 'package:komikku/modules/dto/manga_dto.dart';
-import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'controller.dart';
 import 'widgets/grid_view_item_widget.dart';
 
 class Subscribes extends StatelessWidget {
@@ -24,47 +22,23 @@ class Subscribes extends StatelessWidget {
               child: Text('请先登录'),
             );
           }
-          return SmartRefresher(
-            enablePullUp: true,
+          return PagedGridViewWidget<MangaDto>(
             controller: controller.refreshController,
-            onRefresh: () =>
-                Future.sync(() => controller.pagingController.refresh(background: true)),
-            child: PagedGridView(
-              cacheExtent: 500,
-              // 永远滚动，即使在不满屏幕的情况下
-              physics: const AlwaysScrollableScrollPhysics(),
-              padding: const EdgeInsets.all(15),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3,
-                mainAxisSpacing: 15,
-                crossAxisSpacing: 15,
-                childAspectRatio: 0.75,
-              ),
-              pagingController: controller.pagingController,
-              builderDelegate: PagedChildBuilderDelegate<MangaDto>(
-                newPageProgressIndicatorBuilder: (context) => const SizedBox.shrink(),
-                firstPageErrorIndicatorBuilder: (context) => TryAgainExceptionIndicator(
-                  onTryAgain: () => controller.pagingController.retryLastFailedRequest(),
+            onRefresh: () => controller.pagingController.refresh(background: true),
+            pagingController: controller.pagingController,
+            onTryAgain: () => controller.pagingController.retryLastFailedRequest(),
+            noItemsFoundText: '没有订阅的漫画',
+            itemBuilder: (context, item, index) {
+              return InkWell(
+                onTap: () => Get.toNamed('/details', arguments: item),
+                child: GridViewItemWidget(
+                  imageUrl: item.imageUrl256,
+                  title: item.title,
+                  subtitle: item.status,
+                  titleStyle: TitleStyle.footer,
                 ),
-                newPageErrorIndicatorBuilder: (context) => TryAgainIconExceptionIndicator(
-                  onTryAgain: () => controller.pagingController.retryLastFailedRequest(),
-                ),
-                noItemsFoundIndicatorBuilder: (context) => const Center(
-                  child: Text('没有订阅的漫画'),
-                ),
-                itemBuilder: (context, item, index) {
-                  return InkWell(
-                    onTap: () => Get.toNamed('/details', arguments: item),
-                    child: GridViewItemWidget(
-                      imageUrl: item.imageUrl256,
-                      title: item.title,
-                      subtitle: item.status,
-                      titleStyle: TitleStyle.footer,
-                    ),
-                  );
-                },
-              ),
-            ),
+              );
+            },
           );
         }),
       ),

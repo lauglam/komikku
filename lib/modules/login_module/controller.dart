@@ -1,10 +1,17 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:komikku/core/utils/toast.dart';
 import 'package:komikku/data/hive.dart';
 import 'package:komikku/dex/apis/auth_api.dart';
 import 'package:komikku/dex/apis/user_api.dart';
 import 'package:komikku/dex/models.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginController extends GetxController {
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  String? emailOrUsername;
+  String? password;
+
   /// 用户名
   var username = '';
 
@@ -23,10 +30,13 @@ class LoginController extends GetxController {
   }
 
   /// 登录
-  Future<void> login(String emailOrUsername, String password) async {
-    var login = emailOrUsername.contains('@')
-        ? Login(email: emailOrUsername, password: password)
-        : Login(username: emailOrUsername, password: password);
+  Future<void> login() async {
+    formKey.currentState?.save();
+    if (!_validate()) return;
+
+    var login = emailOrUsername!.contains('@')
+        ? Login(email: emailOrUsername, password: password!)
+        : Login(username: emailOrUsername, password: password!);
 
     final loginResponse = await AuthApi.loginAsync(login);
     HiveDatabase.sessionToken = loginResponse.token.session;
@@ -45,5 +55,37 @@ class LoginController extends GetxController {
 
     username = '';
     _loginState.value = false;
+  }
+
+  /// 跳转浏览器
+  Future<void> launchInBrowser(Uri url) async {
+    if (!await launchUrl(
+      url,
+      mode: LaunchMode.externalApplication,
+    )) {
+      throw 'Could not launch $url';
+    }
+  }
+
+  /// 验证
+  bool _validate() {
+    if (emailOrUsername?.isEmpty ?? true) {
+      showText(text: '账号不能为空');
+      return false;
+    }
+    if (password?.isEmpty ?? true) {
+      showText(text: '密码不能为空');
+      return false;
+    }
+    if (password!.length < 8) {
+      showText(text: '密码不能小于8位');
+      return false;
+    }
+    if (password!.length > 1024) {
+      showText(text: '密码不能大于1024位');
+      return false;
+    }
+
+    return true;
   }
 }

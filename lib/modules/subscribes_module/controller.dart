@@ -29,7 +29,7 @@ class SubscribesController extends GetxController {
   );
 
   /// 订阅的漫画的id集合
-  final followedMangaIds = <String>[];
+  final RxList<String> followedMangaIds = <String>[].obs;
 
   /// [SubscribesController]的单例
   static SubscribesController get to => Get.find();
@@ -53,19 +53,15 @@ class SubscribesController extends GetxController {
   /// 订阅一本漫画
   Future<void> unfollowManga(String id) async {
     followedMangaIds.remove(id);
-    update();
-
     await MangaApi.unfollowMangaAsync(id);
-    pagingController.refresh(background: true);
+    refreshController.requestRefresh();
   }
 
   /// 取消订阅一本漫画
   Future<void> followManga(String id) async {
     followedMangaIds.add(id);
-    update();
-
     await MangaApi.followMangaAsync(id);
-    pagingController.refresh(background: true);
+    refreshController.requestRefresh();
   }
 
   /// 每页数据的数据量

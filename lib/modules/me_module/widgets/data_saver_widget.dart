@@ -14,7 +14,8 @@ class DataSaverWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final selected = RxBool(HiveDatabase.dataSaver);
 
-    final content = Obx(
+    /// Content of alert dialog
+    final alertContent = Obx(
       () => CheckboxListTile(
         title: const Text('图片压缩'),
         value: selected.value,
@@ -30,7 +31,7 @@ class DataSaverWidget extends StatelessWidget {
       icon: TaoIcons.image,
       onPressed: () => showAlertDialog(
         title: '图片质量',
-        content: content,
+        content: alertContent,
         onConfirm: () {
           // 提示信息
           if (selected.value) showText(text: '阅读漫画时更快加载，但图片质量有所下降');

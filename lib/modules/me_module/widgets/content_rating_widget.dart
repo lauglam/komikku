@@ -14,8 +14,13 @@ class ContentRatingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final hoController = Get.put(HomeController());
+    final subController = Get.put(SubscribesController());
+
     final selected = RxList<String>(HiveDatabase.contentRating);
-    final content = SizedBox(
+
+    /// Content of alert dialog
+    final alertContent = SizedBox(
       width: 250,
       child: Scrollbar(
         child: ListView.builder(
@@ -45,13 +50,13 @@ class ContentRatingWidget extends StatelessWidget {
       icon: TaoIcons.film,
       onPressed: () => showAlertDialog(
         title: '内容分级',
-        content: content,
+        content: alertContent,
         onConfirm: () {
           HiveDatabase.contentRating = selected;
 
           // 刷新首页和订阅页
-          HomeController.to.refreshController.requestRefresh(needMove:true);
-          SubscribesController.to.refreshController.requestRefresh(needMove:true);
+          hoController.refreshController.requestRefresh();
+          subController.refreshController.requestRefresh();
         },
       ),
     );
