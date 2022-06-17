@@ -19,12 +19,14 @@ class BidirectionalListView<ItemType> extends StatefulWidget {
   /// 向上请求的回调
   /// 输入当前请求的[pageKey]和一个执行函数[AppendPageCallback]
   /// 执行该函数能将新的值附加到列表中
-  final Future<void> Function(int pageKey, AppendPageCallback<ItemType> append) onReplyUp;
+  final Future<void> Function(int pageKey, AppendPageCallback<ItemType> append)
+      onReplyUp;
 
   /// 向下请求的回调
   /// 输入当前请求的[pageKey]和一个执行函数[AppendPageCallback]
   /// 执行该函数能将新的值附加到列表中
-  final Future<void> Function(int pageKey, AppendPageCallback<ItemType> append) onReplyDown;
+  final Future<void> Function(int pageKey, AppendPageCallback<ItemType> append)
+      onReplyDown;
 
   /// 向上的第一个[pageKey]
   /// 这个值必须大于0
@@ -38,6 +40,8 @@ class BidirectionalListView<ItemType> extends StatefulWidget {
   /// 默认：false
   final bool enableReplayUp;
 
+  final ScrollController? controller;
+
   /// 子项的建造器
   final ItemWidgetBuilder<ItemType> itemBuilder;
 
@@ -49,32 +53,46 @@ class BidirectionalListView<ItemType> extends StatefulWidget {
     required this.firstReplyDownPageKey,
     required this.itemBuilder,
     this.enableReplayUp = false,
+    this.controller,
   })  : assert(firstReplyUpPageKey >= 0 && firstReplyDownPageKey >= 0,
             'Both firstReplyUpPageKey and firstReplyDownPageKey cannot be less than 0'),
         super(key: key);
 
   @override
-  State<BidirectionalListView<ItemType>> createState() => _BidirectionalListViewState();
+  State<BidirectionalListView<ItemType>> createState() =>
+      _BidirectionalListViewState();
 }
 
-class _BidirectionalListViewState<ItemType> extends State<BidirectionalListView<ItemType>> {
+class _BidirectionalListViewState<ItemType>
+    extends State<BidirectionalListView<ItemType>> {
   final Key downListKey = UniqueKey();
 
-  late final PagingController<int, ItemType> _pagingReplyUpController = PagingController(
+  final ValueNotifier<bool> _delayAddReplyUpToScreen = ValueNotifier(true);
+
+  late final ScrollController _scrollController =
+      widget.controller ?? ScrollController();
+
+  late final PagingController<int, ItemType> _pagingReplyUpController =
+      PagingController(
     firstPageKey: widget.firstReplyUpPageKey,
   );
 
-  late final PagingController<int, ItemType> _pagingReplyDownController = PagingController(
+  late final PagingController<int, ItemType> _pagingReplyDownController =
+      PagingController(
     firstPageKey: widget.firstReplyDownPageKey,
   );
 
-  void _fetchUpPage(int nextPageKey, List<ItemType> newItems, bool isLastPage) => isLastPage
-      ? _pagingReplyUpController.appendLastPage(newItems)
-      : _pagingReplyUpController.appendPage(newItems, nextPageKey);
+  void _fetchUpPage(
+          int nextPageKey, List<ItemType> newItems, bool isLastPage) =>
+      isLastPage
+          ? _pagingReplyUpController.appendLastPage(newItems)
+          : _pagingReplyUpController.appendPage(newItems, nextPageKey);
 
-  void _fetchDownPage(int nextPageKey, List<ItemType> newItems, bool isLastPage) => isLastPage
-      ? _pagingReplyDownController.appendLastPage(newItems)
-      : _pagingReplyDownController.appendPage(newItems, nextPageKey);
+  void _fetchDownPage(
+          int nextPageKey, List<ItemType> newItems, bool isLastPage) =>
+      isLastPage
+          ? _pagingReplyDownController.appendLastPage(newItems)
+          : _pagingReplyDownController.appendPage(newItems, nextPageKey);
 
   @override
   void initState() {
@@ -86,7 +104,17 @@ class _BidirectionalListViewState<ItemType> extends State<BidirectionalListView<
       await widget.onReplyDown(pageKey, _fetchDownPage);
     });
 
+    if (_delayAddReplyUpToScreen.value) {
+      _scrollController.addListener(listener);
+    }
+
     super.initState();
+  }
+
+  void listener() {
+    if (_scrollController.position.pixels < 0) {
+      _delayAddReplyUpToScreen.value = false;
+    }
   }
 
   @override
@@ -106,31 +134,49 @@ class _BidirectionalListViewState<ItemType> extends State<BidirectionalListView<
       ),
     );
 
-    // Disable replay up
-    if (!widget.enableReplayUp) {
-      return Scrollable(
-        viewportBuilder: (BuildContext context, ViewportOffset position) {
-          return Viewport(
-            cacheExtent: 500,
-            offset: position,
-            center: downListKey,
-            slivers: [downPageSliverList],
+    return ValueListenableBuilder<bool>(
+      valueListenable: _delayAddReplyUpToScreen,
+      builder: (context, value, child) {
+        if (value || !widget.enableReplayUp) {
+          return Scrollable(
+            controller: _scrollController,
+            viewportBuilder: (BuildContext context, ViewportOffset position) {
+              return Viewport(
+                cacheExtent: 500,
+                offset: position,
+                center: downListKey,
+                slivers: [placeholder, downPageSliverList],
+              );
+            },
           );
-        },
-      );
-    }
+        }
 
-    return Scrollable(
-      viewportBuilder: (BuildContext context, ViewportOffset position) {
-        return Viewport(
-          cacheExtent: 500,
-          offset: position,
-          center: downListKey,
-          slivers: [upPageSliverList, downPageSliverList],
+        _scrollController.removeListener(listener);
+
+        return Scrollable(
+          controller: _scrollController,
+          viewportBuilder: (BuildContext context, ViewportOffset position) {
+            return Viewport(
+              cacheExtent: 500,
+              offset: position,
+              center: downListKey,
+              slivers: [upPageSliverList, downPageSliverList],
+            );
+          },
         );
       },
     );
   }
+
+  final placeholder = SliverFixedExtentList(
+    itemExtent: 5,
+    delegate: SliverChildBuilderDelegate(
+      childCount: 1,
+      (context, index) => const SizedBox(
+        height: 5,
+      ),
+    ),
+  );
 
   @override
   void dispose() {

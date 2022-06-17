@@ -8,10 +8,10 @@ import 'package:komikku/modules/details_module/controller.dart';
 
 class ReadingController extends GetxController {
   /// 章节名和id
-  final List<String> data = Get.arguments[0];
+  late final List<String> data = Get.arguments[0];
 
   /// 当前所处在[chapters]中的位置
-  final int current = Get.arguments[1];
+  late final int current = Get.arguments[1];
 
   /// 阅读进度
   final RxInt _readingProgress = 0.obs;

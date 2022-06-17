@@ -593,8 +593,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "488e77accd745dd3648aa700ae7a0f888e6b9b2f"
-      url: "https://github.com/sou1maker/pull_to_refresh.git"
+      resolved-ref: "10f47c479ffe2be24cf63d35c67234e021e96c9a"
+      url: "https://github.com/cube1in/pull_to_refresh.git"
     source: git
     version: "1.0.0"
   rxdart:
@@ -629,7 +629,7 @@ packages:
       name: sliver_tools
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "0.2.6"
+    version: "0.2.7"
   source_gen:
     dependency: transitive
     description:

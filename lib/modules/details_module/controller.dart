@@ -8,7 +8,7 @@ import 'package:komikku/data/dto/manga_dto.dart';
 
 class DetailsController extends GetxController {
   /// Argument from other page - home, search, subscribes
-  final MangaDto data = Get.arguments;
+  late final MangaDto data = Get.arguments;
 
   /// 倒序排序字典
   final Map<String, List<ChapterDto>> descChapters = <String, List<ChapterDto>>{};
