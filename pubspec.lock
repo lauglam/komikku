@@ -593,8 +593,8 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "0236ba477062b5a207ead852a67dda184f890587"
-      url: "https://github.com/sou1maker/flutter_pull_to_refresh.git"
+      resolved-ref: "488e77accd745dd3648aa700ae7a0f888e6b9b2f"
+      url: "https://github.com/sou1maker/pull_to_refresh.git"
     source: git
     version: "1.0.0"
   rxdart:

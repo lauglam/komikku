@@ -59,7 +59,7 @@ dependencies:
   # 下拉刷新和上拉加载
   pull_to_refresh:
     git:
-      url: https://github.com/sou1maker/flutter_pull_to_refresh.git
+      url: https://github.com/sou1maker/pull_to_refresh.git
   # 国际化
   flutter_localizations:
     sdk: flutter
