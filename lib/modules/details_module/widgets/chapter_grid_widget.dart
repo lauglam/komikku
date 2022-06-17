@@ -64,9 +64,6 @@ class ChapterGridWidget extends StatelessWidget {
                         // 先关闭模态框
                         Navigator.pop(context);
 
-                        // 不等待
-                        DetailsController.to.markMangaRead(values[index].id);
-
                         // 替换
                         ids[current] = values[index].id;
 
@@ -104,9 +101,6 @@ class ChapterGridWidget extends StatelessWidget {
                 // 长按
                 onLongPress: () async => await _showBottomModal(),
                 onPressed: () {
-                  // 不等待
-                  DetailsController.to.markMangaRead(values[0].id);
-
                   // 跳转
                   Get.toNamed('/details/reading', arguments: [
                     ids,

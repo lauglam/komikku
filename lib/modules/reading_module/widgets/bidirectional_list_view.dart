@@ -38,9 +38,6 @@ class BidirectionalListView<ItemType> extends StatefulWidget {
   /// 默认：false
   final bool enableReplayUp;
 
-  /// 滚动控制器
-  final ScrollController? controller;
-
   /// 子项的建造器
   final ItemWidgetBuilder<ItemType> itemBuilder;
 
@@ -52,7 +49,6 @@ class BidirectionalListView<ItemType> extends StatefulWidget {
     required this.firstReplyDownPageKey,
     required this.itemBuilder,
     this.enableReplayUp = false,
-    this.controller,
   })  : assert(firstReplyUpPageKey >= 0 && firstReplyDownPageKey >= 0,
             'Both firstReplyUpPageKey and firstReplyDownPageKey cannot be less than 0'),
         super(key: key);
@@ -110,12 +106,12 @@ class _BidirectionalListViewState<ItemType> extends State<BidirectionalListView<
       ),
     );
 
-    // Disable replay up Or delay relay up to screen
+    // Disable replay up
     if (!widget.enableReplayUp) {
       return Scrollable(
-        controller: widget.controller,
         viewportBuilder: (BuildContext context, ViewportOffset position) {
           return Viewport(
+            cacheExtent: 500,
             offset: position,
             center: downListKey,
             slivers: [downPageSliverList],
@@ -125,9 +121,9 @@ class _BidirectionalListViewState<ItemType> extends State<BidirectionalListView<
     }
 
     return Scrollable(
-      controller: widget.controller,
       viewportBuilder: (BuildContext context, ViewportOffset position) {
         return Viewport(
+          cacheExtent: 500,
           offset: position,
           center: downListKey,
           slivers: [upPageSliverList, downPageSliverList],

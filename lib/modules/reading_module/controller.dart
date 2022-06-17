@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:get/get.dart';
 import 'package:komikku/data/hive.dart';
-import 'package:komikku/dex/apis/at_home_api.dart';
+import 'package:komikku/dex/apis.dart';
 import 'package:komikku/dex/retrieving.dart';
+import 'package:komikku/modules/details_module/controller.dart';
 
 class ReadingController extends GetxController {
   /// 章节名和id
@@ -22,7 +23,10 @@ class ReadingController extends GetxController {
 
   /// 获取章节图片
   Future<List<String>> getChapterPages(int pageKey) async {
-    final atHome = await AtHomeApi.getHomeServerUrlAsync(data[pageKey]);
+    final id = data[pageKey];
+    final atHome = await AtHomeApi.getHomeServerUrlAsync(id);
+
+    _markMangaRead(id);
 
     if (HiveDatabase.dataSaver) {
       return Retrieving.getChapterPagesOnSaver(
@@ -37,5 +41,14 @@ class ReadingController extends GetxController {
         atHome.chapter.data,
       );
     }
+  }
+
+  /// 设置漫画已经阅读
+  Future<void> _markMangaRead(String id) async {
+    if (!HiveDatabase.userLoginState) return;
+
+    final controller = Get.put(DetailsController());
+    controller.chapterReadMarkers.add(id);
+    await ChapterReadMarkerApi.markChapterRead(id);
   }
 }

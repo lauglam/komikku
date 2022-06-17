@@ -112,11 +112,4 @@ class DetailsController extends GetxController {
     final response = await ChapterReadMarkerApi.getMangaReadMarkersAsync(data.id);
     chapterReadMarkers.addAll(response.data);
   }
-
-  /// 设置漫画已经阅读
-  Future<void> markMangaRead(String id) async {
-    if (!HiveDatabase.userLoginState) return;
-    await ChapterReadMarkerApi.markChapterRead(id);
-    chapterReadMarkers.add(id);
-  }
 }
