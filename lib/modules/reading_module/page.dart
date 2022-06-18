@@ -11,22 +11,27 @@ class Reading extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final currentIndex = ReadingController.to.current;
+
+    final getPages = ReadingController.to.getChapterPages;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
       body: BidirectionalListView<String>(
-        enableReplayUp: ReadingController.to.current > 0,
-        firstReplyUpPageKey:
-            ReadingController.to.current - 1 < 0 ? 0 : ReadingController.to.current - 1,
-        firstReplyDownPageKey: ReadingController.to.current,
+        enableReplayUp: currentIndex > 0,
+        firstReplyUpPageKey: currentIndex - 1 < 0 ? 0 : currentIndex - 1,
+        firstReplyDownPageKey: currentIndex,
         onReplyUp: (pageKey, append) async {
-          var newItems = await ReadingController.to.getChapterPages(pageKey);
+          var newItems = await getPages(pageKey);
+
           newItems = newItems.reversed.toList();
           append(pageKey - 1, newItems, pageKey == 0);
         },
         onReplyDown: (pageKey, append) async {
-          final newItems = await ReadingController.to.getChapterPages(pageKey);
-          final isLastPage = pageKey == ReadingController.to.data.length - 1;
-          append(pageKey + 1, newItems, isLastPage);
+          final data = ReadingController.to.data;
+
+          final newItems = await getPages(pageKey);
+          append(pageKey + 1, newItems, pageKey == data.length - 1);
         },
         itemBuilder: (context, item, index) => ExtendedNetworkImage(
           imageUrl: item,

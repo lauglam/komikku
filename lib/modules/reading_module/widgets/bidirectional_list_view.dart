@@ -14,35 +14,34 @@ typedef AppendPageCallback<ItemType> = void Function(
   bool isLastPage,
 );
 
-/// 双向列表
+/// Bidirectional list view
 class BidirectionalListView<ItemType> extends StatefulWidget {
-  /// 向上请求的回调
-  /// 输入当前请求的[pageKey]和一个执行函数[AppendPageCallback]
-  /// 执行该函数能将新的值附加到列表中
+  /// Calls methods every time new items are needed.
+  /// Execute this method to append items to the reply up list.
   final Future<void> Function(int pageKey, AppendPageCallback<ItemType> append)
       onReplyUp;
 
-  /// 向下请求的回调
-  /// 输入当前请求的[pageKey]和一个执行函数[AppendPageCallback]
-  /// 执行该函数能将新的值附加到列表中
+  /// Calls methods every time new items are needed.
+  /// Execute this method to append items to the reply down list.
   final Future<void> Function(int pageKey, AppendPageCallback<ItemType> append)
       onReplyDown;
 
-  /// 向上的第一个[pageKey]
-  /// 这个值必须大于0
+  /// The first [pageKey] for reply up.
+  /// This value must be greater than 0.
   final int firstReplyUpPageKey;
 
-  /// 向下的第一个[pageKey]
-  /// 这个值必须大于0
+  /// The first [pageKey] for reply down.
+  /// This value must be greater than 0.
   final int firstReplyDownPageKey;
 
-  /// 是否启用向上
-  /// 默认：false
+  /// Whether enable replay up.
+  /// default: false.
   final bool enableReplayUp;
 
+  /// The controller for scrolling.
   final ScrollController? controller;
 
-  /// 子项的建造器
+  /// The builder for list items.
   final ItemWidgetBuilder<ItemType> itemBuilder;
 
   const BidirectionalListView({
@@ -55,7 +54,7 @@ class BidirectionalListView<ItemType> extends StatefulWidget {
     this.enableReplayUp = false,
     this.controller,
   })  : assert(firstReplyUpPageKey >= 0 && firstReplyDownPageKey >= 0,
-            'Both firstReplyUpPageKey and firstReplyDownPageKey cannot be less than 0'),
+            'Both firstReplyUpPageKey and firstReplyDownPageKey cannot be less than 0.'),
         super(key: key);
 
   @override
@@ -105,14 +104,15 @@ class _BidirectionalListViewState<ItemType>
     });
 
     if (_delayAddReplyUpToScreen.value) {
-      _scrollController.addListener(listener);
+      _scrollController.addListener(addRelyUpToScreen);
     }
 
     super.initState();
   }
 
-  void listener() {
+  void addRelyUpToScreen() {
     if (_scrollController.position.pixels < 0) {
+      _scrollController.removeListener(addRelyUpToScreen);
       _delayAddReplyUpToScreen.value = false;
     }
   }
@@ -150,8 +150,6 @@ class _BidirectionalListViewState<ItemType>
             },
           );
         }
-
-        _scrollController.removeListener(listener);
 
         return Scrollable(
           controller: _scrollController,
