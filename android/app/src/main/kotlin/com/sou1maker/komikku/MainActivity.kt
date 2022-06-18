@@ -1,4 +1,4 @@
-package com.sou1maker.komikku
+package com.cube1in.komikku
 
 import io.flutter.embedding.android.FlutterActivity
 

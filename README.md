@@ -1,4 +1,4 @@
-![Komikku-Flutter](https://socialify.git.ci/sou1maker/Komikku-Flutter/image?descriptionEditable=&owner=1&pattern=Overlapping%20Hexagons&theme=Light)
+![Komikku-Flutter](https://socialify.git.ci/cube1in/komikku/image?description=1&name=1&owner=1&pattern=Overlapping%20Hexagons&theme=Light)
 
 # komikku
 
