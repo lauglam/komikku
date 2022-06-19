@@ -3,13 +3,13 @@ import 'package:get/get.dart';
 import '../modules/details/binding.dart';
 import '../modules/home/binding.dart';
 import '../modules/login/binding.dart';
-import '../modules/reading/binding.dart';
+import '../modules/reader/binding.dart';
 import '../modules/search/binding.dart';
 import '../modules/shell/binding.dart';
 import '../modules/subscribes/binding.dart';
 import '../modules/details/page.dart';
 import '../modules/login/page.dart';
-import '../modules/reading/page.dart';
+import '../modules/reader/page.dart';
 import '../modules/search/page.dart';
 import '../modules/shell/page.dart';
 
