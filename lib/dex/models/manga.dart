@@ -5,19 +5,19 @@ import 'relationship.dart';
 
 part 'manga.g.dart';
 
-/// 漫画
+/// Manga
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Manga {
-  /// 漫画id
+  /// The id of manga.
   final String id;
 
-  /// 类型
+  /// The type of manga.
   final EntityType type;
 
-  /// 漫画属性
+  /// The attributes of manga.
   final MangaAttributes attributes;
 
-  /// 关系
+  /// The relationship of manga.
   final List<Relationship> relationships;
 
   Manga({

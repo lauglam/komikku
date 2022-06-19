@@ -2,16 +2,15 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'user_attributes.g.dart';
 
-/// 用户属性
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class UserAttributes {
-  /// 用户名
+  /// The name of this user.
   final String username;
 
-  /// 角色
+  /// The role list of this user.
   final List<String> roles;
 
-  /// 版本
+  /// The vision of this attributes.
   final int version;
 
   UserAttributes({
@@ -20,7 +19,8 @@ class UserAttributes {
     required this.version,
   });
 
-  factory UserAttributes.fromJson(Map<String, dynamic> json) => _$UserAttributesFromJson(json);
+  factory UserAttributes.fromJson(Map<String, dynamic> json) =>
+      _$UserAttributesFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserAttributesToJson(this);
 }

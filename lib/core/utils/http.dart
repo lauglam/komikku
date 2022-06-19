@@ -6,12 +6,13 @@ import '../../dex/apis/auth_api.dart';
 import '../../dex/models/refresh_token.dart';
 
 class HttpUtil {
-  /// MangaDex服务器地址
+  /// MangaDex Server url.
   static const serverUrl = 'https://api.mangadex.org';
 
-  /// HttpUtil的单例
+  /// The singleton of [HttpUtil].
   static final HttpUtil _instance = HttpUtil._internal();
 
+  /// The singleton factory constructor.
   factory HttpUtil() => _instance;
 
   Dio? dio;
@@ -75,7 +76,7 @@ class HttpUtil {
     token.cancel('cancelled');
   }
 
-  /// 读取本地配置
+  /// Load local options.
   Future<Options> getLocalOptions() async {
     Options options = Options();
 
@@ -94,7 +95,7 @@ class HttpUtil {
     return options;
   }
 
-  /// restful get 操作
+  /// Restful get.
   Future get(String path,
       {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
@@ -109,7 +110,7 @@ class HttpUtil {
     }
   }
 
-  /// restful post 操作
+  /// Restful post.
   Future post(String path,
       {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
@@ -122,7 +123,7 @@ class HttpUtil {
     }
   }
 
-  /// restful put 操作
+  /// Restful put.
   Future put(String path,
       {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
@@ -135,7 +136,7 @@ class HttpUtil {
     }
   }
 
-  /// restful patch 操作
+  /// Restful patch.
   Future patch(String path,
       {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
@@ -148,7 +149,7 @@ class HttpUtil {
     }
   }
 
-  /// restful delete 操作
+  /// Restful delete.
   Future delete(String path,
       {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
@@ -161,7 +162,7 @@ class HttpUtil {
     }
   }
 
-  /// restful post form 表单提交操作
+  /// Restful post form.
   Future postForm(String path,
       {dynamic params, Options? options, CancelToken? cancelToken}) async {
     try {
@@ -176,7 +177,7 @@ class HttpUtil {
     }
   }
 
-  /// 异常处理
+  /// Handle exception.
   HttpException createException(DioError error) {
     switch (error.type) {
       case DioErrorType.cancel:
@@ -266,7 +267,7 @@ class HttpUtil {
   }
 }
 
-/// Http异常
+/// Http exception.
 class HttpException implements Exception {
   int code;
   String message;

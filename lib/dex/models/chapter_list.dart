@@ -5,7 +5,7 @@ import 'response.dart';
 
 part 'chapter_list.g.dart';
 
-/// 章节列表响应
+/// Chapter list response.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ChapterListResponse extends PageResponse<Chapter> {
   ChapterListResponse({

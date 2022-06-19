@@ -22,8 +22,8 @@ class ChapterDto {
   });
 
   factory ChapterDto.fromDex(Chapter source) {
-    /// NOTE: 必须含有 ScanlationAttributes UserAttributes
-    /// NOTE: 此处可能出出现没有返回的情况
+    /// NOTE: must contain [ScanlationAttributes] and [UserAttributes].
+    /// NOTE: There may be cases where there is no return.
     final groupMap = source.relationships
         .firstTypeOrDefault(EntityType.scanlationGroup)
         ?.attributes;

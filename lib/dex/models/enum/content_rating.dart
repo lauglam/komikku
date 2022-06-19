@@ -1,14 +1,13 @@
-/// 分级
 enum ContentRating {
-  /// 安全
+  /// Safe content.
   safe,
 
-  /// 性暗示
+  /// Suggestive content.
   suggestive,
 
-  /// 涉黄
+  /// Erotica content.
   erotica,
 
-  /// 色情
+  /// Pornographic content.
   pornographic,
 }

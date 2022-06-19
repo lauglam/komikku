@@ -3,61 +3,71 @@ import '../localized_string.dart';
 
 part 'scanlation_group_attributes.g.dart';
 
-/// 扫描组属性
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ScanlationGroupAttributes {
-  /// 扫描组名称
+  /// The name of this group.
   final String name;
 
-  /// 是否锁定
+  /// Whether this attributes is locked.
   final bool locked;
 
-  /// 是否是官方
+  /// Whether this attributes is official.
   final bool official;
 
-  /// 是否活跃
+  /// Whether this attributes is inactive.
   final bool inactive;
 
-  /// 发布延迟
+  /// Publish delay.
+  /// nullable.
   final String? publishDelay;
 
-  /// 备用名称
+  /// The alt name of this group.
+  /// nullable.
   final List<LocalizedString>? altNames;
 
-  /// 网站
+  /// Website.
+  /// nullable.
   final String? website;
 
-  /// 群里服务器
+  /// Group server.
+  /// nullable.
   final String? ircServer;
 
-  /// 群聊频道
+  /// Group channel.
+  /// nullable.
   final String? ircChannel;
 
-  /// discord
+  /// discord.
+  /// nullable.
   final String? discord;
 
-  /// 联系邮箱
+  /// The contact email of this manga.
+  /// nullable.
   final String? contactEmail;
 
-  /// 描述
+  /// The description of this manga.
+  /// nullable.
   final String? description;
 
-  /// twitter
+  /// twitter.
+  /// nullable.
   final String? twitter;
 
-  /// 上传的漫画
+  /// The updates of this manga.
+  /// nullable.
   final String? mangaUpdates;
 
-  /// 专注翻译语言
+  /// Focused language.
+  /// nullable.
   List<String>? focusedLanguage;
 
-  /// 创建时间
+  /// Create date.
   String createdAt;
 
-  /// 更新时间
+  /// Update date.
   String updatedAt;
 
-  /// 版本
+  /// The version of this attributes.
   int version;
 
   ScanlationGroupAttributes({

@@ -8,65 +8,69 @@ import '../tag.dart';
 
 part 'manga_attributes.g.dart';
 
-/// 漫画属性
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MangaAttributes {
-  /// 标题
+  /// The title of this manga.
   final LocalizedString title;
 
-  /// 是否锁定
+  /// Whether this manga is locked.
   final bool isLocked;
 
-  /// 原始语言
+  /// The original language of this manga.
   final String originalLanguage;
 
-  /// 内容分级
+  /// The content rating of this manga.
   final ContentRating contentRating;
 
-  /// 新的一卷卷时章节编号是否i重置
+  /// Whether to reset the chapter number of a new volume.
   final bool chapterNumbersResetOnNewVolume;
 
-  /// 可用的章节翻译语言
+  /// Available chapter translation languages.
   final List<String?> availableTranslatedLanguages;
 
-  /// 标签
+  /// The tag list of this manga.
   final List<Tag> tags;
 
-  /// 漫画更新状态
+  /// The manga status of this manga.
   final Status status;
 
-  /// 漫画状态
+  /// The state of this manga.
   final State state;
 
-  /// 备用标题
+  /// The alt title of this manga.
   final List<LocalizedString>? altTitles;
 
-  /// 描述
+  /// The description of this manga.
+  /// nullable.
   @JsonKey(readValue: readSingleOrArray)
   final LocalizedString? description;
 
-  /// 最新卷
+  /// The last volume of this manga.
+  /// nullable.
   final String? lastVolume;
 
-  /// 最新章
+  /// The last chapter of this manga.
+  /// nullable.
   final String? lastChapter;
 
-  /// 漫画类型
+  /// The manga type of this manga.
+  /// nullable.
   final PublicationDemographic? publicationDemographic;
 
-  /// 年份
+  /// The year of this manga.
+  /// nullable.
   final int? year;
 
-  /// 链接
+  /// The link of this manga.
   final dynamic links;
 
-  /// 创建时间
+  /// Create date.
   final String createdAt;
 
-  /// 更新时间
+  /// Update date.
   final String updatedAt;
 
-  /// 版本
+  /// The vision of this attributes.
   final int version;
 
   MangaAttributes({

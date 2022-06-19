@@ -2,19 +2,21 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'cover_attributes.g.dart';
 
-/// 封面属性
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class CoverAttributes {
-  /// 文件名
+  /// The file name of this cover.
   final String fileName;
 
-  /// 所属卷
+  /// The volume belong to.
+  /// nullable.
   final String? volume;
 
-  /// 描述
+  /// The description of this chapter.
+  /// nullable.
   final String? description;
 
-  /// 语言环境
+  /// The local language of this chapter.
+  /// nullable.
   final String? locale;
 
   CoverAttributes({

@@ -1,52 +1,52 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum EntityType {
-  /// 漫画
+  /// Manga resource.
   manga,
 
-  /// 标签
+  /// Tag resource.
   tag,
 
-  /// 漫画的封面
+  /// A Cover Art for a manga.
   @JsonValue('cover_art')
   coverArt,
 
-  /// 章节
+  /// Chapter resource.
   chapter,
 
-  /// 扫描组
+  /// ScanlationGroup resource.
   @JsonValue('scanlation_group')
   scanlationGroup,
 
-  /// 用户
+  /// User resource.
   user,
 
-  /// 自定义列表
+  /// Custom list resource.
   @JsonValue('custom_list')
   customList,
 
-  /// 作者
+  /// Author resource.
   author,
 
-  /// 艺术家
+  /// Artist resource (drawers only).
   artist,
 
-  /// 映射
+  /// Mapping id resource.
   @JsonValue('mapping_id')
   mappingId,
 
-  /// 漫画关系
+  /// Manga relation resource.
   @JsonValue('manga_relation')
   mangaRelation,
 
-  /// 上传会话
+  /// Upload session resource.
   @JsonValue('upload_session')
   uploadSession,
 
-  /// 上传文件会话
+  /// Upload session file.
   @JsonValue('upload_session_file')
   uploadSessionFile,
 
-  ///报告
+  /// Report resource.
   report,
 }

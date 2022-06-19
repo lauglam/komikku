@@ -4,12 +4,12 @@ import 'response.dart';
 
 part 'chapter_read_marker.g.dart';
 
-/// 漫画阅读记录响应
+/// The read marker response of manga.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ChapterReadMarkerResponse extends Response {
   ChapterReadMarkerResponse({required super.result, required this.data});
 
-  /// 阅读过的章节id列表
+  /// The chapter id list of read.
   final List<String> data;
 
   factory ChapterReadMarkerResponse.fromJson(Map<String, dynamic> json) =>

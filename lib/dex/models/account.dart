@@ -3,16 +3,16 @@ import 'response.dart';
 
 part 'account.g.dart';
 
-/// 创建账号
+/// Create account.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class AccountCreate {
-  /// 用户名
+  /// The name of user.
   final String username;
 
-  /// 密码
+  /// The password of user.
   final String password;
 
-  /// 邮箱
+  /// The email of user.
   final String email;
 
   AccountCreate({

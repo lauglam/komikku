@@ -5,14 +5,14 @@ import '../models/refresh_token.dart';
 import '../../core/utils/http.dart';
 
 class AuthApi {
-  /// 登录
+  /// Login.
   static Future<LoginResponse> loginAsync(Login login) async {
     final response =
         await HttpUtil().post('/auth/login', params: login.toJson());
     return LoginResponse.fromJson(response);
   }
 
-  /// 刷新令牌
+  /// Refresh the token.
   static Future<RefreshResponse> refreshAsync(RefreshToken refresh) async {
     final response = await HttpUtil().post(
       '/auth/refresh',
@@ -23,7 +23,7 @@ class AuthApi {
     return RefreshResponse.fromJson(response);
   }
 
-  /// 刷新令牌
+  /// Logout.
   static Future<LogoutResponse> logoutAsync() async {
     final response = await HttpUtil().post('/auth/logout');
     return LogoutResponse.fromJson(response);

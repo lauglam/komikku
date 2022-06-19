@@ -1,14 +1,13 @@
-/// 漫画状态
 enum Status {
-  /// 正在进行
+  /// Ongoing.
   ongoing,
 
-  /// 完结
+  /// Completed.
   completed,
 
-  /// 暂停
+  /// Hiatus.
   hiatus,
 
-  /// 取消
+  /// Cancelled.
   cancelled,
 }

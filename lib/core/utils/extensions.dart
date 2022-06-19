@@ -2,20 +2,24 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
-/// 对象拓展
-extension ObjectExtensions<T> on T {
+/// Object extensions.
+extension ObjectX<T> on T {
   dynamic get deepClone => jsonDecode(jsonEncode(this));
 }
 
-/// 滚动控制器拓展
-extension ScrollControllerExtensions on ScrollController {
-  /// 在底部
+/// Scroll controller extensions.
+extension ScrollControllerX on ScrollController {
+  /// Whether on the bottom of list.
   bool get onBottom {
-    return positions.isNotEmpty && position.atEdge && position.pixels == position.maxScrollExtent;
+    return positions.isNotEmpty &&
+        position.atEdge &&
+        position.pixels == position.maxScrollExtent;
   }
 
-  /// 在顶部
+  /// Whether on the top of list.
   bool get onTop {
-    return positions.isNotEmpty && position.atEdge && position.pixels == position.minScrollExtent;
+    return positions.isNotEmpty &&
+        position.atEdge &&
+        position.pixels == position.minScrollExtent;
   }
 }

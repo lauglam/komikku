@@ -6,7 +6,7 @@ import 'response.dart';
 
 part 'user.g.dart';
 
-/// 用户令牌
+/// User response.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class UserResponse extends OkResponse<User> {
   UserResponse({required super.response, required super.data});
@@ -16,16 +16,16 @@ class UserResponse extends OkResponse<User> {
   Map<String, dynamic> toJson() => _$UserResponseToJson(this);
 }
 
-/// 用户
+/// User.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class User {
-  /// 用户id
+  /// The id of user.
   final String id;
 
-  /// 用户属性
+  /// The attributes of user.
   final UserAttributes attributes;
 
-  /// 关系
+  /// The relationship of user.
   final List<Relationship> relationships;
 
   User({

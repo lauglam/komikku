@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'color_schemes.g.dart';
 
 class AppTheme {
+  /// Light mode theme data.
   static var light = ThemeData(
     colorScheme: lightColorScheme,
 
-    // 全局样式修改
-
+    // Global Style.
   );
 
+  /// Dark mode theme data.
   static var dark = ThemeData(
     colorScheme: lightColorScheme,
 
-    // 全局样式修改
+    // Global Style.
   );
 }

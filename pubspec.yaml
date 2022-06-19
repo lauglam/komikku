@@ -30,37 +30,46 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # 网络请求
-  dio: ^4.0.6
-  # 重试
-  dio_smart_retry: ^1.2.0
-  # 配合build_runner、json_serializable一起使用，本身也提供帮助类
-  json_annotation: ^4.5.0
-  # 网络图片加载
-  cached_network_image: ^3.2.1
-  # 集合处理
-  collection: ^1.16.0
-  # 消息框、提示框和自定义加载等
-  bot_toast: ^4.0.2
-  # 格式化时间（如：1天前）
-  timeago: ^3.2.2
-  # 跳转Url
-  url_launcher: ^6.1.2
-  # 唯一键
-  uuid: 3.0.6
-  # 滚动分页
-  infinite_scroll_pagination: ^3.2.0
-  # Hive数据库
-  hive: ^2.2.2
-  # Hive数据库拓展
-  hive_flutter: ^1.1.0
-  # GetX
+  # State, routes, theme.
   get: ^4.6.5
-  # 下拉刷新和上拉加载
+
+  # Http Request.
+  dio: ^4.0.6
+  dio_smart_retry: ^1.2.0
+
+  # Unique key.
+  uuid: 3.0.6
+
+  # Database.
+  hive: ^2.2.2
+  hive_flutter: ^1.1.0
+
+  # Converts a date into a humanized text.
+  timeago: ^3.2.2
+
+  bot_toast: ^4.0.2
+
+  # List extensions.
+  collection: ^1.16.0
+
+  # Launcher url in browser.
+  url_launcher: ^6.1.2
+
+  # Handle json.
+  json_annotation: ^4.5.0
+
+  # Request the network image and cached it.
+  cached_network_image: ^3.2.1
+
+  # The list/grid view which auto load more.
+  infinite_scroll_pagination: ^3.2.0
+
+  # Refresh indicator.
   pull_to_refresh:
     git:
       url: https://github.com/cube1in/pull_to_refresh.git
-  # 国际化
+
+  # Localization for flutter.
   flutter_localizations:
     sdk: flutter
 
@@ -73,13 +82,17 @@ dev_dependencies:
     sdk: flutter
 
   build_runner: ^2.1.11
-  # 生成类中fromJson和toJson方法[flutter pub run build_runner build]
+
+  # [flutter pub run build_runner build].
   json_serializable: ^6.2.0
-  # 应用图标[flutter pub run icons_launcher:create]
+
+  # [flutter pub run icons_launcher:create].
   icons_launcher: ^1.1.8
-  # 应用屏幕启动时的闪屏[flutter pub run flutter_native_splash:create]
+
+  # [flutter pub run flutter_native_splash:create].
   flutter_native_splash: ^2.2.1
-  # Hive数据库Adapter生成器[flutter packages pub run build_runner build]
+
+  # [flutter packages pub run build_runner build].
   hive_generator: ^1.1.3
 
   # The "flutter_lints" package below contains a set of recommended lints to

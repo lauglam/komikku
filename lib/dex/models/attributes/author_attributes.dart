@@ -3,65 +3,77 @@ import '../localized_string.dart';
 
 part 'author_attributes.g.dart';
 
-/// 作者属性
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class AuthorAttributes {
-  /// 作者名
+  /// Author name.
   final String name;
 
-  /// 图片地址
+  /// The cover image url.
   final String? imageUrl;
 
-  /// 传记
+  /// The biography of author.
   @JsonKey(readValue: readSingleOrArray)
   final LocalizedString? biography;
 
-  /// twitter
+  /// twitter.
+  /// nullable.
   final String? twitter;
 
-  /// pixiv
+  /// pixiv.
+  /// nullable.
   final String? pixiv;
 
-  /// melonBook
+  /// melonBook.
+  /// nullable.
   final String? melonBook;
 
   /// fanBox
+  /// nullable.
   final String? fanBox;
 
   /// booth
+  /// nullable.
   final String? booth;
 
   /// nicoVideo
+  /// nullable.
   final String? nicoVideo;
 
   /// skeb
+  /// nullable.
   final String? skeb;
 
   /// fantia
+  /// nullable.
   final String? fantia;
 
   /// tumber
+  /// nullable.
   final String? tumber;
 
   /// youtube
+  /// nullable.
   final String? youtube;
 
   /// weibo
+  /// nullable.
   final String? weibo;
 
   /// naver
+  /// nullable.
   final String? naver;
 
   /// website
+  /// nullable.
   final String? website;
 
-  /// 创建时间
+  /// Create date.
   final String createdAt;
 
-  /// 更新时间
+  /// Update date.
   final String updatedAt;
 
-  /// 版本
+  /// The vision of this attributes.
   final int version;
 
   AuthorAttributes({
@@ -86,7 +98,8 @@ class AuthorAttributes {
     this.website,
   });
 
-  factory AuthorAttributes.fromJson(Map<String, dynamic> json) => _$AuthorAttributesFromJson(json);
+  factory AuthorAttributes.fromJson(Map<String, dynamic> json) =>
+      _$AuthorAttributesFromJson(json);
 
   Map<String, dynamic> toJson() => _$AuthorAttributesToJson(this);
 }

@@ -1,22 +1,22 @@
 class Retrieving {
   static const _retrievingCoverArtUrl = 'https://uploads.mangadex.org/covers';
 
-  /// 获取封面艺术原图
+  /// Get original quality cover art.
   static String getCoverArtOnOriginal(String mangaId, String filename) {
     return '$_retrievingCoverArtUrl/$mangaId/$filename';
   }
 
-  /// 获取封面艺术512px
+  /// Get 512px quality cover art.
   static String getCoverArtOn512(String mangaId, String filename) {
     return '$_retrievingCoverArtUrl/$mangaId/$filename.512.jpg';
   }
 
-  /// 获取封面艺术256px
+  /// Get 256px quality cover art.
   static String getCoverArtOn256(String mangaId, String filename) {
     return '$_retrievingCoverArtUrl/$mangaId/$filename.256.jpg';
   }
 
-  /// 获取章节图片
+  /// Get chapter pages image url.
   static List<String> getChapterPages(
       String baseUrl, String hash, List<String> filenames) {
     return filenames
@@ -24,7 +24,7 @@ class Retrieving {
         .toList();
   }
 
-  /// 获取章节图片（压缩模式）
+  /// Get chapter pages image url (data saver).
   static List<String> getChapterPagesOnSaver(
       String baseUrl, String hash, List<String> filenames) {
     return filenames

@@ -1,8 +1,8 @@
-/// 排序模式
+
 enum OrderMode {
-  /// 倒序
+  /// Descending.
   desc,
 
-  /// 正序
+  /// Ascending.
   asc,
 }

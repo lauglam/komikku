@@ -5,10 +5,10 @@ import 'token.dart';
 
 part 'login.g.dart';
 
-/// 登录响应
+/// Login response.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class LoginResponse extends Response {
-  /// 令牌
+  /// The token of user.
   Token token;
 
   LoginResponse({required this.token, required super.result});

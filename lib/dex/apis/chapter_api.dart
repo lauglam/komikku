@@ -4,7 +4,7 @@ import '../util.dart';
 import '../models/chapter_list.dart';
 
 class ChapterApi {
-  /// 获取章节列表
+  /// Get chapter list.
   static Future<ChapterListResponse> getChapterListAsync({
     Map<String, dynamic>? queryParameters,
   }) async {
@@ -15,7 +15,7 @@ class ChapterApi {
     return ChapterListResponse.fromJson(response);
   }
 
-  /// 根据id获取章节
+  /// Get chapter by [id].
   static Future<ChapterResponse> getChapterAsync(
     String id, {
     Map<String, dynamic>? queryParameters,

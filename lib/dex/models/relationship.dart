@@ -5,19 +5,19 @@ import 'package:collection/collection.dart';
 
 part 'relationship.g.dart';
 
-/// 关系
+/// Relationship.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Relationship {
-  /// 关系id
+  /// The id of relationship.
   final String id;
 
-  /// 类型
+  /// The type of relationship.
   final EntityType type;
 
-  /// 关系
+  /// The related of relationship.
   final Related? related;
 
-  /// 属性
+  /// The attribute of relationship.
   final dynamic attributes;
 
   Relationship({
@@ -33,12 +33,13 @@ class Relationship {
 }
 
 extension RelationshipsExtensions on List<Relationship> {
-  /// 返回一个 EntityType 为输入值的 Relationship
+  /// Return a [Relationship] which EntityType is [type].
   Relationship firstType(EntityType type) {
     return firstWhere((relationship) => relationship.type == type);
   }
 
-  /// 返回一个 EntityType 为输入值的 Relationship（未找到时返回 null）
+  /// Return a [Relationship] which EntityType is [type].
+  /// Return null if not exists.
   Relationship? firstTypeOrDefault(EntityType type) {
     return firstWhereOrNull((relationship) => relationship.type == type);
   }

@@ -1,7 +1,7 @@
 enum Result {
-  /// 成功
+  /// Success.
   ok,
 
-  /// 错误
+  /// Failed.
   error,
 }

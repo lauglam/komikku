@@ -3,19 +3,19 @@ import '../localized_string.dart';
 
 part 'tag_attributes.g.dart';
 
-/// 标签属性
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class TagAttributes {
-  /// 标签名称
+  /// The name of this tag.
   final LocalizedString name;
 
-  /// 所属标签组
+  /// The group this tag belong to.
   final String group;
 
-  /// 版本
+  /// The vision of this attributes.
   final int version;
 
-  /// 描述
+  /// The description of this tag.
+  /// nullable.
   @JsonKey(readValue: readSingleOrArray)
   final LocalizedString? description;
 

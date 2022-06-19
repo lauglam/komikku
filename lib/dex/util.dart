@@ -1,4 +1,4 @@
-/// 建造请求Uri
+/// Build request uri.
 String buildUri({required String path, Map<String, dynamic>? queryParameters}) {
   var uri = Uri(
     path: path,

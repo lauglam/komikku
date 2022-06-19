@@ -1,14 +1,13 @@
-/// 漫画类型
 enum PublicationDemographic {
-  /// 少年
+  ///	Manga is a Shounen.
   shounen,
 
-  /// 少女
+  ///	Manga is a Shoujo.
   shoujo,
 
-  /// 女士
+  ///	Manga is a Josei.
   josei,
 
-  /// 青年
+  /// Manga is a Seinen.
   seinen,
 }

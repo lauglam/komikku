@@ -7,7 +7,7 @@ import 'response.dart';
 
 part 'chapter.g.dart';
 
-/// 章节响应
+/// Chapter response.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class ChapterResponse extends OkResponse<Chapter> {
   ChapterResponse({required super.response, required super.data});
@@ -17,12 +17,19 @@ class ChapterResponse extends OkResponse<Chapter> {
   Map<String, dynamic> toJson() => _$ChapterResponseToJson(this);
 }
 
-/// 章节
+/// Chapter
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Chapter {
+  /// The id of chapter.
   final String id;
+
+  /// The type of chapter.
   final EntityType type;
+
+  /// The attributes of chapter.
   final ChapterAttributes attributes;
+
+  /// The relationship of chapter.
   final List<Relationship> relationships;
 
   Chapter({

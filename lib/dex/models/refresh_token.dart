@@ -3,13 +3,13 @@ import 'login.dart';
 
 part 'refresh_token.g.dart';
 
-/// 刷新响应
+/// Refresh token response.
 typedef RefreshResponse = LoginResponse;
 
-/// 刷新请求
+/// Get session token request.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class RefreshToken {
-  /// 刷新令牌
+  /// The refresh token.
   final String token;
 
   RefreshToken({required this.token});

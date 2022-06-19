@@ -3,7 +3,7 @@ import '../models/user.dart';
 import '../../core/utils/http.dart';
 
 class AccountApi {
-  /// 创建账号
+  /// Create account.
   @Deprecated('官方不允许App进行注册，注册需要移步官网')
   static Future<UserResponse> createAccountAsync(AccountCreate create) async {
     final response =
@@ -11,7 +11,7 @@ class AccountApi {
     return UserResponse.fromJson(response);
   }
 
-  /// 激活账号
+  /// Activate account.
   @Deprecated('官方不允许App进行注册，注册需要移步官网')
   static Future<AccountActivateResponse> activateAccountAsync(
       String code) async {
@@ -19,7 +19,7 @@ class AccountApi {
     return AccountActivateResponse.fromJson(response);
   }
 
-  /// 重新发送激活码
+  /// Resent the activate code.
   @Deprecated('官方不允许App进行注册，注册需要移步官网')
   static Future<AccountActivateResponse> resendActivationCodeAsync(
       SendAccountActivationCode resend) async {
@@ -28,7 +28,7 @@ class AccountApi {
     return AccountActivateResponse.fromJson(response);
   }
 
-  /// 恢复账号(修改密码)
+  /// Recover account (change password).
   @Deprecated('官方不允许App进行注册，注册需要移步官网')
   static Future<AccountActivateResponse> recoverAccountAsync(
       SendAccountActivationCode resend) async {
@@ -36,7 +36,7 @@ class AccountApi {
     return AccountActivateResponse.fromJson(response);
   }
 
-  /// 完成恢复账号(修改密码)
+  /// Complete recover (change password).
   @Deprecated('官方不允许App进行注册，注册需要移步官网')
   static Future<AccountActivateResponse> completeAccountRecoverAsync(
       String code, RecoverComplete complete) async {

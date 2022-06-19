@@ -7,7 +7,7 @@ import 'response.dart';
 
 part 'tag.g.dart';
 
-/// 标签列表 响应
+/// Tag list response.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class TagListResponse extends PageResponse<Tag> {
   TagListResponse({
@@ -23,7 +23,7 @@ class TagListResponse extends PageResponse<Tag> {
   Map<String, dynamic> toJson() => _$TagListResponseToJson(this);
 }
 
-/// 标签 响应
+/// Tag response.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class TagResponse extends OkResponse<Tag> {
   TagResponse({required super.response, required super.data});
@@ -33,19 +33,19 @@ class TagResponse extends OkResponse<Tag> {
   Map<String, dynamic> toJson() => _$TagResponseToJson(this);
 }
 
-/// 标签
+/// Tag.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Tag {
-  /// 标签id
+  /// The id of tag.
   final String id;
 
-  /// 类型
+  /// The type of tag.
   final EntityType type;
 
-  /// 标签属性
+  /// The attributes of tag.
   final TagAttributes attributes;
 
-  /// 关系
+  /// The relationship of tag.
   final List<Relationship> relationships;
 
   Tag({

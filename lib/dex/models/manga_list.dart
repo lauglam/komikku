@@ -5,7 +5,7 @@ import 'response.dart';
 
 part 'manga_list.g.dart';
 
-/// 漫画列表
+/// Manga list response.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class MangaListResponse extends PageResponse<Manga> {
   MangaListResponse({

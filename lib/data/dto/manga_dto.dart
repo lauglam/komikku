@@ -29,7 +29,7 @@ class MangaDto {
   });
 
   factory MangaDto.fromDex(Manga source) {
-    /// NOTE: 必须含有 CoverAttributes AuthorAttributes
+    /// NOTE: must contain [CoverAttributes] [AuthorAttributes].
     final coverAttributes = CoverAttributes.fromJson(
         source.relationships.firstType(EntityType.coverArt).attributes);
     final authorAttributes = AuthorAttributes.fromJson(

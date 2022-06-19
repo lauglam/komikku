@@ -4,13 +4,13 @@ part 'at_home_chapter.g.dart';
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class AtHomeChapter {
-  /// 哈希值
+  /// The hash code.
   final String hash;
 
-  /// 图片名称列表
+  /// The image file name list of chapter.
   final List<String> data;
 
-  /// 压缩质量图片名称列表
+  /// The data saver image file name list of chapter.
   final List<String> dataSaver;
 
   AtHomeChapter({

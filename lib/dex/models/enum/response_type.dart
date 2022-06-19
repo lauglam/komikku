@@ -1,7 +1,7 @@
 enum ResponseType {
-  /// 实体
+  /// Entity.
   entity,
 
-  /// 集合
+  /// Collection.
   collection,
 }

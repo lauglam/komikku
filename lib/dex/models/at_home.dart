@@ -5,10 +5,10 @@ part 'at_home.g.dart';
 
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class AtHome {
-  /// 服务器地址
+  /// The server url.
   final String baseUrl;
 
-  /// 章节数据
+  /// The data of chapter.
   final AtHomeChapter chapter;
 
   AtHome({

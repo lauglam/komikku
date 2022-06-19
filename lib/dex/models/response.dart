@@ -5,15 +5,15 @@ import 'enum/response_type.dart';
 
 part 'response.g.dart';
 
-/// 页响应
+/// Page response.
 abstract class PageResponse<T> extends OkResponse<List<T>> {
-  /// 页限制
+  /// The page size of page.
   final int limit;
 
-  /// 偏移
+  /// The offset of page.
   final int offset;
 
-  /// 总共
+  /// The total count of page.
   final int total;
 
   PageResponse({
@@ -25,12 +25,12 @@ abstract class PageResponse<T> extends OkResponse<List<T>> {
   });
 }
 
-/// 成功响应
+/// Success response.
 class OkResponse<T> {
-  /// 响应类型
+  /// The type of response.
   final ResponseType response;
 
-  /// 数据
+  /// The data of response.
   final T data;
 
   OkResponse({
@@ -39,10 +39,10 @@ class OkResponse<T> {
   });
 }
 
-/// 响应
+/// Response.
 @JsonSerializable(explicitToJson: true, includeIfNull: false)
 class Response {
-  /// 结果
+  /// The result of response.
   final Result result;
 
   Response({

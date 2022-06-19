@@ -1,13 +1,13 @@
 enum State {
-  /// 草稿
+  /// Draft.
   draft,
 
-  /// 已提交
+  /// Submitted.
   submitted,
 
-  /// 已发布
+  /// Published.
   published,
 
-  /// 已拒绝
+  /// Rejected.
   rejected
 }

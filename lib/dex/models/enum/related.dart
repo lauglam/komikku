@@ -1,61 +1,61 @@
 import 'package:json_annotation/json_annotation.dart';
 
 enum Related {
-  /// 这部漫画的单色变体
+  /// A monochrome variant of this manga.
   monochrome,
 
-  /// 这部漫画的彩色变体
+  /// A colored variant of this manga.
   colored,
 
-  /// 这部漫画在正式连载之前的原版
+  /// The original version of this manga before its official serialization.
   preserialization,
 
-  /// 这部漫画的正式连载
+  /// The official serialization of this manga.
   serialization,
 
-  /// 同一系列中的上一个条目
+  /// The previous entry in the same series.
   prequel,
 
-  /// 同一系列的下一个条目
+  /// The next entry in the same series.
   sequel,
 
-  /// 这部漫画的是基于原始叙事
+  /// The original narrative this manga is based on.
   @JsonValue('main_story')
   mainStory,
 
-  /// 与这部漫画的故事同时发生的副业
+  /// A side work contemporaneous with the narrative of this manga.
   @JsonValue('side_story')
   sideStory,
 
-  /// 这部衍生漫画的原著改编自
+  /// The original work this spin-off manga has been adapted from.
   @JsonValue('adapted_from')
   adaptedFrom,
 
-  /// 基于这部漫画的官方衍生作品
+  /// An official derivative work based on this manga.
   @JsonValue('spin_off')
   spinOff,
 
-  /// 这部自助出版的衍生漫画是基于原著
+  /// The original work this self-published derivative manga is based on.
   @JsonValue('based_on')
   basedOn,
 
-  /// 斗金石 根据这部漫画自行出版的衍生作品
+  /// A self-published derivative work based on this manga.
   @JsonValue('doujinshi')
   douJinShi,
 
-  /// 这部漫画的知识产权和这部漫画一样
+  /// A manga based on the same intellectual property as this manga.
   @JsonValue('same_franchise')
   sameFranchise,
 
-  /// 一部漫画发生在和这部漫画一样的虚构世界里
+  /// A manga taking place in the same fictional world as this manga.
   @JsonValue('shared_universe')
   sharedUniverse,
 
-  /// 这部漫画的另一个故事
+  /// An alternative take of the story in this manga.
   @JsonValue('alternate_story')
   alternateStory,
 
-  /// 这部漫画的另一个版本没有其他特别的区别
+  /// A different version of this manga with no other specific distinction.
   @JsonValue('alternate_version')
   alternateVersion,
 }
