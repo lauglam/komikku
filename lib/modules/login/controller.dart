@@ -26,7 +26,7 @@ class LoginController extends GetxController {
 
   @override
   void onInit() {
-    _loginState.value = StoreService().userLoginState;
+    _loginState.value = StoreService().loginStatus;
     super.onInit();
   }
 
@@ -50,8 +50,8 @@ class LoginController extends GetxController {
 
   /// 登出
   Future<void> logout() async {
-    StoreService().removeSessionToken();
-    StoreService().removeRefreshToken();
+    StoreService().sessionToken = null;
+    StoreService().refreshToken = null;
     await AuthApi.logoutAsync();
 
     username = '';

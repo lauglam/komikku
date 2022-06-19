@@ -80,7 +80,7 @@ class HttpUtil {
     Options options = Options();
 
     // 查看是否登录
-    if (StoreService().userLoginState) {
+    if (StoreService().loginStatus) {
       if (StoreService().sessionToken == null) {
         final response = await AuthApi.refreshAsync(
             RefreshToken(token: StoreService().refreshToken!));

@@ -70,7 +70,7 @@ class SubscribesController extends GetxController {
 
   /// 获取用户订阅的漫画
   Future<void> _getUserFollowedMangaList(int pageKey) async {
-    if (!StoreService().userLoginState) {
+    if (!StoreService().loginStatus) {
       pagingController.appendPage(<MangaDto>[], 0);
       return;
     }

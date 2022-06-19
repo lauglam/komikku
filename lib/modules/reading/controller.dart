@@ -46,7 +46,7 @@ class ReadingController extends GetxController {
 
   /// 设置漫画已经阅读
   Future<void> _markMangaRead(String id) async {
-    if (!StoreService().userLoginState) return;
+    if (!StoreService().loginStatus) return;
 
     final controller = Get.put(DetailsController());
     controller.chapterReadMarkers.add(id);

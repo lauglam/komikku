@@ -108,7 +108,7 @@ class DetailsController extends GetxController {
 
   /// 获取漫画阅读记录
   Future<void> _getMangaReadMarkers() async {
-    if (!StoreService().userLoginState) return;
+    if (!StoreService().loginStatus) return;
     final response = await ChapterReadMarkerApi.getMangaReadMarkersAsync(data.id);
     chapterReadMarkers.addAll(response.data);
   }
