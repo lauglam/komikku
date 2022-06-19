@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../global_widgets/widgets.dart';
+import '../../../widgets/widgets.dart';
 
 class SearchFilterWidget extends StatelessWidget {
   const SearchFilterWidget({

@@ -6,7 +6,7 @@ import 'package:pull_to_refresh/pull_to_refresh.dart';
 import '../../data/services/store.dart';
 import '../../dex/apis/follows_api.dart';
 import '../../dex/apis/manga_api.dart';
-import '../../global_widgets/paging_controller_extent.dart';
+import '../../widgets/paging_controller_extent.dart';
 import '../../data/dto/manga_dto.dart';
 
 class SubscribesController extends GetxController {

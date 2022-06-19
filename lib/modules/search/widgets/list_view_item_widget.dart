@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../global_widgets/image.dart';
+import '../../../widgets/image.dart';
 
 /// 漫画搜索子项布局
 class ListViewItemWidget extends StatelessWidget {

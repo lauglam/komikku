@@ -5,7 +5,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import '../../core/utils/icons.dart';
 import '../../core/utils/toast.dart';
 import '../../data/dto/manga_dto.dart';
-import '../../global_widgets/widgets.dart';
+import '../../widgets/widgets.dart';
 
 import 'controller.dart';
 import 'widgets/list_view_item_widget.dart';

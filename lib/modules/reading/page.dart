@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../global_widgets/widgets.dart';
+import '../../widgets/widgets.dart';
 
 import 'controller.dart';
 import 'widgets/bidirectional_list_view.dart';

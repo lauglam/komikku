@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../global_widgets/paged_grid_view_widget.dart';
-import '../../global_widgets/widgets.dart';
+import '../../widgets/paged_grid_view_widget.dart';
+import '../../widgets/widgets.dart';
 import '../../data/dto/manga_dto.dart';
 
 import 'controller.dart';

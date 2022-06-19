@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 
 import '../../core/utils/icons.dart';
 import '../../core/utils/toast.dart';
-import '../../global_widgets/widgets.dart';
+import '../../widgets/widgets.dart';
 import '../subscribes/controller.dart';
 import '../login/controller.dart';
 

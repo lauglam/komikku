@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../global_widgets/image.dart';
+import '../../../widgets/image.dart';
 
 /// 漫画栅格子项布局
 class GridViewItemWidget extends StatelessWidget {

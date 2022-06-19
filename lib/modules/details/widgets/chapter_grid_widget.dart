@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/utils/timeago.dart';
 import '../../../core/utils/toast.dart';
-import '../../../global_widgets/bottom_modal_item.dart';
+import '../../../widgets/bottom_modal_item.dart';
 import '../../../data/dto/chapter_dto.dart';
 
 import '../controller.dart';
