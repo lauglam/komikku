@@ -1,6 +1,6 @@
-import 'package:komikku/dex/models/account.dart';
-import 'package:komikku/dex/models/user.dart';
-import 'package:komikku/core/utils/http.dart';
+import '../models/account.dart';
+import '../models/user.dart';
+import '../../core/utils/http.dart';
 
 class AccountApi {
   /// 创建账号
@@ -13,7 +13,8 @@ class AccountApi {
 
   /// 激活账号
   @Deprecated('官方不允许App进行注册，注册需要移步官网')
-  static Future<AccountActivateResponse> activateAccountAsync(String code) async {
+  static Future<AccountActivateResponse> activateAccountAsync(
+      String code) async {
     final response = await HttpUtil().post('/account/activate/$code');
     return AccountActivateResponse.fromJson(response);
   }
@@ -22,7 +23,8 @@ class AccountApi {
   @Deprecated('官方不允许App进行注册，注册需要移步官网')
   static Future<AccountActivateResponse> resendActivationCodeAsync(
       SendAccountActivationCode resend) async {
-    final response = await HttpUtil().post('/account/activate/resend', params: resend.toJson());
+    final response = await HttpUtil()
+        .post('/account/activate/resend', params: resend.toJson());
     return AccountActivateResponse.fromJson(response);
   }
 
@@ -38,7 +40,8 @@ class AccountApi {
   @Deprecated('官方不允许App进行注册，注册需要移步官网')
   static Future<AccountActivateResponse> completeAccountRecoverAsync(
       String code, RecoverComplete complete) async {
-    final response = await HttpUtil().post('/account/recover/$code', params: complete.toJson());
+    final response = await HttpUtil()
+        .post('/account/recover/$code', params: complete.toJson());
     return AccountActivateResponse.fromJson(response);
   }
 }

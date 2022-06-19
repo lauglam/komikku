@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/enum/result.dart';
-import 'package:komikku/dex/models/response.dart';
+import 'enum/result.dart';
+import 'response.dart';
 
 part 'chapter_read_marker.g.dart';
 

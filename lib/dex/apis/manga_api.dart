@@ -1,9 +1,9 @@
-import 'package:komikku/dex/models/response.dart';
-import 'package:komikku/dex/models/tag.dart';
-import 'package:komikku/dex/util.dart';
-import 'package:komikku/dex/models/chapter_list.dart';
-import 'package:komikku/dex/models/manga_list.dart';
-import 'package:komikku/core/utils/http.dart';
+import '../models/response.dart';
+import '../models/tag.dart';
+import '../util.dart';
+import '../models/chapter_list.dart';
+import '../models/manga_list.dart';
+import '../../core/utils/http.dart';
 
 class MangaApi {
   /// Get 漫画列表

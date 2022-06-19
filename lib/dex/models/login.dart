@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/enum/result.dart';
-import 'package:komikku/dex/models/response.dart';
-import 'package:komikku/dex/models/token.dart';
+import 'enum/result.dart';
+import 'response.dart';
+import 'token.dart';
 
 part 'login.g.dart';
 

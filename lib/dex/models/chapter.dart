@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/attributes/chapter_attributes.dart';
-import 'package:komikku/dex/models/enum/entity_type.dart';
-import 'package:komikku/dex/models/enum/response_type.dart';
-import 'package:komikku/dex/models/relationship.dart';
-import 'package:komikku/dex/models/response.dart';
+import 'attributes/chapter_attributes.dart';
+import 'enum/entity_type.dart';
+import 'enum/response_type.dart';
+import 'relationship.dart';
+import 'response.dart';
 
 part 'chapter.g.dart';
 

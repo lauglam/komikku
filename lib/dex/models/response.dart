@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/enum/result.dart';
+import 'enum/result.dart';
 
 import 'enum/response_type.dart';
 

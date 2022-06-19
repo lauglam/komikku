@@ -1,4 +1,4 @@
-import 'package:komikku/core/utils/http.dart';
+import '../../core/utils/http.dart';
 
 class PingApi {
   /// Ping

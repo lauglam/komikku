@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/at_home_chapter.dart';
+import 'at_home_chapter.dart';
 
 part 'at_home.g.dart';
 

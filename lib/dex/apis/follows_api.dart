@@ -1,7 +1,7 @@
-import 'package:komikku/dex/models/response.dart';
-import 'package:komikku/dex/util.dart';
-import 'package:komikku/dex/models/manga_list.dart';
-import 'package:komikku/core/utils/http.dart';
+import '../models/response.dart';
+import '../util.dart';
+import '../models/manga_list.dart';
+import '../../core/utils/http.dart';
 
 class FollowsApi {
   /// 获取用户订阅的漫画列表

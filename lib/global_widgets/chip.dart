@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:komikku/core/utils/icons.dart';
+import '../core/utils/icons.dart';
 
 
 /// 普通的 Chip

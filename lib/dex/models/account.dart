@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/response.dart';
+import 'response.dart';
 
 part 'account.g.dart';
 
@@ -21,7 +21,8 @@ class AccountCreate {
     required this.email,
   });
 
-  factory AccountCreate.fromJson(Map<String, dynamic> json) => _$AccountCreateFromJson(json);
+  factory AccountCreate.fromJson(Map<String, dynamic> json) =>
+      _$AccountCreateFromJson(json);
 
   Map<String, dynamic> toJson() => _$AccountCreateToJson(this);
 }
@@ -51,7 +52,8 @@ class RecoverComplete {
 
   RecoverComplete({required this.newPassword});
 
-  factory RecoverComplete.fromJson(Map<String, dynamic> json) => _$RecoverCompleteFromJson(json);
+  factory RecoverComplete.fromJson(Map<String, dynamic> json) =>
+      _$RecoverCompleteFromJson(json);
 
   Map<String, dynamic> toJson() => _$RecoverCompleteToJson(this);
 }

@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/enum/entity_type.dart';
-import 'package:komikku/dex/models/enum/related.dart';
+import 'enum/entity_type.dart';
+import 'enum/related.dart';
 import 'package:collection/collection.dart';
 
 part 'relationship.g.dart';

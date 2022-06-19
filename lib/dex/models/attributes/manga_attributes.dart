@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/localized_string.dart';
-import 'package:komikku/dex/models/enum/state.dart';
-import 'package:komikku/dex/models/enum/status.dart';
-import 'package:komikku/dex/models/enum/content_rating.dart';
-import 'package:komikku/dex/models/enum/publication_demographic.dart';
-import 'package:komikku/dex/models/tag.dart';
+import '../localized_string.dart';
+import '../enum/state.dart';
+import '../enum/status.dart';
+import '../enum/content_rating.dart';
+import '../enum/publication_demographic.dart';
+import '../tag.dart';
 
 part 'manga_attributes.g.dart';
 
@@ -91,7 +91,8 @@ class MangaAttributes {
     this.links,
   });
 
-  factory MangaAttributes.fromJson(Map<String, dynamic> json) => _$MangaAttributesFromJson(json);
+  factory MangaAttributes.fromJson(Map<String, dynamic> json) =>
+      _$MangaAttributesFromJson(json);
 
   Map<String, dynamic> toJson() => _$MangaAttributesToJson(this);
 }

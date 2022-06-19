@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/login.dart';
+import 'login.dart';
 
 part 'refresh_token.g.dart';
 

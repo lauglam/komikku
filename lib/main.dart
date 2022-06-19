@@ -1,16 +1,16 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:komikku/core/theme/global.dart';
-import 'package:komikku/data/hive.dart';
-import 'package:komikku/routes/pages.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
+import 'core/theme/global.dart';
 import 'core/theme/theme.dart';
+import 'data/services/store.dart';
+import 'routes/pages.dart';
 
 void main() async {
   // 注册Hive数据库
-  await HiveDatabase.initial();
+  await StoreService().initial();
 
   // 确保能够调用调用本机代码
   WidgetsFlutterBinding.ensureInitialized();

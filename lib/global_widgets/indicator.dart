@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:komikku/core/utils/icons.dart';
+import '../core/utils/icons.dart';
 
 /// 中间带安卓图片的错误指示器
 class ExceptionIndicator extends StatelessWidget {

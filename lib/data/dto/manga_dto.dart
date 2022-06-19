@@ -1,12 +1,6 @@
-import 'package:komikku/data/hive.dart';
-import 'package:komikku/dex/models/attributes/author_attributes.dart';
-import 'package:komikku/dex/models/attributes/cover_attributes.dart';
-import 'package:komikku/dex/models/enum/content_rating.dart';
-import 'package:komikku/dex/models/enum/entity_type.dart';
-import 'package:komikku/dex/models/enum/status.dart';
-import 'package:komikku/dex/models/manga.dart';
-import 'package:komikku/dex/models/relationship.dart';
-import 'package:komikku/dex/retrieving.dart';
+import '../../data/services/store.dart';
+import '../../dex/models.dart';
+import '../../dex/retrieving.dart';
 
 /// 漫画
 class MangaDto {
@@ -36,10 +30,10 @@ class MangaDto {
 
   factory MangaDto.fromDex(Manga source) {
     /// NOTE: 必须含有 CoverAttributes AuthorAttributes
-    final coverAttributes =
-        CoverAttributes.fromJson(source.relationships.firstType(EntityType.coverArt).attributes);
-    final authorAttributes =
-        AuthorAttributes.fromJson(source.relationships.firstType(EntityType.author).attributes);
+    final coverAttributes = CoverAttributes.fromJson(
+        source.relationships.firstType(EntityType.coverArt).attributes);
+    final authorAttributes = AuthorAttributes.fromJson(
+        source.relationships.firstType(EntityType.author).attributes);
 
     var titleMap = source.attributes.title.toJson();
     var title = titleMap.values.first;
@@ -51,14 +45,14 @@ class MangaDto {
     }
 
     for (var entry in titleMap.entries) {
-      if (!HiveDatabase.translatedLanguage.contains(entry.key)) continue;
+      if (!StoreService().translatedLanguage.contains(entry.key)) continue;
       title = entry.value;
     }
 
     String? description;
     if (source.attributes.description != null) {
       for (var entry in source.attributes.description!.toJson().entries) {
-        if (!HiveDatabase.translatedLanguage.contains(entry.key)) continue;
+        if (!StoreService().translatedLanguage.contains(entry.key)) continue;
         description = entry.value;
       }
     }
@@ -68,7 +62,7 @@ class MangaDto {
       var nameMap = tag.attributes.name.toJson();
       var name = nameMap.values.first;
       for (var entry in nameMap.entries) {
-        if (!HiveDatabase.translatedLanguage.contains(entry.key)) continue;
+        if (!StoreService().translatedLanguage.contains(entry.key)) continue;
         name = entry.value;
       }
 
@@ -81,9 +75,12 @@ class MangaDto {
       status: _statusEnumChineseMap[source.attributes.status]!,
       author: authorAttributes.name,
       tags: tags,
-      imageUrl256: Retrieving.getCoverArtOn256(source.id, coverAttributes.fileName),
-      imageUrl512: Retrieving.getCoverArtOn512(source.id, coverAttributes.fileName),
-      imageUrlOriginal: Retrieving.getCoverArtOnOriginal(source.id, coverAttributes.fileName),
+      imageUrl256:
+          Retrieving.getCoverArtOn256(source.id, coverAttributes.fileName),
+      imageUrl512:
+          Retrieving.getCoverArtOn512(source.id, coverAttributes.fileName),
+      imageUrlOriginal:
+          Retrieving.getCoverArtOnOriginal(source.id, coverAttributes.fileName),
       contentRating: _contentRatingEnumMap[source.attributes.contentRating]!,
       description: description,
     );

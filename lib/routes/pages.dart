@@ -1,16 +1,17 @@
 import 'package:get/get.dart';
-import 'package:komikku/modules/details_module/binding.dart';
-import 'package:komikku/modules/home_module/binding.dart';
-import 'package:komikku/modules/login_module/binding.dart';
-import 'package:komikku/modules/reading_module/binding.dart';
-import 'package:komikku/modules/search_module/binding.dart';
-import 'package:komikku/modules/shell_module/binding.dart';
-import 'package:komikku/modules/subscribes_module/binding.dart';
-import 'package:komikku/modules/details_module/page.dart';
-import 'package:komikku/modules/login_module/page.dart';
-import 'package:komikku/modules/reading_module/page.dart';
-import 'package:komikku/modules/search_module/page.dart';
-import 'package:komikku/modules/shell_module/page.dart';
+
+import '../modules/details/binding.dart';
+import '../modules/home/binding.dart';
+import '../modules/login/binding.dart';
+import '../modules/reading/binding.dart';
+import '../modules/search/binding.dart';
+import '../modules/shell/binding.dart';
+import '../modules/subscribes/binding.dart';
+import '../modules/details/page.dart';
+import '../modules/login/page.dart';
+import '../modules/reading/page.dart';
+import '../modules/search/page.dart';
+import '../modules/shell/page.dart';
 
 part 'routes.dart';
 

@@ -1,13 +1,14 @@
 import 'package:dio/dio.dart';
-import 'package:komikku/dex/models/login.dart';
-import 'package:komikku/dex/models/logout.dart';
-import 'package:komikku/dex/models/refresh_token.dart';
-import 'package:komikku/core/utils/http.dart';
+import '../models/login.dart';
+import '../models/logout.dart';
+import '../models/refresh_token.dart';
+import '../../core/utils/http.dart';
 
 class AuthApi {
   /// 登录
   static Future<LoginResponse> loginAsync(Login login) async {
-    final response = await HttpUtil().post('/auth/login', params: login.toJson());
+    final response =
+        await HttpUtil().post('/auth/login', params: login.toJson());
     return LoginResponse.fromJson(response);
   }
 

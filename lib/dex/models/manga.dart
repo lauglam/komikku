@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/attributes/manga_attributes.dart';
-import 'package:komikku/dex/models/enum/entity_type.dart';
-import 'package:komikku/dex/models/relationship.dart';
+import 'attributes/manga_attributes.dart';
+import 'enum/entity_type.dart';
+import 'relationship.dart';
 
 part 'manga.g.dart';
 

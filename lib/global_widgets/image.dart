@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:komikku/core/utils/set_state_complain.dart';
 import 'package:uuid/uuid.dart';
 
 import 'indicator.dart';
+import '../core/utils/set_state_complain.dart';
 
 class ExtendedNetworkImage extends StatefulWidget {
   /// The target image that is displayed.
@@ -65,7 +65,9 @@ class _ExtendedNetworkImageState extends State<ExtendedNetworkImage> {
   @override
   Widget build(BuildContext context) {
     return Obx(() => CachedNetworkImage(
-          key: _rebuildWidgetKey.value.isEmpty ? null : ValueKey(_rebuildWidgetKey.value),
+          key: _rebuildWidgetKey.value.isEmpty
+              ? null
+              : ValueKey(_rebuildWidgetKey.value),
           imageUrl: widget.imageUrl,
           fit: widget.fit,
           width: widget.width,

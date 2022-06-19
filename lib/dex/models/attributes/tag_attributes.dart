@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/localized_string.dart';
+import '../localized_string.dart';
 
 part 'tag_attributes.g.dart';
 

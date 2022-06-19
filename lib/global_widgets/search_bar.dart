@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:komikku/core/utils/icons.dart';
+import '../core/utils/icons.dart';
 
 /// 搜索框
 class SearchAppBar extends StatelessWidget {

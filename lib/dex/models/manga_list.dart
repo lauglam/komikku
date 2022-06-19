@@ -1,7 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:komikku/dex/models/enum/response_type.dart';
-import 'package:komikku/dex/models/manga.dart';
-import 'package:komikku/dex/models/response.dart';
+import 'enum/response_type.dart';
+import 'manga.dart';
+import 'response.dart';
 
 part 'manga_list.g.dart';
 
