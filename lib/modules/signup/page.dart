@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../core/utils/toast.dart';
+import '../../core/utils/message.dart';
 import '../../dex/apis/account_api.dart';
 import '../../dex/models.dart';
 
@@ -150,41 +150,41 @@ class Signup extends StatelessWidget {
     if (!_validate()) return;
 
     try {
-      final response = await AccountApi.createAccountAsync(AccountCreate(
+      final res = await AccountApi.createAccountAsync(AccountCreate(
         username: _username!,
         password: _password!,
         email: _email!,
       ));
-      showText(text: '${response.data.attributes.username}，已发送激活邮件到您邮箱');
+      toast('${response.data.attributes.username}，已发送激活邮件到您邮箱');
     } catch (e) {
-      showText(text: '注册失败，发生错误: $e');
+      toast('注册失败，发生错误: $e');
     }
   }
 
   /// 验证
   bool _validate() {
     if (_username?.isEmpty ?? true) {
-      showText(text: '用户名不能为空');
+      toast('用户名不能为空');
       return false;
     }
     if (_password?.isEmpty ?? true) {
-      showText(text: '密码不能为空');
+      toast('密码不能为空');
       return false;
     }
     if (_email?.isEmpty ?? true) {
-      showText(text: '邮箱地址不能为空');
+      toast('邮箱地址不能为空');
       return false;
     }
     if (_username!.length > 64) {
-      showText(text: '用户不能大于64位');
+      toast('用户不能大于64位');
       return false;
     }
     if (_password!.length < 8) {
-      showText(text: '密码不能小于8位');
+      toast('密码不能小于8位');
       return false;
     }
     if (_password!.length > 1024) {
-      showText(text: '密码不能大于1024位');
+      toast('密码不能大于1024位');
       return false;
     }
 

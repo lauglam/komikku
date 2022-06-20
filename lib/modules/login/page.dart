@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../core/utils/toast.dart';
+import '../../core/utils/message.dart';
 
 import 'controller.dart';
 
@@ -86,10 +86,10 @@ class Login extends StatelessWidget {
         onPressed: () async {
           try {
             await controller.login();
-            showText(text: '登录成功');
+            toast('登录成功');
             Get.back();
           } catch (e) {
-            showText(text: '账号或密码有误');
+            toast('账号或密码有误');
             return;
           }
         },

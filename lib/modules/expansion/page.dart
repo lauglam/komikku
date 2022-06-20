@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:komikku/widgets/widgets.dart';
 
 import 'controller.dart';
 import 'widgets/entry_item_widget.dart';
@@ -7,7 +8,7 @@ import 'widgets/entry_item_widget.dart';
 class ExpansionListView extends StatelessWidget {
   const ExpansionListView({Key? key}) : super(key: key);
 
-  static const _indicator = Center(child: CircularProgressIndicator());
+  static const _indicator = ThinProgressIndicator();
 
   @override
   Widget build(BuildContext context) {

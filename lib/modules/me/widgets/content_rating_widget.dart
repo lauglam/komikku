@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'icon_button_widget.dart';
 
 import '../../../core/utils/icons.dart';
-import '../../../core/utils/toast.dart';
+import '../../../core/utils/message.dart';
 import '../../../data/services/store.dart';
 import '../../../modules/subscribes/controller.dart';
 
@@ -22,7 +22,7 @@ class ContentRatingWidget extends StatelessWidget {
 
     /// Content of alert dialog
     final alertContent = SizedBox(
-      width: 250,
+      width: Get.width * 0.7,
       child: Scrollbar(
         child: ListView.builder(
           shrinkWrap: true,
@@ -51,8 +51,8 @@ class ContentRatingWidget extends StatelessWidget {
     return IconTextButtonWidget(
       text: '内容分级',
       icon: TaoIcons.film,
-      onPressed: () => showAlertDialog(
-        title: '内容分级',
+      onPressed: () => dialog(
+        '内容分级',
         content: alertContent,
         onConfirm: () {
           StoreService().contentRating = selected;
@@ -65,8 +65,11 @@ class ContentRatingWidget extends StatelessWidget {
     );
   }
 
-  static const _placeholder =
-      CheckboxListTile(title: Text(''), value: true, onChanged: null);
+  static const _placeholder = CheckboxListTile(
+    title: null,
+    value: true,
+    onChanged: null,
+  );
 
   static const _contentRatingMap = {
     'safe': '安全的',

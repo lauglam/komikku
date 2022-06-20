@@ -8,17 +8,17 @@ class FollowsApi {
   static Future<MangaListResponse> getUserFollowedMangaListAsync({
     Map<String, dynamic>? queryParameters,
   }) async {
-    final response = await HttpUtil().get(buildUri(
+    final res = await HttpUtil().get(buildUri(
       path: '/user/follows/manga',
       queryParameters: queryParameters,
     ));
-    return MangaListResponse.fromJson(response);
+    return MangaListResponse.fromJson(res);
   }
 
   /// Check if logged user is follow to a manga.
   /// 404 exception: the logged user is unfollow.
   static Future<Response> checkUserFollowsMangaAsync(String id) async {
-    final response = await HttpUtil().get('/user/follows/manga/$id');
-    return Response.fromJson(response);
+    final res = await HttpUtil().get('/user/follows/manga/$id');
+    return Response.fromJson(res);
   }
 }

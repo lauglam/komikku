@@ -8,11 +8,11 @@ class ChapterApi {
   static Future<ChapterListResponse> getChapterListAsync({
     Map<String, dynamic>? queryParameters,
   }) async {
-    final response = await HttpUtil().get(buildUri(
+    final res = await HttpUtil().get(buildUri(
       path: '/chapter',
       queryParameters: queryParameters,
     ));
-    return ChapterListResponse.fromJson(response);
+    return ChapterListResponse.fromJson(res);
   }
 
   /// Get chapter by [id].
@@ -20,10 +20,10 @@ class ChapterApi {
     String id, {
     Map<String, dynamic>? queryParameters,
   }) async {
-    final response = await HttpUtil().get(
+    final res = await HttpUtil().get(
       buildUri(path: '/chapter/$id', queryParameters: queryParameters),
     );
 
-    return ChapterResponse.fromJson(response);
+    return ChapterResponse.fromJson(res);
   }
 }

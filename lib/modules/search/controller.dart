@@ -44,9 +44,9 @@ class SearchController extends GetxController {
       await _searchMangaList(pageKey);
     });
 
-    final response = await MangaApi.getTagListAsync();
+    final res = await MangaApi.getTagListAsync();
     tagsGrouped.addAll(
-        groupBy<Tag, String>(response.data, (p0) => p0.attributes.group)
+        groupBy<Tag, String>(res.data, (p0) => p0.attributes.group)
             .map((key, value) => MapEntry(key, _to(value))));
     super.onInit();
   }
@@ -78,16 +78,15 @@ class SearchController extends GetxController {
         'includedTags[]': selectedTags.keys,
         'order[relevance]': 'desc',
       };
-      final response =
-          await MangaApi.getMangaListAsync(queryParameters: queryMap);
+      final res = await MangaApi.getMangaListAsync(queryParameters: queryMap);
 
-      var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
-      if (newItems.length < _pageSize) {
+      var items = res.data.map((e) => MangaDto.fromDex(e)).toList();
+      if (items.length < _pageSize) {
         // Last
-        pagingController.appendLastPage(newItems);
+        pagingController.appendLastPage(items);
       } else {
-        var nextPageKey = pageKey + newItems.length;
-        pagingController.appendPage(newItems, nextPageKey);
+        var nextPageKey = pageKey + items.length;
+        pagingController.appendPage(items, nextPageKey);
       }
     } catch (e) {
       pagingController.error = e;

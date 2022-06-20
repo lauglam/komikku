@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:komikku/widgets/widgets.dart';
 import '../core/utils/set_state_complain.dart';
 
 /// A widget that makes it easy to execute a [Future] from a [StatelessWidget].
@@ -139,7 +140,7 @@ class _FuturisticState<T> extends State<Futuristic<T>> {
 
   bool _isActive() => mounted && (ModalRoute.of(context)?.isActive ?? true);
 
-  Widget _defaultBusyWidget() => const Center(child: CircularProgressIndicator());
+  Widget _defaultBusyWidget() => const ThinProgressIndicator();
 
   Widget _defaultWidget() => const SizedBox.shrink();
 }

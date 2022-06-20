@@ -35,7 +35,7 @@ class BuilderChecker<T> extends StatelessWidget {
         if (onWaiting != null) return onWaiting!;
         return Offstage(
           offstage: !indicator,
-          child: const Center(child: CircularProgressIndicator()),
+          child: const ThinProgressIndicator(),
         );
       default:
         if (snapshot.hasError) {

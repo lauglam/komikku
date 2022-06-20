@@ -3,7 +3,7 @@ import '../../core/utils/http.dart';
 class PingApi {
   /// Ping
   static Future<String> pingAsync() async {
-    final response = await HttpUtil().get('/ping');
-    return response;
+    final res = await HttpUtil().get('/ping');
+    return res;
   }
 }

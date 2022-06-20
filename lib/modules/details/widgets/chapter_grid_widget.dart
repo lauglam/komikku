@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../core/utils/timeago.dart';
-import '../../../core/utils/toast.dart';
+import '../../../core/utils/message.dart';
 import '../../../widgets/bottom_modal_item.dart';
 import '../../../data/dto/chapter_dto.dart';
 
@@ -44,8 +45,8 @@ class ChapterGridWidget extends StatelessWidget {
 
         // 内部方法
         Future<void> _showBottomModal() async {
-          await showBottomModal(
-            title: '第 ${values[0].chapter ?? chapterIndex} 章',
+          await bottomModal(
+            title: Text('第 ${values[0].chapter ?? chapterIndex} 章'),
             child: ListView.builder(
               padding: const EdgeInsets.all(10),
               itemCount: values.length,

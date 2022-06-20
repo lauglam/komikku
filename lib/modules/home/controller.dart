@@ -55,18 +55,17 @@ class HomeController extends GetxController {
         'availableTranslatedLanguage[]': StoreService().translatedLanguage,
         'includes[]': ["cover_art", "author"],
       };
-      final mangaListResponse =
-          await MangaApi.getMangaListAsync(queryParameters: queryMap);
 
-      final newItems =
-          mangaListResponse.data.map((e) => MangaDto.fromDex(e)).toList();
-      if (newItems.length < _pageSize) {
+      final res = await MangaApi.getMangaListAsync(queryParameters: queryMap);
+
+      final items = res.data.map((e) => MangaDto.fromDex(e)).toList();
+      if (items.length < _pageSize) {
         // Last
-        pagingController.appendLastPage(newItems);
+        pagingController.appendLastPage(items);
         refreshController.loadNoData();
       } else {
-        final nextPageKey = pageKey + newItems.length;
-        pagingController.appendPage(newItems, nextPageKey);
+        final nextPageKey = pageKey + items.length;
+        pagingController.appendPage(items, nextPageKey);
         refreshController.loadComplete();
       }
 

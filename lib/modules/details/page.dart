@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/utils/icons.dart';
-import '../../core/utils/toast.dart';
+import '../../core/utils/message.dart';
 import '../../widgets/widgets.dart';
 import '../subscribes/controller.dart';
 import '../login/controller.dart';
@@ -19,7 +19,7 @@ class Details extends StatelessWidget {
     final subController = Get.put(SubscribesController());
     final data = controller.data;
 
-    /// App bar on top
+    /// App bar on top.
     final appBar = AppBar(
       backgroundColor: Colors.transparent,
       elevation: 0,
@@ -31,12 +31,12 @@ class Details extends StatelessWidget {
         // TODO: 下载
         IconButton(
           icon: const Icon(Icons.downloading, color: Colors.white),
-          onPressed: () => showText(text: '功能暂未上线，敬请期待'),
+          onPressed: () => toast('功能暂未上线，敬请期待'),
         ),
       ],
     );
 
-    /// Big image on top
+    /// Big image on top.
     final bigImg = ExtendedNetworkImage(
       imageUrl: data.imageUrlOriginal,
       fit: BoxFit.fitWidth,
@@ -44,7 +44,7 @@ class Details extends StatelessWidget {
       height: 220,
     );
 
-    /// Manga details - title, tags, state, author
+    /// Manga details - title, tags, state, author.
     final details = Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
@@ -67,7 +67,7 @@ class Details extends StatelessWidget {
       ),
     );
 
-    /// Button of follow/unfollow
+    /// Button of follow/unfollow.
     final floatButton = Obx(
       () => subController.followedMangaIds.contains(data.id)
           ? BeveledButton(
@@ -76,11 +76,11 @@ class Details extends StatelessWidget {
               backgroundColor: MaterialStateProperty.all(Colors.grey),
               onPressed: () async {
                 // 取消订阅确认
-                showAlertDialog(
-                  title: '是否取消订阅',
+                dialog(
+                  '是否取消订阅',
                   cancelText: '再想想',
                   onConfirm: () async {
-                    showText(text: '已取消订阅');
+                    toast('已取消订阅');
                     await subController.unfollowManga(data.id);
                   },
                 );
@@ -91,17 +91,17 @@ class Details extends StatelessWidget {
               icon: const Icon(TaoIcons.favoriteAdd),
               onPressed: () async {
                 if (!LoginController.to.loginState) {
-                  showText(text: '请先登录');
+                  toast('请先登录');
                   return;
                 }
 
-                showText(text: '已订阅');
+                toast('已订阅');
                 await subController.followManga(data.id);
               },
             ),
     );
 
-    /// Button of sort - asc, desc
+    /// Button of sort - asc, desc.
     final sortButton = Obx(
       () => Directionality(
         textDirection: TextDirection.rtl,
@@ -122,7 +122,7 @@ class Details extends StatelessWidget {
       ),
     );
 
-    /// Grid of chapters
+    /// Grid of chapters.
     final grid = Obx(
       () {
         if (controller.loading.value) return _defaultIndicator;
@@ -154,10 +154,14 @@ class Details extends StatelessWidget {
             Column(
               children: [
                 Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 15,
+                    vertical: 5,
+                  ),
                   child: Align(
-                      alignment: Alignment.centerRight, child: sortButton),
+                    alignment: Alignment.centerRight,
+                    child: sortButton,
+                  ),
                 ),
                 grid,
               ],
@@ -168,5 +172,5 @@ class Details extends StatelessWidget {
     );
   }
 
-  static const _defaultIndicator = Center(child: CircularProgressIndicator());
+  static const _defaultIndicator = ThinProgressIndicator();
 }

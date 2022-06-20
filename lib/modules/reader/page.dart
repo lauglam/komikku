@@ -41,10 +41,8 @@ class Reading extends StatelessWidget {
           progressIndicatorBuilder: (context, url, progress) => SizedBox(
             width: Get.width,
             height: Get.height * 0.5,
-            child: Center(
-              child: CircularProgressIndicator(
-                value: progress.progress,
-              ),
+            child: ThinProgressIndicator(
+              value: progress.progress,
             ),
           ),
         ),

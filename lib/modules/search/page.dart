@@ -1,9 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 import '../../core/utils/icons.dart';
-import '../../core/utils/toast.dart';
+import '../../core/utils/message.dart';
 import '../../data/dto/manga_dto.dart';
 import '../../widgets/widgets.dart';
 
@@ -18,30 +19,38 @@ class Search extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(SearchController());
+    final paging = controller.pagingController;
 
-    /// App bar on top
+    /// The button of go back.
+    final backButton = TextButton(
+      child: Text('取消', style: Theme.of(context).textTheme.labelLarge),
+      onPressed: () => Get.back(),
+    );
+
+    /// Search input.
+    final search = Padding(
+      padding: const EdgeInsets.only(left: 10),
+      child: CupertinoSearchTextField(
+        placeholder: 'Search',
+        onSubmitted: (value) {
+          controller.searchTitle = value;
+          paging.refresh();
+        },
+      ),
+    );
+
+    /// App bar on top.
     final appBar = AppBar(
       elevation: 0,
       titleSpacing: 0,
       toolbarHeight: 50,
       backgroundColor: Colors.transparent,
       automaticallyImplyLeading: false,
-      title: SearchAppBar(
-        hintText: '搜索',
-        onSubmitted: (value) {
-          controller.searchTitle = value;
-          controller.pagingController.refresh();
-        },
-      ),
-      actions: [
-        TextButton(
-          child: Text('取消', style: Theme.of(context).textTheme.labelLarge),
-          onPressed: () => Get.back(),
-        ),
-      ],
+      title: search,
+      actions: [backButton],
     );
 
-    /// Floating button on bottom left
+    /// Floating button on bottom left.
     final floatButton = FloatingActionButton(
       clipBehavior: Clip.antiAlias,
       child: const Icon(TaoIcons.filter),
@@ -53,12 +62,11 @@ class Search extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
         }
 
-        showAlertDialog(
-          title: '高级搜索',
-          insetPadding: const EdgeInsets.all(0),
+        dialog(
+          '高级搜索',
           onConfirm: () {
             if (controller.selectedTags.isNotEmpty) {
-              controller.pagingController.refresh();
+              paging.refresh();
             }
           },
           content: SingleChildScrollView(
@@ -77,7 +85,7 @@ class Search extends StatelessWidget {
       },
     );
 
-    /// Selected tag, can delete
+    /// Selected tag, can delete.
     final selectedChip = Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: Obx(
@@ -85,29 +93,29 @@ class Search extends StatelessWidget {
           values: controller.selectedTags.values.toList(),
           onDeleted: (value) {
             controller.removeValue(value);
-            controller.pagingController.refresh();
+            paging.refresh();
           },
         ),
       ),
     );
 
-    /// Content list view
+    /// Content list view.
     final listView = Expanded(
       child: PagedListViewExtent(
         cacheExtent: 500,
         prototypeItem: placeholder,
         physics: const AlwaysScrollableScrollPhysics(),
-        pagingController: controller.pagingController,
+        pagingController: paging,
         builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+          firstPageProgressIndicatorBuilder: (context) =>
+              const ThinProgressIndicator(),
           firstPageErrorIndicatorBuilder: (context) =>
               TryAgainExceptionIndicator(
-            onTryAgain: () =>
-                controller.pagingController.retryLastFailedRequest(),
+            onTryAgain: () => paging.retryLastFailedRequest(),
           ),
           newPageErrorIndicatorBuilder: (context) =>
               TryAgainIconExceptionIndicator(
-            onTryAgain: () =>
-                controller.pagingController.retryLastFailedRequest(),
+            onTryAgain: () => paging.retryLastFailedRequest(),
           ),
           noItemsFoundIndicatorBuilder: (context) => const Center(
             child: Text('没有找到符合条件的漫画'),

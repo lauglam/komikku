@@ -12,6 +12,7 @@ import '../modules/login/page.dart';
 import '../modules/reader/page.dart';
 import '../modules/search/page.dart';
 import '../modules/shell/page.dart';
+import '../modules/me/binding.dart';
 
 part 'routes.dart';
 
@@ -28,6 +29,7 @@ class AppPages {
         HomeBindings(),
         SubscribesBindings(),
         LoginBindings(),
+        MeBinding(),
       ],
     ),
 

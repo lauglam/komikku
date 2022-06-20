@@ -56,13 +56,17 @@ class PagedGridViewWidget<ItemType> extends StatelessWidget {
         ),
         pagingController: pagingController,
         builderDelegate: PagedChildBuilderDelegate(
+          firstPageProgressIndicatorBuilder: (context) =>
+              const ThinProgressIndicator(),
           newPageProgressIndicatorBuilder: (context) => const SizedBox.shrink(),
           firstPageErrorIndicatorBuilder: (context) =>
               TryAgainExceptionIndicator(onTryAgain: onTryAgain),
           newPageErrorIndicatorBuilder: (context) =>
               TryAgainIconExceptionIndicator(onTryAgain: onTryAgain),
-          noItemsFoundIndicatorBuilder: (context) => Center(child: Text(noItemsFoundText)),
-          itemBuilder: (context, item, index) => itemBuilder(context, item as ItemType, index),
+          noItemsFoundIndicatorBuilder: (context) =>
+              Center(child: Text(noItemsFoundText)),
+          itemBuilder: (context, item, index) =>
+              itemBuilder(context, item as ItemType, index),
         ),
       ),
     );

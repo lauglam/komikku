@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/utils/icons.dart';
-import '../../../core/utils/toast.dart';
+import '../../../core/utils/message.dart';
 import '../../../data/services/store.dart';
 
 import 'icon_button_widget.dart';
@@ -17,25 +17,28 @@ class DataSaverWidget extends StatelessWidget {
 
     /// Content of alert dialog
     final alertContent = Obx(
-      () => CheckboxListTile(
-        title: const Text('图片压缩'),
-        value: selected.value,
-        onChanged: (value) {
-          if (value == null) return;
-          selected.value = value;
-        },
+      () => SizedBox(
+        width: Get.width * 0.7,
+        child: CheckboxListTile(
+          title: const Text('图片压缩'),
+          value: selected.value,
+          onChanged: (value) {
+            if (value == null) return;
+            selected.value = value;
+          },
+        ),
       ),
     );
 
     return IconTextButtonWidget(
       text: '图片质量',
       icon: TaoIcons.image,
-      onPressed: () => showAlertDialog(
-        title: '图片质量',
+      onPressed: () => dialog(
+        '图片质量',
         content: alertContent,
         onConfirm: () {
           // 提示信息
-          if (selected.value) showText(text: '阅读漫画时更快加载，但图片质量有所下降');
+          if (selected.value) toast('阅读漫画时更快加载，但图片质量有所下降');
           StoreService().dataSaver = selected.value;
         },
       ),

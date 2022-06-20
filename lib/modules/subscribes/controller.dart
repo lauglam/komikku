@@ -85,21 +85,21 @@ class SubscribesController extends GetxController {
         'includes[]': ["cover_art", "author"],
       };
 
-      final response = await FollowsApi.getUserFollowedMangaListAsync(
+      final res = await FollowsApi.getUserFollowedMangaListAsync(
           queryParameters: queryMap);
-      var newItems = response.data.map((e) => MangaDto.fromDex(e)).toList();
+      var items = res.data.map((e) => MangaDto.fromDex(e)).toList();
 
       // /user/follows/manga 端点没有contentRating参数，所以需要手动过滤掉
-      newItems.removeWhere(
+      items.removeWhere(
           (e) => !StoreService().contentRating.contains(e.contentRating));
 
-      if (newItems.length < _pageSize) {
+      if (items.length < _pageSize) {
         // Last
-        pagingController.appendLastPage(newItems);
+        pagingController.appendLastPage(items);
         refreshController.loadNoData();
       } else {
-        var nextPageKey = pageKey + newItems.length;
-        pagingController.appendPage(newItems, nextPageKey);
+        var nextPageKey = pageKey + items.length;
+        pagingController.appendPage(items, nextPageKey);
         refreshController.loadComplete();
       }
 

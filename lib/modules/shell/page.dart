@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../core/utils/icons.dart';
-import '../../core/utils/toast.dart';
+import '../../core/utils/message.dart';
 
 import 'controller.dart';
 
@@ -43,7 +43,7 @@ class Shell extends StatelessWidget {
         if (lastPop == null ||
             DateTime.now().difference(lastPop) > const Duration(seconds: 2)) {
           ShellController.to.lastPop = DateTime.now();
-          showText(text: '再按一次退出');
+          toast('再按一次退出');
           return false;
         }
         return true;

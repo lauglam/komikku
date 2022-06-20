@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../core/utils/icons.dart';
-import '../../../core/utils/toast.dart';
+import '../../../core/utils/message.dart';
 import '../../../data/services/store.dart';
 import '../../home/controller.dart';
 
@@ -19,11 +19,10 @@ class TranslatedLanguageWidget extends StatelessWidget {
 
     /// Content of alert dialog
     final alertContent = SizedBox(
-      width: 280,
-      height: 500,
+      width: Get.width * 0.8,
+      height: Get.height * 0.5,
       child: Scrollbar(
         child: ListView.builder(
-          shrinkWrap: true,
           prototypeItem: _placeholder,
           itemCount: _localizedStringMap.length,
           itemBuilder: (context, index) {
@@ -49,8 +48,8 @@ class TranslatedLanguageWidget extends StatelessWidget {
     return IconTextButtonWidget(
       text: '章节语言',
       icon: TaoIcons.comment,
-      onPressed: () => showAlertDialog(
-        title: '章节语言',
+      onPressed: () => dialog(
+        '章节语言',
         content: alertContent,
         // translatedLanguage can be empty
         onConfirm: () {

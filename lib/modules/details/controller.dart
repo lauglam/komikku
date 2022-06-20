@@ -60,9 +60,9 @@ class DetailsController extends GetxController {
       'order[chapter]': 'desc',
     };
 
-    final response = await MangaApi.getMangaFeedAsync(data.id, queryParameters: queryMap);
+    final res = await MangaApi.getMangaFeedAsync(data.id, queryParameters: queryMap);
 
-    final newItems = response.data.map((e) => ChapterDto.fromDex(e)).toList();
+    final newItems = res.data.map((e) => ChapterDto.fromDex(e)).toList();
 
     if (!newItems
         .any((value) => value.chapter == null || double.tryParse(value.chapter!) == null)) {
@@ -109,7 +109,7 @@ class DetailsController extends GetxController {
   /// 获取漫画阅读记录
   Future<void> _getMangaReadMarkers() async {
     if (!StoreService().loginStatus) return;
-    final response = await ChapterReadMarkerApi.getMangaReadMarkersAsync(data.id);
-    chapterReadMarkers.addAll(response.data);
+    final res = await ChapterReadMarkerApi.getMangaReadMarkersAsync(data.id);
+    chapterReadMarkers.addAll(res.data);
   }
 }

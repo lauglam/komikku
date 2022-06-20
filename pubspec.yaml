@@ -47,7 +47,14 @@ dependencies:
   # Converts a date into a humanized text.
   timeago: ^3.2.2
 
+  # Toast, dialog.
   bot_toast: ^4.0.2
+
+  # The modal sheet from bottom.
+  modal_bottom_sheet: ^2.0.1
+
+  # The font of google.
+  #google_fonts: ^3.0.1
 
   # List extensions.
   collection: ^1.16.0
@@ -75,7 +82,7 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
+  cupertino_icons: ^1.0.5
 
 dev_dependencies:
   flutter_test:

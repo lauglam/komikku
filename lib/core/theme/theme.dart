@@ -8,12 +8,20 @@ class AppTheme {
     colorScheme: lightColorScheme,
 
     // Global Style.
+    checkboxTheme: ThemeData.light().checkboxTheme.copyWith(
+          fillColor: MaterialStateProperty.all(lightColorScheme.primary),
+        ),
+    // textTheme: GoogleFonts.promptTextTheme(ThemeData.light().textTheme),
   );
 
   /// Dark mode theme data.
   static var dark = ThemeData(
-    colorScheme: lightColorScheme,
+    colorScheme: darkColorScheme,
 
     // Global Style.
+    checkboxTheme: ThemeData.dark().checkboxTheme.copyWith(
+          fillColor: MaterialStateProperty.all(darkColorScheme.primary),
+        ),
+    // textTheme: GoogleFonts.promptTextTheme(ThemeData.dark().textTheme),
   );
 }
