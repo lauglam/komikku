@@ -88,7 +88,7 @@ class _ExtendedNetworkImageState extends State<ExtendedNetworkImage> {
             }
 
             _retryIndex = 0;
-            return TryAgainIconExceptionIndicator(
+            return TryAgainIndicator(
               onTryAgain: () => _rebuildWidgetKey.value = const Uuid().v1(),
             );
           },

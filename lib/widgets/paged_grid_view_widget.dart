@@ -40,13 +40,15 @@ class PagedGridViewWidget<ItemType> extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final iconTryAgain = TryAgainIndicatorWithIcon(onTryAgain: onTryAgain);
+    final tryAgain = TryAgainIndicator(onTryAgain: onTryAgain);
+
     return SmartRefresher(
       enablePullUp: true,
       controller: controller,
       onRefresh: onRefresh,
       child: PagedGridView(
         cacheExtent: 500,
-        // 永远滚动，即使在不满屏幕的情况下
         physics: const AlwaysScrollableScrollPhysics(),
         padding: const EdgeInsets.all(15),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -59,12 +61,10 @@ class PagedGridViewWidget<ItemType> extends StatelessWidget {
         builderDelegate: PagedChildBuilderDelegate(
           firstPageProgressIndicatorBuilder: (context) => defaultIndicator,
           newPageProgressIndicatorBuilder: (context) => emptyWidget,
-          firstPageErrorIndicatorBuilder: (context) =>
-              TryAgainExceptionIndicator(onTryAgain: onTryAgain),
-          newPageErrorIndicatorBuilder: (context) =>
-              TryAgainIconExceptionIndicator(onTryAgain: onTryAgain),
+          firstPageErrorIndicatorBuilder: (context) => iconTryAgain,
+          newPageErrorIndicatorBuilder: (context) => tryAgain,
           noItemsFoundIndicatorBuilder: (context) =>
-              Center(child: Text(noItemsFoundText)),
+              CenterText(noItemsFoundText),
           itemBuilder: (context, item, index) =>
               itemBuilder(context, item as ItemType, index),
         ),

@@ -13,7 +13,6 @@ import 'controller.dart';
 import 'widgets/list_view_item_widget.dart';
 import 'widgets/search_filter_widget.dart';
 
-/// 搜索页面
 class Search extends StatelessWidget {
   const Search({Key? key}) : super(key: key);
 
@@ -63,14 +62,16 @@ class Search extends StatelessWidget {
           FocusManager.instance.primaryFocus?.unfocus();
         }
 
-        dialog(
-          '高级搜索',
-          onConfirm: () {
-            if (controller.selectedTags.isNotEmpty) {
-              refresh.requestRefresh();
-            }
-          },
-          content: SingleChildScrollView(
+        final content = Obx(() {
+          final grouped = controller.tagsGrouped;
+          if (grouped.isEmpty) {
+            return SizedBox(
+              height: double.infinity,
+              width: MediaQuery.of(context).size.width,
+              child: defaultIndicator,
+            );
+          }
+          return SingleChildScrollView(
             child: SearchFilterWidget(
               tagsGrouped: controller.tagsGrouped,
               selected: (value) =>
@@ -81,7 +82,17 @@ class Search extends StatelessWidget {
                     : controller.removeValue(value.value);
               },
             ),
-          ),
+          );
+        });
+
+        dialog(
+          '高级搜索',
+          content: content,
+          onConfirm: () {
+            if (controller.selectedTags.isNotEmpty) {
+              refresh.requestRefresh();
+            }
+          },
         );
       },
     );
@@ -100,6 +111,33 @@ class Search extends StatelessWidget {
       ),
     );
 
+    final iconTryAgain = TryAgainIndicatorWithIcon(
+      onTryAgain: () => paging.retryLastFailedRequest(),
+    );
+    final tryAgain = TryAgainIndicator(
+      onTryAgain: () => paging.retryLastFailedRequest(),
+    );
+
+    /// The delegate of child builder.
+    final delegate = PagedChildBuilderDelegate<MangaDto>(
+      firstPageProgressIndicatorBuilder: (context) => defaultIndicator,
+      firstPageErrorIndicatorBuilder: (context) => iconTryAgain,
+      newPageProgressIndicatorBuilder: (context) => emptyWidget,
+      newPageErrorIndicatorBuilder: (context) => tryAgain,
+      noItemsFoundIndicatorBuilder: (context) =>
+          const CenterText('没有找到符合条件的漫画'),
+      itemBuilder: (context, item, index) {
+        return InkWell(
+          onTap: () => Get.toNamed('/details', arguments: item),
+          child: ListViewItemWidget(
+            imageUrl: item.imageUrl256,
+            title: item.title,
+            subtitle: item.status,
+          ),
+        );
+      },
+    );
+
     /// Content list view.
     final listView = Expanded(
       child: SmartRefresher(
@@ -111,31 +149,7 @@ class Search extends StatelessWidget {
           prototypeItem: placeholder,
           physics: const AlwaysScrollableScrollPhysics(),
           pagingController: paging,
-          builderDelegate: PagedChildBuilderDelegate<MangaDto>(
-            newPageProgressIndicatorBuilder: (context) => emptyWidget,
-            firstPageProgressIndicatorBuilder: (context) => defaultIndicator,
-            firstPageErrorIndicatorBuilder: (context) =>
-                TryAgainExceptionIndicator(
-              onTryAgain: () => paging.retryLastFailedRequest(),
-            ),
-            newPageErrorIndicatorBuilder: (context) =>
-                TryAgainIconExceptionIndicator(
-              onTryAgain: () => paging.retryLastFailedRequest(),
-            ),
-            noItemsFoundIndicatorBuilder: (context) => const Center(
-              child: Text('没有找到符合条件的漫画'),
-            ),
-            itemBuilder: (context, item, index) {
-              return InkWell(
-                onTap: () => Get.toNamed('/details', arguments: item),
-                child: ListViewItemWidget(
-                  imageUrl: item.imageUrl256,
-                  title: item.title,
-                  subtitle: item.status,
-                ),
-              );
-            },
-          ),
+          builderDelegate: delegate,
         ),
       ),
     );

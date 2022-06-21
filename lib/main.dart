@@ -11,13 +11,10 @@ import 'data/services/store.dart';
 import 'routes/pages.dart';
 
 void main() async {
-  // 注册Hive数据库
   await StoreService().initial();
 
-  // 确保能够调用调用本机代码
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 注册GetX
   Get.put<GlobalService>(GlobalService());
 
   LicenseRegistry.addLicense(() async* {
@@ -25,7 +22,6 @@ void main() async {
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
 
-  // 启动App
   runApp(const MyApp());
 }
 
@@ -48,7 +44,6 @@ class MyApp extends StatelessWidget {
         initialRoute: AppPages.initial,
         getPages: AppPages.pages,
         // localizationsDelegates: const [
-        //   // 国际化
         //   RefreshLocalizations.delegate,
         //   GlobalWidgetsLocalizations.delegate,
         //   GlobalMaterialLocalizations.delegate

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:komikku/widgets/widgets.dart';
 
 import '../../widgets/paged_grid_view_widget.dart';
 import '../../data/dto/manga_dto.dart';
@@ -20,9 +21,7 @@ class Subscribes extends StatelessWidget {
       child: GetBuilder<SubscribesController>(
         builder: (controller) => Obx(() {
           if (!LoginController.to.loginState) {
-            return const Center(
-              child: Text('请先登录'),
-            );
+            return const CenterText('请先登录');
           }
           return PagedGridViewWidget<MangaDto>(
             controller: controller.refreshController,

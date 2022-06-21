@@ -28,7 +28,7 @@ class SearchController extends GetxController {
 
   /// GroupTags.
   /// [groupedName, <id, name>].
-  final tagsGrouped = <String, Map<String, String>>{};
+  final tagsGrouped = <String, Map<String, String>>{}.obs;
 
   /// Selected tags.
   /// <id, name>.
