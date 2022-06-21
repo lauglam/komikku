@@ -22,7 +22,7 @@ class ContentRatingWidget extends StatelessWidget {
 
     /// Content of alert dialog
     final alertContent = SizedBox(
-      width: Get.width * 0.7,
+      width: 200,
       child: Scrollbar(
         child: ListView.builder(
           shrinkWrap: true,

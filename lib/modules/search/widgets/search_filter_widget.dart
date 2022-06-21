@@ -41,6 +41,7 @@ class SearchFilterWidget extends StatelessWidget {
 
       children.add(child);
     });
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: children);
+    return Column(
+        crossAxisAlignment: CrossAxisAlignment.start, children: children);
   }
 }

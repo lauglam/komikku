@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../core/utils/icons.dart';
 import '../../core/utils/message.dart';
@@ -20,6 +21,7 @@ class Search extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(SearchController());
     final paging = controller.pagingController;
+    final refresh = controller.refreshController;
 
     /// The button of go back.
     final backButton = TextButton(
@@ -34,7 +36,7 @@ class Search extends StatelessWidget {
         placeholder: 'Search',
         onSubmitted: (value) {
           controller.searchTitle = value;
-          paging.refresh();
+          refresh.requestRefresh();
         },
       ),
     );
@@ -56,9 +58,8 @@ class Search extends StatelessWidget {
       child: const Icon(TaoIcons.filter),
       onPressed: () async {
         // 键盘是否是弹起状态
-        FocusScopeNode currentFocus = FocusScope.of(context);
-        if (!currentFocus.hasPrimaryFocus &&
-            currentFocus.focusedChild != null) {
+        final focus = FocusScope.of(context);
+        if (!focus.hasPrimaryFocus && focus.focusedChild != null) {
           FocusManager.instance.primaryFocus?.unfocus();
         }
 
@@ -66,7 +67,7 @@ class Search extends StatelessWidget {
           '高级搜索',
           onConfirm: () {
             if (controller.selectedTags.isNotEmpty) {
-              paging.refresh();
+              refresh.requestRefresh();
             }
           },
           content: SingleChildScrollView(
@@ -93,7 +94,7 @@ class Search extends StatelessWidget {
           values: controller.selectedTags.values.toList(),
           onDeleted: (value) {
             controller.removeValue(value);
-            paging.refresh();
+            refresh.requestRefresh();
           },
         ),
       ),
@@ -101,35 +102,40 @@ class Search extends StatelessWidget {
 
     /// Content list view.
     final listView = Expanded(
-      child: PagedListViewExtent(
-        cacheExtent: 500,
-        prototypeItem: placeholder,
-        physics: const AlwaysScrollableScrollPhysics(),
-        pagingController: paging,
-        builderDelegate: PagedChildBuilderDelegate<MangaDto>(
-          firstPageProgressIndicatorBuilder: (context) =>
-              const ThinProgressIndicator(),
-          firstPageErrorIndicatorBuilder: (context) =>
-              TryAgainExceptionIndicator(
-            onTryAgain: () => paging.retryLastFailedRequest(),
+      child: SmartRefresher(
+        controller: refresh,
+        enablePullUp: true,
+        onRefresh: () => paging.refresh(background: true),
+        child: PagedListViewExtent(
+          cacheExtent: 500,
+          prototypeItem: placeholder,
+          physics: const AlwaysScrollableScrollPhysics(),
+          pagingController: paging,
+          builderDelegate: PagedChildBuilderDelegate<MangaDto>(
+            newPageProgressIndicatorBuilder: (context) => emptyWidget,
+            firstPageProgressIndicatorBuilder: (context) => defaultIndicator,
+            firstPageErrorIndicatorBuilder: (context) =>
+                TryAgainExceptionIndicator(
+              onTryAgain: () => paging.retryLastFailedRequest(),
+            ),
+            newPageErrorIndicatorBuilder: (context) =>
+                TryAgainIconExceptionIndicator(
+              onTryAgain: () => paging.retryLastFailedRequest(),
+            ),
+            noItemsFoundIndicatorBuilder: (context) => const Center(
+              child: Text('没有找到符合条件的漫画'),
+            ),
+            itemBuilder: (context, item, index) {
+              return InkWell(
+                onTap: () => Get.toNamed('/details', arguments: item),
+                child: ListViewItemWidget(
+                  imageUrl: item.imageUrl256,
+                  title: item.title,
+                  subtitle: item.status,
+                ),
+              );
+            },
           ),
-          newPageErrorIndicatorBuilder: (context) =>
-              TryAgainIconExceptionIndicator(
-            onTryAgain: () => paging.retryLastFailedRequest(),
-          ),
-          noItemsFoundIndicatorBuilder: (context) => const Center(
-            child: Text('没有找到符合条件的漫画'),
-          ),
-          itemBuilder: (context, item, index) {
-            return InkWell(
-              onTap: () => Get.toNamed('/details', arguments: item),
-              child: ListViewItemWidget(
-                imageUrl: item.imageUrl256,
-                title: item.title,
-                subtitle: item.status,
-              ),
-            );
-          },
         ),
       ),
     );

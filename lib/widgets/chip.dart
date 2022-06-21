@@ -128,7 +128,6 @@ class _ManyChoiceChipWrapState extends State<ManyChoiceChipWarp> {
     var children = List.generate(
       widget.values.length,
       (index) => ChoiceChip(
-        selectedColor: Theme.of(context).primaryColor,
         selected: widget.selected(widget.values[index]),
         onSelected: (value) => setState(() => widget.onChanged(value, widget.values[index])),
         padding: const EdgeInsets.all(0),

@@ -19,8 +19,8 @@ class TranslatedLanguageWidget extends StatelessWidget {
 
     /// Content of alert dialog
     final alertContent = SizedBox(
-      width: Get.width * 0.8,
-      height: Get.height * 0.5,
+      height: 450,
+      width: 300,
       child: Scrollbar(
         child: ListView.builder(
           prototypeItem: _placeholder,
@@ -61,8 +61,11 @@ class TranslatedLanguageWidget extends StatelessWidget {
     );
   }
 
-  static const _placeholder =
-      CheckboxListTile(title: Text(''), value: true, onChanged: null);
+  static const _placeholder = CheckboxListTile(
+    title: null,
+    value: true,
+    onChanged: null,
+  );
 
   static const _localizedStringMap = {
     'en': 'English',

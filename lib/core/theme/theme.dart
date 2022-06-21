@@ -11,6 +11,9 @@ class AppTheme {
     checkboxTheme: ThemeData.light().checkboxTheme.copyWith(
           fillColor: MaterialStateProperty.all(lightColorScheme.primary),
         ),
+    chipTheme: ThemeData.light().chipTheme.copyWith(
+          selectedColor: lightColorScheme.primary,
+        ),
     // textTheme: GoogleFonts.promptTextTheme(ThemeData.light().textTheme),
   );
 
@@ -22,6 +25,9 @@ class AppTheme {
     checkboxTheme: ThemeData.dark().checkboxTheme.copyWith(
           fillColor: MaterialStateProperty.all(darkColorScheme.primary),
         ),
+    chipTheme: ThemeData.dark().chipTheme.copyWith(
+      selectedColor: darkColorScheme.primary,
+    ),
     // textTheme: GoogleFonts.promptTextTheme(ThemeData.dark().textTheme),
   );
 }

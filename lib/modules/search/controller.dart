@@ -2,6 +2,8 @@ import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:komikku/widgets/paging_controller_extent.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import '../../data/services/store.dart';
 import '../../dex/apis/manga_api.dart';
@@ -9,33 +11,33 @@ import '../../dex/models.dart';
 import '../../data/dto/manga_dto.dart';
 
 class SearchController extends GetxController {
-  /// 第一页的[PageKeyType]
+  /// The page key for first page.
   static const _firstPageKey = 0;
 
-  /// 是否正在加载数据
-  /// true: 数据正在加载，别的加载请求应该拒绝
-  /// false: 没有数据正在加载，可以接受加载请求
+  /// Whether is loading data.
   static var _loading = false;
 
-  /// 页面中[PagedGridView]的控制器
-  /// 控制[PagedGridView]的刷新、附加数据、错误处理与重试
-  final pagingController = PagingController<int, MangaDto>(
+  /// The paging controller for [PagedListView]
+  final pagingController = PagingControllerExtent<int, MangaDto>(
     firstPageKey: _firstPageKey,
     invisibleItemsThreshold: 6,
   );
 
-  /// 标签组
-  /// 标签所属组名、标签id、标签名
+  /// The refresh controller for [SmartRefresher].
+  final RefreshController refreshController = RefreshController();
+
+  /// GroupTags.
+  /// [groupedName, <id, name>].
   final tagsGrouped = <String, Map<String, String>>{};
 
-  /// 已选的标签
-  /// 标签id、标签名
+  /// Selected tags.
+  /// <id, name>.
   final selectedTags = <String, String>{}.obs;
 
-  /// 搜索漫画标题
-  var searchTitle = '';
+  /// The title for search manga.
+  var searchTitle = _emptyChar;
 
-  /// [SearchController]的单例
+  /// The Shortcut to get [SearchController].
   static SearchController get to => Get.find();
 
   @override
@@ -51,18 +53,18 @@ class SearchController extends GetxController {
     super.onInit();
   }
 
-  /// 添加标签
+  /// Add tag to select tags.
   void addAll(MapEntry<String, String> value) =>
       selectedTags.addEntries([value]);
 
-  /// 移除标签
+  /// Remove tag from selected tags.
   void removeValue(String value) =>
       selectedTags.removeWhere((k, v) => v == value);
 
-  /// 每页数据的数据量
+  /// The size of each page.
   static const _pageSize = 20;
 
-  /// 搜索漫画
+  /// Search manga list.
   Future<void> _searchMangaList(int pageKey) async {
     try {
       if (_loading) return;
@@ -84,12 +86,18 @@ class SearchController extends GetxController {
       if (items.length < _pageSize) {
         // Last
         pagingController.appendLastPage(items);
+        refreshController.loadNoData();
       } else {
         var nextPageKey = pageKey + items.length;
         pagingController.appendPage(items, nextPageKey);
+        refreshController.loadComplete();
       }
+
+      refreshController.refreshCompleted();
     } catch (e) {
       pagingController.error = e;
+      refreshController.refreshFailed();
+      refreshController.loadFailed();
       if (kDebugMode) rethrow;
     } finally {
       _loading = false;
@@ -110,4 +118,6 @@ class SearchController extends GetxController {
 
     return value;
   }
+
+  static const _emptyChar = '';
 }

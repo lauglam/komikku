@@ -18,7 +18,7 @@ class DataSaverWidget extends StatelessWidget {
     /// Content of alert dialog
     final alertContent = Obx(
       () => SizedBox(
-        width: Get.width * 0.7,
+        width: 200,
         child: CheckboxListTile(
           title: const Text('图片压缩'),
           value: selected.value,

@@ -155,7 +155,7 @@ class Signup extends StatelessWidget {
         password: _password!,
         email: _email!,
       ));
-      toast('${response.data.attributes.username}，已发送激活邮件到您邮箱');
+      toast('${res.data.attributes.username}，已发送激活邮件到您邮箱');
     } catch (e) {
       toast('注册失败，发生错误: $e');
     }

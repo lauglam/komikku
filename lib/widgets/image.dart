@@ -4,8 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:uuid/uuid.dart';
 
-import 'indicator.dart';
 import '../core/utils/set_state_complain.dart';
+
+import 'indicator.dart';
+import 'shortcut.dart';
 
 class ExtendedNetworkImage extends StatefulWidget {
   /// The target image that is displayed.
@@ -82,7 +84,7 @@ class _ExtendedNetworkImageState extends State<ExtendedNetworkImage> {
             if (_retryIndex < _retries) {
               _retryIndex++;
               noComplain(() => _rebuildWidgetKey.value = const Uuid().v1());
-              return const SizedBox.shrink();
+              return emptyWidget;
             }
 
             _retryIndex = 0;

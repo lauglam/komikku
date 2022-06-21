@@ -4,6 +4,7 @@ import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 import 'indicator.dart';
+import 'shortcut.dart';
 
 class PagedGridViewWidget<ItemType> extends StatelessWidget {
   /// Corresponds to [PagedSliverBuilder.pagingController].
@@ -56,9 +57,8 @@ class PagedGridViewWidget<ItemType> extends StatelessWidget {
         ),
         pagingController: pagingController,
         builderDelegate: PagedChildBuilderDelegate(
-          firstPageProgressIndicatorBuilder: (context) =>
-              const ThinProgressIndicator(),
-          newPageProgressIndicatorBuilder: (context) => const SizedBox.shrink(),
+          firstPageProgressIndicatorBuilder: (context) => defaultIndicator,
+          newPageProgressIndicatorBuilder: (context) => emptyWidget,
           firstPageErrorIndicatorBuilder: (context) =>
               TryAgainExceptionIndicator(onTryAgain: onTryAgain),
           newPageErrorIndicatorBuilder: (context) =>

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:komikku/widgets/widgets.dart';
 
 import 'indicator.dart';
 
@@ -35,7 +36,7 @@ class BuilderChecker<T> extends StatelessWidget {
         if (onWaiting != null) return onWaiting!;
         return Offstage(
           offstage: !indicator,
-          child: const ThinProgressIndicator(),
+          child: defaultIndicator,
         );
       default:
         if (snapshot.hasError) {

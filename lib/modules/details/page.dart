@@ -15,9 +15,9 @@ class Details extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(DetailsController());
-    final subController = Get.put(SubscribesController());
-    final data = controller.data;
+    final detail = Get.put(DetailsController());
+    final sub = Get.put(SubscribesController());
+    final data = detail.data;
 
     /// App bar on top.
     final appBar = AppBar(
@@ -44,8 +44,8 @@ class Details extends StatelessWidget {
       height: 220,
     );
 
-    /// Manga details - title, tags, state, author.
-    final details = Padding(
+    /// Manga summary - title, tags, state, author.
+    final summary = Padding(
       padding: const EdgeInsets.all(15),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -69,7 +69,7 @@ class Details extends StatelessWidget {
 
     /// Button of follow/unfollow.
     final floatButton = Obx(
-      () => subController.followedMangaIds.contains(data.id)
+      () => sub.followedMangaIds.contains(data.id)
           ? BeveledButton(
               '已追',
               icon: const Icon(TaoIcons.favoriteAlreadyAdd),
@@ -81,7 +81,7 @@ class Details extends StatelessWidget {
                   cancelText: '再想想',
                   onConfirm: () async {
                     toast('已取消订阅');
-                    await subController.unfollowManga(data.id);
+                    await sub.unfollowManga(data.id);
                   },
                 );
               },
@@ -96,7 +96,7 @@ class Details extends StatelessWidget {
                 }
 
                 toast('已订阅');
-                await subController.followManga(data.id);
+                await sub.followManga(data.id);
               },
             ),
     );
@@ -112,24 +112,24 @@ class Details extends StatelessWidget {
             foregroundColor: MaterialStateProperty.all(Colors.black54),
           ),
           label: const Text('排序'),
-          icon: controller.chapterGridIsDesc
+          icon: detail.chapterGridIsDesc
               ? const Icon(Icons.arrow_downward_rounded, size: 18)
               : const Icon(Icons.arrow_upward_rounded, size: 18),
           onPressed: () {
-            controller.chapterGridIsDesc = !controller.chapterGridIsDesc;
+            detail.chapterGridIsDesc = !detail.chapterGridIsDesc;
           },
         ),
       ),
     );
 
     /// Grid of chapters.
-    final grid = Obx(
+    final chapterGrid = Obx(
       () {
-        if (controller.loading.value) return _defaultIndicator;
+        if (detail.loading.value) return _defaultIndicator;
         return ChapterGridWidget(
-          ascChapters: controller.ascChapters,
-          descChapters: controller.descChapters,
-          isDesc: controller.chapterGridIsDesc,
+          ascChapters: detail.ascChapters,
+          descChapters: detail.descChapters,
+          isDesc: detail.chapterGridIsDesc,
         );
       },
     );
@@ -144,28 +144,24 @@ class Details extends StatelessWidget {
             Stack(
               children: [
                 Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [bigImg, details]),
-                // 上层-追漫按钮
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [bigImg, summary],
+                ),
                 Positioned(top: 185, right: 10, child: floatButton),
               ],
             ),
             const Divider(thickness: 0.5, height: 1),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 15,
-                    vertical: 5,
-                  ),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: sortButton,
-                  ),
-                ),
-                grid,
-              ],
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 15,
+                vertical: 5,
+              ),
+              child: Align(
+                alignment: Alignment.centerRight,
+                child: sortButton,
+              ),
             ),
+            chapterGrid,
           ],
         ),
       ),

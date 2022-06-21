@@ -17,42 +17,46 @@ class ListViewItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final left = ClipRRect(
+      clipBehavior: Clip.antiAlias,
+      borderRadius: BorderRadius.circular(2),
+      child: ExtendedNetworkImage(
+        imageUrl: imageUrl,
+        fit: BoxFit.cover,
+        width: 85,
+        height: 130,
+      ),
+    );
+
+    final right = Expanded(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(25, 2, 2, 2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Text(
+                title,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.titleSmall,
+              ),
+            ),
+            Text(
+              subtitle,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
+      ),
+    );
+
     return Container(
-      height: 120,
+      height: 130,
       padding: const EdgeInsets.symmetric(vertical: 10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ClipRRect(
-            clipBehavior: Clip.antiAlias,
-            borderRadius: BorderRadius.circular(4),
-            child: ExtendedNetworkImage(
-              imageUrl: imageUrl,
-              fit: BoxFit.fill,
-              width: 75,
-              height: 120,
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(25, 2, 2, 2),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.titleSmall,
-                    ),
-                  ),
-                  Text(subtitle, style: Theme.of(context).textTheme.bodySmall),
-                ],
-              ),
-            ),
-          ),
-        ],
+        children: [left, right],
       ),
     );
   }

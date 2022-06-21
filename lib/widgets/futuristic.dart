@@ -140,7 +140,7 @@ class _FuturisticState<T> extends State<Futuristic<T>> {
 
   bool _isActive() => mounted && (ModalRoute.of(context)?.isActive ?? true);
 
-  Widget _defaultBusyWidget() => const ThinProgressIndicator();
+  Widget _defaultBusyWidget() => defaultIndicator;
 
-  Widget _defaultWidget() => const SizedBox.shrink();
+  Widget _defaultWidget() => emptyWidget;
 }
