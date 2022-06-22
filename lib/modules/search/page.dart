@@ -120,13 +120,12 @@ class Search extends StatelessWidget {
 
     /// The delegate of child builder.
     final delegate = PagedChildBuilderDelegate<MangaDto>(
-      firstPageProgressIndicatorBuilder: (context) => defaultIndicator,
-      firstPageErrorIndicatorBuilder: (context) => iconTryAgain,
-      newPageProgressIndicatorBuilder: (context) => emptyWidget,
-      newPageErrorIndicatorBuilder: (context) => tryAgain,
-      noItemsFoundIndicatorBuilder: (context) =>
-          const CenterText('没有找到符合条件的漫画'),
-      itemBuilder: (context, item, index) {
+      firstPageProgressIndicatorBuilder: (_) => defaultIndicator,
+      firstPageErrorIndicatorBuilder: (_) => iconTryAgain,
+      newPageProgressIndicatorBuilder: (_) => emptyWidget,
+      newPageErrorIndicatorBuilder: (_) => tryAgain,
+      noItemsFoundIndicatorBuilder: (_) => const CenterText('没有找到符合条件的漫画'),
+      itemBuilder: (_, item, index) {
         return InkWell(
           onTap: () => Get.toNamed('/details', arguments: item),
           child: ListViewItemWidget(

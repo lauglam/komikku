@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
+import 'package:komikku/widgets/widgets.dart';
 
 typedef ItemWidgetBuilder<ItemType> = Widget Function(
   BuildContext context,
@@ -122,6 +123,7 @@ class _BidirectionalListViewState<ItemType>
     final upPageSliverList = PagedSliverList(
       pagingController: _pagingReplyUpController,
       builderDelegate: PagedChildBuilderDelegate<ItemType>(
+        firstPageProgressIndicatorBuilder: (_) => defaultIndicator,
         itemBuilder: widget.itemBuilder,
       ),
     );
@@ -130,6 +132,7 @@ class _BidirectionalListViewState<ItemType>
       key: downListKey,
       pagingController: _pagingReplyDownController,
       builderDelegate: PagedChildBuilderDelegate<ItemType>(
+        firstPageProgressIndicatorBuilder: (_) => defaultIndicator,
         itemBuilder: widget.itemBuilder,
       ),
     );
