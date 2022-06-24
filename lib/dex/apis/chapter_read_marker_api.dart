@@ -28,7 +28,7 @@ class ChapterReadMarkerApi {
     String id,
     ChapterReadMarkerBatch batch,
   ) async {
-    final res = await HttpUtil().post('/manga/$id/read', params: batch.toJson());
+    final res = await HttpUtil().post('/manga/$id/read', data: batch.toJson());
     return ChapterReadMarkerResponse.fromJson(res);
   }
 

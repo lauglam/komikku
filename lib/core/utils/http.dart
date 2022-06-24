@@ -80,7 +80,6 @@ class HttpUtil {
   Future<Options> getLocalOptions() async {
     Options options = Options();
 
-    // 查看是否登录
     if (StoreService().loginStatus) {
       if (StoreService().sessionToken == null) {
         final res = await AuthApi.refreshAsync(
@@ -96,14 +95,22 @@ class HttpUtil {
   }
 
   /// Restful get.
-  Future get(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future<T> get<T>(
+    String path, {
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
-      var tokenOptions = options ?? await getLocalOptions();
-      final res = await dio?.get(path,
-          queryParameters: params,
-          options: tokenOptions,
-          cancelToken: cancelToken);
+      final internalOptions = options ?? await getLocalOptions();
+      final res = await dio?.get(
+        path,
+        options: internalOptions,
+        cancelToken: cancelToken,
+        queryParameters: queryParameters,
+        onReceiveProgress: onReceiveProgress,
+      );
       return res?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -111,12 +118,26 @@ class HttpUtil {
   }
 
   /// Restful post.
-  Future post(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future<T> post<T>(
+    String path, {
+    dynamic data,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
-      var tokenOptions = options ?? await getLocalOptions();
-      final res = await dio?.post(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
+      final internalOptions = options ?? await getLocalOptions();
+      final res = await dio?.post(
+        path,
+        data: data,
+        options: internalOptions,
+        cancelToken: cancelToken,
+        queryParameters: queryParameters,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
       return res?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -124,12 +145,26 @@ class HttpUtil {
   }
 
   /// Restful put.
-  Future put(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future<T> put<T>(
+    String path, {
+    dynamic data,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
-      var tokenOptions = options ?? await getLocalOptions();
-      final res = await dio?.put(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
+      final internalOptions = options ?? await getLocalOptions();
+      final res = await dio?.put(
+        path,
+        data: data,
+        options: internalOptions,
+        cancelToken: cancelToken,
+        queryParameters: queryParameters,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
       return res?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -137,12 +172,26 @@ class HttpUtil {
   }
 
   /// Restful patch.
-  Future patch(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future<T> patch<T>(
+    String path, {
+    dynamic data,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
-      var tokenOptions = options ?? await getLocalOptions();
-      final res = await dio?.patch(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
+      final internalOptions = options ?? await getLocalOptions();
+      final res = await dio?.patch(
+        path,
+        data: data,
+        options: internalOptions,
+        cancelToken: cancelToken,
+        queryParameters: queryParameters,
+        onSendProgress: onSendProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
       return res?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -150,12 +199,22 @@ class HttpUtil {
   }
 
   /// Restful delete.
-  Future delete(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future<T> delete<T>(
+    String path, {
+    dynamic data,
+    Options? options,
+    CancelToken? cancelToken,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
-      var tokenOptions = options ?? await getLocalOptions();
-      final res = await dio?.delete(path,
-          data: params, options: tokenOptions, cancelToken: cancelToken);
+      final internalOptions = options ?? await getLocalOptions();
+      final res = await dio?.delete(
+        path,
+        data: data,
+        options: internalOptions,
+        cancelToken: cancelToken,
+        queryParameters: queryParameters,
+      );
       return res?.data;
     } on DioError catch (e) {
       throw createException(e);
@@ -163,15 +222,60 @@ class HttpUtil {
   }
 
   /// Restful post form.
-  Future postForm(String path,
-      {dynamic params, Options? options, CancelToken? cancelToken}) async {
+  Future<T> postForm<T>(
+    String path, {
+    dynamic data,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onSendProgress,
+    ProgressCallback? onReceiveProgress,
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
-      var tokenOptions = options ?? await getLocalOptions();
-      final res = await dio?.post(path,
-          data: FormData.fromMap(params),
-          options: tokenOptions,
-          cancelToken: cancelToken);
+      final internalOptions = options ?? await getLocalOptions();
+      final res = await dio?.post(
+        path,
+        data: FormData.fromMap(data),
+        options: internalOptions,
+        cancelToken: cancelToken,
+        queryParameters: queryParameters,
+        onSendProgress: onReceiveProgress,
+        onReceiveProgress: onReceiveProgress,
+      );
       return res?.data;
+    } on DioError catch (e) {
+      throw createException(e);
+    }
+  }
+
+  /// Restful download.
+  Future<Response> download(
+    String path, {
+    dynamic data,
+    Options? options,
+    String? savePath,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+    Map<String, dynamic>? queryParameters,
+    String Function(Headers)? savePathCallback,
+  }) async {
+    assert(
+      savePath != null || savePathCallback != null,
+      'One of the two must not be empty.',
+    );
+
+    try {
+      final internalOptions = options ?? await getLocalOptions();
+      final res = await dio?.download(
+        path,
+        savePath ?? savePathCallback!,
+        data: data,
+        options: internalOptions.copyWith(receiveTimeout: 60000),
+        cancelToken: cancelToken,
+        queryParameters: queryParameters,
+        onReceiveProgress: onReceiveProgress,
+      );
+      return res!;
     } on DioError catch (e) {
       throw createException(e);
     }

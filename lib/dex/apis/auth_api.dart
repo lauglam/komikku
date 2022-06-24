@@ -8,7 +8,7 @@ class AuthApi {
   /// Login.
   static Future<LoginResponse> loginAsync(Login login) async {
     final res =
-        await HttpUtil().post('/auth/login', params: login.toJson());
+        await HttpUtil().post('/auth/login', data: login.toJson());
     return LoginResponse.fromJson(res);
   }
 
@@ -16,7 +16,7 @@ class AuthApi {
   static Future<RefreshResponse> refreshAsync(RefreshToken refresh) async {
     final res = await HttpUtil().post(
       '/auth/refresh',
-      params: refresh.toJson(),
+      data: refresh.toJson(),
       // 新建 Options 防止循环调用
       options: Options(),
     );

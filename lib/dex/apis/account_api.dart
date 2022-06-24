@@ -7,7 +7,7 @@ class AccountApi {
   @Deprecated('官方不允许App进行注册，注册需要移步官网')
   static Future<UserResponse> createAccountAsync(AccountCreate create) async {
     final res =
-        await HttpUtil().post('/account/create', params: create.toJson());
+        await HttpUtil().post('/account/create', data: create.toJson());
     return UserResponse.fromJson(res);
   }
 
@@ -24,7 +24,7 @@ class AccountApi {
   static Future<AccountActivateResponse> resendActivationCodeAsync(
       SendAccountActivationCode resend) async {
     final res = await HttpUtil()
-        .post('/account/activate/resend', params: resend.toJson());
+        .post('/account/activate/resend', data: resend.toJson());
     return AccountActivateResponse.fromJson(res);
   }
 
@@ -41,7 +41,7 @@ class AccountApi {
   static Future<AccountActivateResponse> completeAccountRecoverAsync(
       String code, RecoverComplete complete) async {
     final res = await HttpUtil()
-        .post('/account/recover/$code', params: complete.toJson());
+        .post('/account/recover/$code', data: complete.toJson());
     return AccountActivateResponse.fromJson(res);
   }
 }
